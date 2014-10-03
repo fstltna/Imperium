@@ -1,0 +1,64 @@
+miner list <miners>
+      update
+      empty <miner> [ore|gold] <amount>
+      program <miner> [ore|gold|messages] [none|low|medium|high]
+      recharge <miner> <energy>
+
+    The miner command is used to control any robot miners that you own.
+
+    "Miner list" will allow you to print out a report of all the miners that
+you own, optionally specifying conditionals. Values you may select are:
+         planet - Planet the miner is on (if any, -1 if none)
+        carrier - Ship that the miner is on (if any, -1 if none)
+            ore - Amount of ore on the miner
+           gold - Number of gold bars on the miner
+         energy - How much energy (fuel) the miner has left
+
+The format of the miner list is as follows:
+  Number | Plan/Shp | T | Eff |  Ore  |  Bars | Space | Energ | OMG
+=========+==========+===+=====+=======+=======+=======+=======+====
+       1 |     3894 | P | 100 |     0 |     0 |  3000 |   182 | HHN
+       3 |        4 | S | 100 |     0 |     0 |  3000 |     0 | HLM
+
+where:
+    Number = The miner number
+    Plan/Shp = The number of the planet or ship the miner is on
+    T = P if the miner is on a planet, or S if the miner is on a ship
+    Eff = The miners efficiency
+    Ore = The units of refined ore the miner is carrying
+    Bars = The number of gold bars the miner is carrying
+    Space = The amount of cargo space available
+    Energ = The amount of energy (power) the miner has left
+    OMG = The programmed "levels" for mining "o"re, "m"essages, and "g"old
+
+    You may specify the miners by a list of miner numbers, a list of ship
+numbers (end the list with a "s"), or a list of planet numbers (end the list
+with a "p"), along with the normal R:r,C:c type format.
+
+    "Miner update" will cause all the miners to be updated (IE do their work).
+
+    "Miner empty" will empty gold or ore from the miners hold into the ship
+that is carrying the miner's hold. Note that you can NOT unload the miners
+cargo onto a planet directly. The miner interfaces to a ship which may then
+unload the items onto a planet.
+
+    "Miner program" will let you "program" the miner to operate in certain
+ways. A miner must be on a ship to be reprogrammed, as it is can only
+transmit messages, not receive them.
+    The "message" option determines what level of messages you receive
+about the miners progress. Setting it to "none" will cause no messages to
+be sent to you. Increasing it will cause it to become more and more
+verbose, and will also make it more likely that the miner will be detected
+by other players.
+    The "ore" and "gold" options allow you to set at what level of "activity"
+the miner will mine the planet. The higher the level the faster it will
+produce items, but the more likely that it will be discovered.
+
+    "Miner recharge" will allow you to recharge the miners energy banks from
+the energy banks of the ship it is on. Note that there is no way to get
+energy back once it has been sent to a miner.
+
+    Note that the "program", "empty", and "recharge" commands all require the
+miner to be loaded onto a ship, and that miners efficiency only increases
+when loaded on a ship.
+

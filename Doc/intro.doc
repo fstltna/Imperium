@@ -1,0 +1,426 @@
+
+                       Imperium - Introduction
+
+Imperium is a game of intergalactic exploration, warfare, and economics.
+Imperium has no set goal, and fairly flexible rules about what you can do,
+thus, while a single player could run their own game just for the fun of
+exploration, they would be missing out on most of the aspects of the game with
+no one to compete against. Imperium is a "true" multiplayer game supporting
+as many simultaneous players as will fit in memory at one time, as opposed
+to other systems which allow only one player to be active at a time.
+
+Imperium does not require your computer to have or support graphics, but an
+80 column (or more) display is recommended, and the ability to display and send
+both upper and lower case letters is required. Graphics and sound for Imperium
+are provided through "front ends" which are optimized for a particular type of
+computer system. Ask the deity about the availability of a "front end" for
+your computer type.
+
+The general layout of the Imperium "universe" is a rectangular array of
+"galactic" sectors. Each galactic sector contains a 10x10 array of "sub"
+sectors. A galactic sector can be "normal", a black hole, or a supernova.
+A supernova will immediately destroy anything that moves into it. A black
+hole may do this, but you will have to find out for yourself.
+Within a galactic sector are found planets and stars. Moving a ship through
+a star will also destroy it. The universe is "flat", that is, the edges
+do not wrap around and you can not move past the edges.
+
+In order to try and maintain some degree of realism for the amount of time
+it takes to accomplish certain things in the "real" world, and to prevent
+an experienced player from being able to attack another player all day,
+Imperium has several types of "counters". Each player has a "BTU"
+(Bureaucracy Time Unit) counter of their own, which is replenished at the same
+rate as every other player. This assures that you can only execute certain
+commands a certain number of times in a given period of time, and allows
+more powerful commands to be weighted against commands that do little or
+nothing. Planets also have their own BTU counters, and certain other commands
+(such as load, unload, etc.) require a certain amount of both player BTU's
+and planetary BTU's (PBTUs). These help to assure that one particular planet
+does not do more than would really be possible in a given period of time.
+Planets can only have half the BTUs that a player may have.
+
+The main Imperium prompt looks like this:
+
+    [96;60] Command:
+
+where:
+      96 = number of player BTU's
+      60 = play time left for today
+
+Your play time will be reset at midnight to the amount the deity has decided
+to allow, normally 60 minutes. Note that if you access Imperium through a BBS
+as a door, the sysop may have Imperium set up to use the time from the BBS as
+the amount of time per day instead.
+
+You will need to earn money to build ships, items on the planet, buy goods from
+other players, and to pay for military payroll and utility and planet
+improvements. You can earn money from interest on gold bars, by keeping
+part of a planets production allocated to "cash", selling goods to other
+players, or from interest on loans you make to other players.
+
+Each planet (and race) has a technology level, which affects many things
+such as what types of items you can build, the range and speed of the
+ships they build, chances of getting the plague, etc. You can increase a
+planets technology level by allocating part of a planets production to
+"technology". A races technology level can be increased by donating part of
+a planets technology production to the race.
+
+Each planet and race also have a research level, which affects your chances
+of catching the plague, and slowing down the pollution process. You can increase
+the research level in the same manner as the technology level.
+
+Both research and technology levels (on a planet) decay away at 1% per day,
+so you must continuously create research or technology production to avoid
+your level dropping.
+
+While the game may at first seem very complicated, it is actually quite
+possible to play an entire game without using the more powerful or
+esoteric commands. The most frequently used commands are:
+
+    bye        - exit the game
+    scan       - do a sensor scan from a planet or ship
+    load       - load items from a planet onto a ship
+    unload     - unload items from a ship onto a planet
+    land       - land a ship or fleet on the surface of a planet
+    liftoff    - put a ship or fleet into orbit
+    navigate   - move a ship or fleet of ships
+    telegram   - send a telegram to another player
+    read       - read your telegrams
+    census     - get a detailed report of planets you own
+    players    - get a list of other Imperium players
+    newspaper  - see what other players did today
+    power      - get a report of the computed "power" of other players
+
+A Imperium player usually goes through several phases during the game:
+
+exploration - the player moves out from their home planet to explore
+              nearby planets and possibly start new colonies.
+
+    contact - the player finds another player or planets owned by another
+              player. The players may fight, but not on a large scale just
+              yet, as neither player has the ships this requires.
+
+development - the player begins to set up his own little area of space,
+              possibly taking over several planets in a subsector and
+              creating supply lines between the planets. Usually during
+              this phase the player will start to "dig in" and harden their
+              planets from attack.
+
+LR exploration - the player now has ships to spare and sends them on long
+              range exploration missions, possibly programming a ship to
+              act as a "probe" to map out the universe.
+
+    endgame - players start to horde up items and form alliances to attack
+              other players or races, and hunting down planets owned by
+              certain races is common. In many games most of the gameplay is
+              spent in LR exploration and battles.
+
+    victory - As Imperium HAS no "victory" conditions, the deity will have
+              to decide when the game is over, possibly by setting some
+              power level to achieve, planets to own, etc. by a certain
+              date, or by using  2 races as "teams" and establishing the
+              destruction of the opposing race as the goal.
+
+Normally Imperium runs with an ITU (Imperium Time Unit) of 30 minutes.
+This gives you 48 "update" periods per day, and in a moderately sized
+universe (32x32 or so) should last 3-6 months of real-time. This can be changed
+either at the time the universe is created, or the deity can edit the ITU
+inside Imperium itself. If this time is shortened to 30 secs or so you can
+probably get a game completed in 3 or 4 days, and if the hosting machine has
+more than one serial port and the players can all be on at the same time, the
+action can get quite fast! Having an update time that fast will almost
+certainly require a faster CPU and hard disk to be playable.
+
+The best way to learn how to play Imperium is to just jump in and get
+started. If you don't understand something, refer to these documentation
+files and the shorter "help" files, both of which are available inside
+Imperium itself, unless the deity has removed them to save disk space.
+If you are just confused about some of the terms used in the files,
+you can type "help syntax" for a better explanation.
+
+The other documentation files available are:
+
+    communication  - how to talk to other players, edit messages, etc.
+    economics      - how to earn money and operate in the black.
+    society        - misc. topics related to playing Imperium
+    planets        - details on the various planet types
+    ships          - details relating to ships
+    war            - planetary, stellar, defensive techniques
+    update         - details the planet and ship updating algorithms
+    deity          - tips on being a deity
+    hosting        - tips on running a game
+    impcre         - instructions for running the universe builder
+    conimp         - instructions for running the console client
+    impserv        - instructions for running the server
+
+Just to give you an idea of what Imperium is like, here is a dump of a player
+just starting out. User input can usually be identified by appearing after a
+"Command:" prompt or something similar. Commentary is indented from commands
+and output.
+
+Enter player name: NewGuy
+Player 'NewGuy' does not exist, create it (Y/N): yes
+     This deity does not require players to enter the creation password
+Enter your player password: xxxxxxxx
+Enter it again just to be sure: xxxxxxxx
+     You only have to enter the password twice the first time, when you
+     are a new player, to prevent accidental mistakes.
+     This player's name will be "NewGuy".
+
+Stats of each race as of: Wed Jun 12 20:31:01 1994:
+ ______________________________________________________________________
+| ## | Race Name                       | Tech Lev | # Planets | Status |
+|    | Home Planet Name                | Res Lev  | # Players |        |
+|======================================================================|
+|  0 | Xyphos                          |        0 |         1 | INACT  |
+|    | Xyphon                          |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  1 | Nakasumi                        |        0 |         1 | INACT  |
+|    | Fujiri                          |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  2 | Aeleiusa                        |        0 |         1 | INACT  |
+|    | Raeleon                         |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  3 | Voltar                          |        0 |         1 | INACT  |
+|    | Trafalmadoria                   |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  4 | Human                           |        0 |         1 | INACT  |
+|    | Terra                           |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  5 | Merove                          |        0 |         1 | INACT  |
+|    | Languedoc                       |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  6 | Poussin                         |        0 |         1 | INACT  |
+|    | Arcadia                         |        0 |         0 |        |
+|----------------------------------------------------------------------|
+Please select a race: Nakasumi
+     Note the section for number of planets and players already of this
+     race. A race with many members may be safer from attack, but will
+     probably have less planets near it's home planet that are not already
+     taken by other players. You might also consider the tech and research
+     levels listed for each race before making a choice.
+Creating your starting ship on your home planet:
+(info about the ship number, items numbers on board, etc.)
+
+[96:60] Command: ship status 0
+ Ship #    T| Row,Col |F| Eff| TF|Energ|  Fuel|Armor|Price|  Planet|Name
+----------------------------------------------------------------------------
+       0   a| 274,236 |*| 50%| 15|   75|    75|    0|    0|     415|Fujiri
+
+
+[96:59] Command: census pop 415
+  PC  civl  scien    mil  offic  BTU  Pop%   PF  Race   Pl#   Name
+-----------------------------------------------------------------------
+  H   1012      0    250     75   96     5    0   3      415  Trafalmadoria
+
+    This lets me take a detail look at my race's home planet.
+
+    Now we are curious about what other people have been doing, so we look
+    at the newspaper:
+
+[96:58] Command: news
+
+           -=[  IMPERIUM NEWS LINK ]=-
+::::::::::::::::::::::::::::::::::::::::::::::::::
+!       "All the news thats fit, we print."      !
+::::::::::::::::::::::::::::::::::::::::::::::::::
+             Wed Jun 12 20:31:18 1994
+
+Relative calm prevails.
+
+The details of Imperium news since Wed Jun 12 00:00:00 1994
+
+        === section 1 ===
+
+        === section 2 ===
+
+        === section 3 ===
+
+        === section 4 ===
+
+    Since there is no news we must be one of the early players. This might
+    give us an advantage.
+
+[96:58] Command: power
+*** power report not available ***
+
+    There is no initial power report. Also, a deity can control whether or
+    not non-deities can 'force' a new power report (it can take quite a
+    long time on large worlds), so one is not automatically built.
+
+[96:58] Command: power force
+Please wait, recomputing power...
+Power report updated
+
+Imperium power report as of Wed Jun 12 20:31:25 1994:
+ plan    civ    mil    sh   gun  pl  bar   % ship    $     pow  player
+---------------------------------------------------------------------------
+    0      0     10     0    0    0    0   0   1    5000   120  NewGuy
+
+
+    We're the only ones playing so far, apparently.
+
+[96:58] Command: players
+Current time Wed Jun 12 20:32:01 1994, world created Wed Jun 12 16:13:02 1994
+ #   last access            time  BTU's status    race   player name
+--------------------------------------------------------------------
+ 0   Wed Jun 12 17:59:49   [9999] [ 96] DEITY     NONE   god
+ 1  *Wed Jun 12 20:20:40   [  57] [ 96] Active    Nakasu NewGuy
+
+
+    We are the only player right now. The "*" beside our number indicates that
+    we are currently logged in.
+
+[96:58] Command: status
+Status of NewGuy, of the Nakasumi race, on Wed Jun 12 20:32:15 1994:
+
+Number of planets: 0
+Home planet: 415
+Cash on hand: 5000
+
+Notify via: message
+Compressed mode is ON
+You are not using a front-end
+
+You have the following actions defined: 
+
+You have the following realms defined:
+
+    The "status" command shows some information about our alter-ego. We
+    don't control any planets (home planets don't count), we haven't spent
+    any money, and the other flags are in their default state.
+
+[96:57] Command: info
+Last game won by: Those great Rialtan's.
+World created on Wed Jun 12 05:15:49 1994.
+World size: 32 rows by 32 columns.
+There are currently 2 players out of a maximum of 16.
+Maximum daily connect time is 60 minutes.
+An ITU (Imperium Time Unit) is 1800 seconds.
+The world has seen 0 loans, 0 offers, 0 ships and 0 fleets,
+    ### planets, and ### big items.
+
+    This displays some general information about the world.
+
+[96:56] Command: scan lr 45
+    0 1 2
+    5 5 5
+
+22  ? : ?  22
+32  : : :  32
+42  ? : ?  42
+
+    0 1 2
+    5 5 5
+
+    We do a long-range scan to see what the nearby galactic sectors look
+    like. The ":" indicate a 'normal' sector, that is, our sensors are able
+    to detect at least one planet or star in the sector, and the sectors are
+    not black holes or supernovas. The "?" sectors in the corners indicate that
+    our (currently) limited sensors are not able to give us a certain picture
+    of the sector, but most likely the sector is not supernova, since they can
+    be seen farther away and would probably show up at this range.
+    Also note that the row and column numbers increment by 10. We would see
+    the same thing if our ship was at locations from a row of 30 to 39, and a
+    column from 10 to 19.
+
+[94:54] Command: scan sr 45
+NewGuy Class A #45 at 32,15
+    0 1 1 1 1 1 1 1 1 1 1 2 2
+    9 0 1 2 3 4 5 6 7 8 9 0 1
+
+26  ? ? ?               ? ? ?  26
+27  ? ?     *             ? ?  27
+28  ?                       ?  28
+29                             29
+30                             30
+31                             31
+32              h              32
+33                             33
+34                             34
+35                             35
+36  ?               0       ?  36
+37  ? ?                   ? ?  37
+38  ? ? ?               ? ? ?  38
+
+    0 1 1 1 1 1 1 1 1 1 1 2 2
+    9 0 1 2 3 4 5 6 7 8 9 0 1
+
+    This gives us a more detailed short-range scan of the area around our
+    home planet (which shows up as "h" in the center). The "?" in the
+    corner indicate that this area was not detectable by our sensors. We
+    can also see a star at 27,13 and a planet at 36,17.
+
+
+    This is enough for now, and we can't really do much until our ship
+    is a little more efficient, so we hang up and call back later....
+
+    Ok. It's the next day so lets see if there are any new players:
+
+[96:60] Command: play
+Current time Thu Jun 13 14:21:05 1994, world created Wed Jun 12 16:13:02 1994
+ #   last access            time  BTU's status    race   player name
+--------------------------------------------------------------------
+ 0   Thu Jun 13 22:59:49   [9999] [ 96] DEITY     NONE   god
+ 2  *Thu Jun 13 14:18:34   [  57] [ 80] Active    Voltar Klaus Friedrich
+ 1  *Thu Jun 13 14:19:55   [  60] [ 96] Active    Nakasu NewGuy
+
+    There is a new player called "Klaus Friedrich", and he must have logged
+    out just a few minutes ago. Note that our PBTU count has gone up, and
+    that our time left has been reset to 60 minutes.
+
+[96:59] Command: power
+Imperium power report as of Thu Jun 13 14:05:25 1994:
+ plan    civ    mil    sh   gun  pl  bar   % ship    $     pow  player
+---------------------------------------------------------------------------
+    0      0     10     0    0    0    0   0   1    5000   703  Klaus Friedrich
+    0      0     10     0    0    0    0   0   1    4100   540  NewGuy
+
+    Klaus is about as powerful as we are. Now we can see if our ship is
+    efficient enough to move.
+
+[96:57] Command: shi sta
+ Ship #    T| Row,Col |F| Eff| TF|Energ|  Fuel|Armor|Price|  Planet|Name
+----------------------------------------------------------------------------
+       0   a|  32,15  |*|100%| 15|  150|     0|    0|    0|     415|Fujiri
+
+    Our ship is now efficient enough to navigate, and our energy banks also
+    have enough of a charge to move us at least a few sectors.
+
+[96:56] Command: liftof 0
+Class A #0 is now in orbit above planet 415
+[94:56] Command: nav 0 3232.
+
+    Now our ship is above the new planet, but before we land we should look and
+    see what type of planet it is, and if it will support life.
+
+[92:55] Command: scan planet 0 0
+Results of sensor scan of planet 416:
+Is a class D planet, and is not under the control of any player
+Size|Polut|Eff|Minr|Gold|Gas|Wat|  Ore  |  Bars | Civil | Milit | TF
+   3|    0|100|  48|   0| 52| 37|     0 |     0 |     0 |     0 | 15
+
+    We can see that the planet is class D (the average), has enough land
+    masses and an atmosphere that should support life, and does not appear to
+    be owned by another player. Lets land and take a look around. Also note
+    that we used planet number 0 when doing the scan. You can usually indicate
+    planet 0 to indicate "the planet the ship is currently orbiting".
+
+[90:55] Command: land 0
+Class A #0 landed on the surface of planet 416 safely
+
+    Our ship is now on the surface, and we can try unloading some people.
+
+[88:54] Command: unl small 0
+!<insert list of items being unloaded here>
+You now own planet 416!
+
+    Now that we own the planet we can get a more accurate look at the planets
+    stats:
+
+[86:53] Command: cen geo 416
+ PC S eff min gld pol gas wat mob   ore   bar   TF  ResLv  Planet  Position
+---------------------------------------------------------------------------
+ D  3 100  53   0   0  53   6  95     0     0   15      0    416    36,17
+
+

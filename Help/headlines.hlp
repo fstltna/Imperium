@@ -1,0 +1,10 @@
+headlines [days]
+
+    Headlines will print out a summary of events for the given number of days,
+or for the past 3 days if none are specified.
+
+See also:
+        NEWS
+Doc:
+        Communication
+

@@ -1,0 +1,13 @@
+1)	Reduce the rate at which you earn cash from planets. It allows you
+	to earn way too much money currently.
+2)	Complete combat code.
+	a) When planets defend, should it be handled just like ships?
+3)	Add some additional type of security to the ImpServ->utilities layer.
+	Need to be able to prevent "normal" users from being able to access the
+	ImpShut features by writing their own clients. Maybe use a handshake
+	sequence when a client starts up to determine if they are a "powerfull"
+	user or not. Even better would be to provide extra server calls that
+	allowed you to make three successive "challenge" server requests to
+	activate the ImpShut/ImpCre features.
+4)	Need to add ability to edit the weapons installed on planets
+5)	Need to add edit/examine routines for big items.

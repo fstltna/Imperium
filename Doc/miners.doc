@@ -1,0 +1,70 @@
+                        Imperium - Miners
+
+
+Purpose:
+    Some planets are incapable of supporting life due to an atmosphere that is
+too thin or having no atmosphere at all. If you unload people onto the surface
+of one of these planets, they will die as soon as the air they carry on their
+back runs out (1 ITU) unless they are transferred onto another ship. This does
+not mean you can't extract minerals from these planets, however.
+    There is a special class of ship known as a "miner" that can do this for
+you, without any crew on board at all. Miners can be loaded into the hold of
+other ships (if they have enough free cargo space), and then dropped onto the
+surface of an inhospitable planet to mine whatever minerals they can and then
+radio you of their progress.
+
+Creation:
+    Miners are built on a planet just like any other class of ship. In a
+"standard" universe they will cost 275 production units (plus the standard
+"monetary" cost per unit), and can carry 3000 units of ore/bars. Note that
+the ship you start out with does NOT have enough cargo space to carry a
+miner, while the largest hull could carry several.
+
+Use:
+    A miner is first loaded into the cargo hold of another ship via the
+"load miner" command. Both the miner and the ship must be on the same
+planet, and miners can not be transferred between ships directly. They must
+first be unloaded from one ship and then loaded onto the other.
+    Once the miner is loaded you may use the "miner refuel" command to
+transfer some of the ship's active field energy (not it's "fuel", you are
+charging a field coil in the miner directly. The miner has no way to
+convert raw "fuel" into energy) to the miner. (If you forget this step you
+won't see much work :-).
+    Before dropping the miner off you way wish to use the "miner program"
+command to change how the miner will operate. This can only be done while
+the miners' umbillacle is still attached to the mother ship's cargo hold.
+Once you arrive and have landed on the target planet you may use the
+"unload miner" command to place it on the surface and it will begin it's
+work. You may either stay on the surface and wait for it, or leave and
+come back when it's cargo hold is full. Note however that your presence on
+the planet's surface is much more noticeable then a small miner...
+    When the miners hold is full you can use the "load miner" command to
+place it in the cargo hold of your ship (you can load it at any time,
+if you need to clear out of the area in a hurry, say) and then use the
+"miner empty" command to transfer any ore or gold bars to your ship's
+cargo hold.
+    To make all your miners actually do their work you need to use the
+"miner update" command. Note that this may NOT be required if the deity
+has set up Imperium so that miners get updated on their own. Check with
+them and see if this is the case.
+    At any time you may use the "miner list" command to display one or more
+of your miners, and their current status.
+
+Programming:
+    There are three items you can set on a miner, and each items can be
+one of four "levels". The items are "ore", "messages", and "gold". The
+"levels" are "none", "low", "medium", and "high".
+    For "ore" and "gold" the levels represent the amount of energy that
+should be used to attempt to mine the respective mineral. The levels compete
+against each other, such that setting both to "low" will result in equal
+low-level production, but setting "ore" to "medium" with "gold" to "low"
+will result in more energy going to ore production at the cost of gold
+production. If a planet is very low in either gold or ore, you may set
+the appropriate item to "none" and the miner will not waste any energy
+trying to mine that mineral.
+    The "messages" item indicates how verbose the miner should be about
+notifying you of it's progress. The higher this level, the more
+messages you will get (either as on-line messages, or as telegrams if
+you are not logged in when the miner is updated). The higher the message
+level, the greater the chances that someone else will discover your miner.
+

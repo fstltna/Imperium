@@ -1,0 +1,15 @@
+unload big <item> <ship>
+       small <ship>
+       miner <ship> <miner>
+
+    Allows you to unload goods from a ship that is on the surface of a
+planet. The "big" option allows you to unload items such as engines, while
+the "small" item allows you to unload items such as people or fuel. The
+"miner" option allows you to unload a miner from the ship's hold and leave
+it on the surface of a planet.
+
+See also:
+        LOAD, MINER, TELEPORT
+Doc:
+        Miners, Ships
+

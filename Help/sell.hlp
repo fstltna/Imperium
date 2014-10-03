@@ -1,0 +1,11 @@
+sell <ship> <lot number>
+
+    Allows you to sell goods to a planet that has set up buying prices for
+the items you wish to sell them. If your ship does not have teleport units,
+you must be able to land on the planet to sell to them.
+
+See also:
+        BUY, PRICE, REPORT
+Doc:
+        Economics
+

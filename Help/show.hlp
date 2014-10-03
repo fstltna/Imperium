@@ -1,0 +1,9 @@
+show <action>
+
+    Allows you to display the current settings of one of your actions.
+
+See also:
+        PROGRAM, RUN, SETUP
+Doc:
+        Programming
+

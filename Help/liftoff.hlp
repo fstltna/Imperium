@@ -1,0 +1,11 @@
+liftoff <ships>
+
+    Allows you to attempt to put a ship or group of ships into orbit.
+All the ships must be on the surface of a planet, but they do not have to
+be on the surface of the same planet.
+
+See also:
+        LAND, NAVIGATE
+Doc:
+        Ships
+

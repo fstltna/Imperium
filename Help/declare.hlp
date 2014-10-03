@@ -1,0 +1,21 @@
+declare <relation> race <race>
+                   player <player>
+
+    Declare allows you to declare your relations to a specific player or a
+race as a whole. <relation> may be, war, neutral, allied, or default.
+Default will act differently depending on whether you are declaring with a
+race or a player. If default is declared with a player, your relation to
+that player will become whatever your relation to that players race is.
+If default is declared with a race, it will be translated to "neutral".
+
+    The settings for a player overlay any settings you may have for a certain
+race. Thus, even if you are at war with a race, you can be allied or even
+neutral to certain players of that race by declaring relations with those
+players specifically. To return the relation to those players to normal,
+just declare "default" with them.
+
+See also:
+        STATUS
+Doc:
+        Society
+

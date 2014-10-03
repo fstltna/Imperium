@@ -1,0 +1,164 @@
+
+
+                            Imperium - Items
+
+    In Imperium there are many things which are generically called "items".
+These are usually broken down into two classes; "big" items such as engines
+or weapons, and "small" items such as people or gold bars.
+
+    Most items are considered "small", and do not have the level of detail of
+larger items such as engines or weapons. These items are not identified by a
+unique number per item, but by how many of them are present, such as "10
+civilians". These items do not have separate technology levels, but are all the
+same level.
+
+
+                             SMALL ITEMS
+Civilians
+
+    Civilians are the basic workers and population. They are assumed to have
+basic skills, but can not pilot ships, make technical discoveries, or do much
+of anything else besides work and reproduce. Based on the amount of production
+put into a planets educational system, they may however become scientists.
+
+    Civilians reproduce fastest when the planet population is between 1/3rd and
+2/3rds of the maximum. Their growth can also be increased by devoting some
+planet production to "civilians".
+
+Scientists
+
+     Scientists are civilians that have completed more advanced schooling,
+can work to develop new technology, and can pilot ships if needed. They will
+not fire weapons however. In all other respects they are the same as civilians,
+and will reproduce more civilians. To increase the create scientists you must
+devote some of the planets production to "scientists".
+
+Military
+
+     Military represent the common soldier. They may fire guns and use weapons,
+but they can not pilot a ship. They are used to defend planets and ships from
+attack by other players. Military do not reproduce. They must be enlisted by
+devoting some of the planets production. This will cause your planet to spend
+more money promoting the benefits of the military way of life, hopefully
+enticing civilians to sign up (scientists will never sign up). You must have
+at least 1 officer present to oversee the training.
+
+Officers
+
+     Officers are military that have completed more advanced training, and have
+a higher intelligence than the basic military. They can pilot ships, fire
+weapons, and will improve the defensive capabilities of whatever they are on
+(planet or ship) when compared to basic "military". Officers do not reproduce,
+they must come from promoted military. You must have at least 1 officer present
+to oversee the training of the rank and file military. Note that the pay for
+officers is TWICE that of normal military. Be careful of having too many!
+
+Missiles
+
+     These are used for planet->ship combat, as well as photon torpedoes for
+ships.
+
+Ore
+
+     Ore is used to create "production" on planets. Ore is mined from the
+planets "mineral" content, and a planet having a higher mineral content will
+produce more ore in the same amount of time as a planet with a lower mineral
+content.
+
+Gold bars
+
+     Gold bars are produced by mining the planets "gold" content. Unlike ore,
+mining gold DOES deplete the resource from the planet, so a planet with a
+higher gold content will produce more gold bars before going dry rather than
+producing them quicker. Gold bars are VERY important. They are a continual
+source of income, for the duration of the game. One of your first priorities
+should be mining some gold bars to give you a positive cash flow.
+
+Air tanks
+
+     Air tanks are carried by ships to temporarily offset the loss of their
+life support systems. Planets must have an atmosphere above 40% to produce air
+tanks.
+
+Fuel tanks
+
+     Fuel tanks are used to store fuel for ships, and represent a pre-packaged
+amount of fuel in a combustible, non-reusable container. Each tank holds 75
+units of fuel, and once put into the ships' active fuel array can not be
+unloaded. Fuel tanks MAY be carried by the ship as cargo, and unloaded if they
+are not used for fuel by the ship. Fuel tanks require a planet to have an
+atmosphere above 50%, as well as water above 25%, along with "ore"  for use in
+the production of the fuel tank containers.
+
+                               BIG ITEMS
+
+    Big items are not usually referenced by quantity, but rather a separate
+unit number for each. Big items also hold more information than small items,
+such as their tech level, location, etc.
+
+    All big items of a certain type are considered to be the same size, but
+their weight will vary depending on the tech level of the planet they are built
+on.
+
+Engines
+
+    Engines provide the power for ships, as well as the ability to move between
+the stars.
+
+Computers
+
+    Computers control almost every aspect of a ship. It is impossible for a
+ship to operate without them. The more computers installed in a ship, the
+better range you will get out of the sensors, the more accurate your weapons
+will be, and teleports will be more reliable.
+
+Weapons
+
+    There are several types of weapons available, including hybrid of a
+blaster and a laser, called a "blaser", and photon torpedoes.
+
+    Blasers:      Blasers do less damage than photon torpedoes, but as they are
+                  guided by the ships computer to their target and they travel
+                  at the speed of light, they are much more accurate. Blasers
+                  take their energy from the ship itself, and so they drain the
+                  ships energy banks, and if used too much they may make it
+                  impossible to leave the sector until the energy banks
+                  recharge.
+
+Photon torpedoes: Photon torpedoes do more damage than blasers, but because
+                  they travel slower than light, and occupy physical space,
+                  they are less accurate. They require an explosive charge,
+                  which must be carried by the starship, and which may explode
+                  if the starship takes enough damage. But they can usually
+                  destroy an enemy ship with one or two shots (if the ship
+                  has no armor), so they have some value.
+                  Photon torpedoes are also the only weapon that may be used
+                  planet->ship and ship->planet combat.
+
+Sensors
+
+     Sensors allow ships and planets to map out subsectors, and if their
+technology level is high enough, to map out sectors as well. Sensors are also
+used to scan for ships in the area, and the higher the tech level, the more
+likely they are to pick up smaller ships farther away.
+
+Teleports
+
+     Teleports allow a ship transport goods from ship to ship or ship to
+surface with other ships or planets in the same subsector. The higher the tech
+factor the larger the item that can be transported, and the more reliably the
+transfer will occur. For teleports, "larger" means the individual item size,
+not necessarily the gross item size. For instance, 1 person is considered
+"larger" than 1 ton of ore, since 1 ton of ore consists of a homogeneous mix
+of smaller ore pieces. It won't hurt anything if the teleports fuse a few
+pieces of the ore together, but you wouldn't want that for living things,
+thus teleporting people is only possible on higher-tech teleport systems.
+Teleports also depend on computers being operational.
+
+Shields
+
+    Shields provide a non-ablative (well, you are trading energy use for
+armor use) defense for the ship. The number and tech level of the shield units
+you have installed will determine how much energy you may put into the shields
+at any one time.
+

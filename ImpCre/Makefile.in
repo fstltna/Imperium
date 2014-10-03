@@ -1,0 +1,39 @@
+# makefile for ImpCre
+
+include ../MakeLoc
+
+CC = @CC@
+RM = rm -f
+
+CFLAGS = @CFLAGS@
+DEBUG = 
+LDFLAGS = @LDFLAGS@
+
+
+INSTALL = @INSTALL@
+
+IMPINC = ../Include/Imperium.h
+
+INCFILES = $(IMPINC)
+
+ALLFLAGS = $(DEBUG) $(CFLAGS) -DIMP_BASE_REV="\"$(IMP_BR)\""
+
+.c.o:
+	$(CC) -c $(ALLFLAGS) -o $*.o $<
+
+all:    ImpCre
+
+ImpCre: ImpCre.o
+	$(CC) $(LDFLAGS) $(ALLFLAGS) -o ImpCre ImpCre.o
+
+ImpCre.o: ImpCre.c $(INCFILES) ../config.h
+
+install: ImpCre
+	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/impcre
+	$(INSTALL) -g $(IMP_GRP) -m 700 -o $(IMP_OWN) ImpCre $(IMP_DEST)/impcre
+	$(INSTALL) -g $(IMP_GRP) -m 700 -o $(IMP_OWN) default.sh $(IMP_DEST)/impcre
+	$(INSTALL) -g $(IMP_GRP) -m 700 -o $(IMP_OWN) bigworld.sh $(IMP_DEST)/impcre
+
+clean:
+	-$(RM) ImpCre ImpCre.o
+

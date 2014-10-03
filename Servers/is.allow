@@ -1,0 +1,7 @@
+#
+# See the file 'ic.allow' for information on setting this file up
+#
+impown all
+sys all
+adm all
+root all

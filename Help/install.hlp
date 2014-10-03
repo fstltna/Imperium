@@ -1,0 +1,12 @@
+install <ship> <item>
+
+    Install allows you to install a "big" item such as an engine or computer
+into one of the ship's active use slots, if any are free. The item must
+already be loaded onto the ship. While an item is installed it's efficiency
+will be maintained, but it's tech level slowly drops.
+
+See also:
+        LOAD, REMOVE, SHIPS, UNLOAD
+Doc:
+        Ships
+

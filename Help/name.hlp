@@ -1,0 +1,9 @@
+name planet <planet>
+     ship <ship>
+
+    Allows you to name the given planet or ship. You MUST own the planet or
+ship, and there is no checking for duplicates of the name. You will be
+shown the current name, if any. Pressing <RETURN> will keep the current
+name, or leave it blank if none is set. To clear out a name, enter "none"
+and press return.
+

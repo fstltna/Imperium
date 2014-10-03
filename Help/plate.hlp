@@ -1,0 +1,8 @@
+plate <ship> <units>
+
+    Allows you to add <units> of armor plating to a ship. The armor comes from
+unused hull production units on the planet the ship is on.
+
+Doc:
+        Ships, War
+

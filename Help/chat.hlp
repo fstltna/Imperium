@@ -1,0 +1,17 @@
+chat
+
+    Chat allows you to enter a multi-user "conference" with any other
+players who are also in chat mode. (Players who are in chat mode will
+have a "<" by their player number in the "player" command.)
+    Any lines you type that are not blank will be sent to the other players,
+and any lines that they type will be sent to you. Whenever someone enters or
+leaves chat mode all of the other players will be notified.
+    Depending on the client that you are using to play Imperium you may be
+able to receive new messages automatically as long as your input line is
+blank. The standard Unix client supports this.
+
+See also:
+        MESSAGE, PLAYER, TELEGRAM
+Doc:
+        Communication
+

@@ -1,0 +1,23 @@
+checkpoint <planets>
+
+    Checkpoint allows you to set a password for a given range of planets
+so that people can access them if they know the code. When a planet is
+checkpointed players can land on it, refuel, reload (or unload) as long as
+they know the code.
+    There may be times which you wish people to be able to land on your
+planets, but not load or unload items outside of lots that you may have
+available. You may do this by breaking the checkpoint code down into two
+pieces. To do this place a "!" in between the two codes. The code that
+appears BEFORE the "!" will allow them to land on the planet. The code
+AFTER the "!" will allow them to load/unload items, refurbish their ships,
+etc. This will allow you to give out the first code so that people without
+teleporters, or with primitive teleporters can land and buy/sell you items,
+but will not give them full access to your planet. You may also press return
+after the "!", and prevent people from getting full access to your planet
+at all, since there will be no code to guess. (There is no point to putting
+nothing before the "!", as this would have the same effect as specifying
+one checkpoint code in the first place)
+
+Doc:
+        Society
+

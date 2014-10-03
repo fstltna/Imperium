@@ -1,0 +1,27 @@
+configure <ship> defend [on|off]
+                 shield [on|up]
+                        [off|down]
+                        auto [on|off]
+                        keep [on|off]
+                        level <level>
+
+    Allows you to configure a ships combat-related parameters. The "defend"
+option allows you to specify whether a given ship will attempt to return
+fire on enemy ships that fire on other ships in range of the given ship.
+That is, whether ship A will fire on ship B when ship B fires on ship C.
+    The "shield on" (or up) command allows you to raise the given ships
+shields to the preset level.
+    The "shield off" (or down) command will drop the given ship's shields (and
+return the energy to the engines).
+    The "shield auto" command allows you to specify whether the ship will
+automatically raise it's shield to the preset level if it is attacked.
+    The "shield keep" command allows you to specify whether the ship will
+attempt to keep it's shields at the preset level if it is attacked. That is,
+it will continue to drain energy off the ship's engines to maintain the
+requested shield level.
+    Finally, the "shield level" command allows you to specify the number of
+units of energy to place in the shields.
+
+Doc:
+	Items, Ships
+

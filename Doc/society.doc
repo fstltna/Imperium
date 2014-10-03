@@ -1,0 +1,67 @@
+                   Imperium - Imperium Society
+
+
+Each planet and ship have a technology level. The level is 0 when the universe
+is created, and can be increased by players owning the planet. Basically
+you must devote some of the planets production to ore, and some to technology
+development. The planet will produce ore, which is then used to create
+technology production units, which are then used to increase the planets
+technology level. Also, every time a planet is updated the technology level
+is reduced by 1%. This means you must continue to devote at least part of the
+planet's production to technology development to prevent backsliding.
+
+The technology level for a ship is set by the technology level of the planet
+it's composite parts are built on, and also decreases at a certain
+rate per update period. Ships can have their technology level brought back
+up by landing them on a planet and using the "refurbish" command.
+
+The technology level is used to generate the "technology factor", which is
+itself used to scale various things like weapon range, ship speed, etc.
+A technology level of 0 will yield a technology FACTOR of .15, and the
+technology factor can go to slightly over 1.0, in very very rare cases.
+This means that there can be almost a factor of 7 in the quality of goods
+produced by a low-tech planet and a high-tech planet.
+
+Only planet's have a research level, which is similar to their technology
+level, but represents that planets degree of medical and environmental
+knowledge and skill. This is also lowered by 1% each time the planet
+is updated. The research level mainly affects the planet's likelihood of
+catching the plague, but can also influence many other subtle actions.
+
+In Imperium, plague represents all aspects of disease resulting from poor
+living conditions, hasty industrialization, improper lack of concern for the
+environment, and the just plain random mutagenic effects on cells of gamma
+wave radiation present everywhere. Plague is always fatal once it develops,
+but it is possible to limit it's spread fairly easily if you are careful.
+
+Whenever a planet is updated, Imperium calculates a "plague factor", or
+the 0-100 odds of that planet coming down with the plague. This can be
+increased by having a high technology level with a lower research level,
+excess ore lying around unused, a high pollution index, or a population in
+excess of the recommended population for that size planet. This can
+be decreased by having more scientists on the planet, by having a higher
+research level, reducing the pollution index, or a high planet efficiency.
+
+The plague has 3 stages. The lengths of each of the stages in random, and the
+length of one stage has no relation to the length of any other. In the first
+stage the plague is dormant, and there are no symptoms. When this stage is
+over the planet becomes infectious, and you will receive a telegram or message
+to warn you (a news item will also be generated). While the plague is in stage
+2 or 3, any movement off of the planet - whether by loading a ship,
+teleporters, etc. will infect the ship that the items are moved onto. The 3rd
+stage is when people begin dying. The number that die can be reduced if the
+planet is efficient, as stated above.
+
+It is possible to "checkpoint" planets in Imperium. This allows the owner of
+a planet to assign a "password" to a planet that will allow other players
+access to the planet if they know the code. If the planet does not have a
+checkpoint other players will not be allowed to land ships on the planet
+or load up items on the planet.
+
+Be careful when loading or unloading items from a planet you do not own.
+If it is infected your ship will get the plague. Likewise, allowing other
+players to land and unload items on your planets may cause YOU to get the
+plague if their ships are infected.
+
+!<insert description of "declare" command here>
+

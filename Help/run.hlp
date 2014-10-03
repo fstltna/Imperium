@@ -1,0 +1,11 @@
+run <ship number>
+
+    Allows you to execute a ship's preprogrammed course. If the ship is in a
+fleet, the program will be executed for all ships in the fleet, with the
+assumption being that the ship number given is the flagship.
+
+See also:
+        PROGRAM, SETUP, SHOW
+Doc:
+        Programming
+

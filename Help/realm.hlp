@@ -1,0 +1,16 @@
+realm [<number>] [<specification>]
+
+    Allows you to specify a list or range of planets for use wherever a list
+of planets is accepted. Using "realm" with nothing else after it will show
+you all the realms and their settings. Specifying a number after the realm
+command will display just that realm.
+    The specification may be either a planet list in the form num1/num2/num3
+or a sector range such as RRR:rrr,CCC:ccc where RRR is the top row, rrr is
+the bottom row, CCC is the left column, and ccc is the right column. If it
+all possible you should use the planet list format, as this is the fastest
+method. If you specify a range of sectors Imperium must read EVERY sector
+in that range looking for planets that match.
+
+See also:
+        STATUS
+

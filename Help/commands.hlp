@@ -1,0 +1,26 @@
+help [topic] [topic] [topic] ...
+list
+commands
+?
+
+    With no arguments displays a list of commands, their BTU costs, if any,
+and their planetary BTU costs, if any.
+
+Any text appearing after the commands is assumed to be a topic that you wish
+help on, for instance "help navigate" would give you help on the navigate
+command.
+
+If the system owner has installed the full online help package you can get a
+list of topics that there is additional help for by typing "help topics".
+
+    If you have set a screen length greater than 3, you will be given a
+" -- more -- :" prompt before each screenfull of data scrolls out of view.
+You can simply press <return> and get the next screen, or type one of the
+following two commands for additional action.
+    q - Stop reading the current file.
+    c - continue reading the current file in "continuous" mode. That is, you
+        will not receive any more " -- more -- " prompts.
+
+See also:
+        DOC
+

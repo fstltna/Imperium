@@ -1,0 +1,21 @@
+power [force] [all]
+
+    Power displays a report based on the current number of certain items that
+each player owns, and calculates a "power" rating for that player. This is not
+to say that a player with a higher "power" rating can't be beaten by a player
+with a lower rating. The figure displayed is only a rough guideline for what
+a hypothetical player, with the items available to them that the listed player
+has, might be capable of. Since all players are not equal in skill, the rating
+must be weighed by the your estimate of the players ability to use the items.
+
+    The "force" option, if permitted by the deity, will allow you to "force"
+the report to be updated right away. Normally the power report is only
+built when it becomes "outdated" (older than a certain amount of time).
+Building a new power report can take a while, depending on the size of the
+universe and the speed (or lack of it) of the host machine. Also, some deities
+may be running a utility that does power report updates in the background
+which would make using this option unnecessary.
+
+    The "all" option will list ALL players in the report, even those who are
+no longer active.
+

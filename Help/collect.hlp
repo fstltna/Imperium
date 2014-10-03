@@ -1,0 +1,11 @@
+collect <loan> <planet>
+
+    Allows you to collect in full or partial payment for a loan that is
+in arrears by repossessing a planet owned by the player who owes you the
+money.
+
+See also:
+        ACCEPT, LEDGER, LEND, REPAY
+Doc:
+        Economics
+

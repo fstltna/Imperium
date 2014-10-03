@@ -1,0 +1,10 @@
+donate technology <planet> [<amount>]
+donate research <planet> [<amount>]
+
+    Allows you to donate some production from a planet under your control to
+your home planet. If <amount> is not specified, all the production (up to a
+maximum of 127 units) will be donated.
+
+Doc:
+        Society
+

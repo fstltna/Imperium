@@ -1,0 +1,54 @@
+scan sr <planet or ship>
+     lr <planet or ship>
+     ship <ship> <planet or ship>
+     planet <planet> <ship>
+
+    Scan with the "sr" or "lr" option allows you to display a small map of what
+your sensors are able to pick up the general area of the planet or ship
+doing the scan.
+    Both scans take the same amount of time, but the sr (short range) scan tunes
+your sensors more finely, sacrificing distance for detail. Both short and long
+range scans are basically "passive", that is, they do not emit any beams that
+can be picked up by other ships. The ability to detect objects depends on
+several things:
+    1) The tech level and efficiency of your ships sensors and computers
+    2) The tech level and efficiency of the other ships hull and engines
+       (for ships only), otherwise the size and type of the item (you can see
+       big planets farther away, and stars even farther).
+Supernovas and black holes are always detected when you are in range of them.
+
+    The long range scan presents a map in which each "sector" represents one
+galactic sector, and the character used indicates the type of sector it
+contains.
+
+    The short range scan presents a map in which each "sector" represents one
+sub-sector, and the character used is either the planet class or the class
+of the largest ship in the sector, if there is more than one. You will also get
+a listing of the ships in range before the map. If the owner of a ship is
+allied with you, their name will always appear before the ship name.
+
+    The "scan planet" and "scan ship" commands are ACTIVE commands, they emit
+signals that are detectable by almost all items you scan, and if they are
+owned and the item is able to detect it, the owner will be notified that you
+scanned it, and if possible will try to scan your ship and also send that
+to the owner. These commands require you to be much closer to the item you
+wish to scan, usually in the same subsector, so "scan planet" is usually only
+done from a ship. As a special case you can use the planet number of "0" when
+scanning a planet and it will scan the planet that your ship is currently
+orbiting.
+
+    The output of these commands is similar to the "ships" and "census" command
+in that they return statistical information on the item, rather than a map
+of where the item is. The amount of information you can get from these two
+commands depends on whether you have a higher tech level than the other
+item. The higher the other item's tech level is above your current tech level,
+the less information you will be able to receive from the scan, and the more
+likely that the owner of the item will be notified of your scan.
+
+    All scans but the short range scan use up some energy from your ships
+energy banks, so be careful to leave enough energy to move away from the item
+if it should turn out to be hostile.
+
+See also:
+        CENSUS, DECLARE, SHIPS
+

@@ -1,0 +1,15 @@
+load big <item> <ship>
+     small <ship>
+     miner <ship> <miner>
+
+    Allows you to load goods from a planet on which your ship has landed.
+The "big" option allows you to load items such as engines, while the
+"small" item allows you to load items such as people or fuel. The "miner"
+option allows you to load a robot miner into the hold and connect it's
+umbilical to the ship's computer to give it new instructions or recharge it.
+
+See also:
+        MINER, TELEPORT, UNLOAD
+Doc:
+        Ships, Miners
+

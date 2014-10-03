@@ -1,0 +1,10 @@
+tend <to ship> <from ship>
+
+    Tends a ship from another ship in the same subsector. This allows small
+items to be transferred while the ships are in space.
+
+See also:
+        LOAD, NAVIGATE, SHIPS, UNLOAD
+Doc:
+        Ships, War
+

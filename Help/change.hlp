@@ -1,0 +1,48 @@
+change name
+       password
+       player
+       notify [message] [telegram] [both]
+       compressed
+       fe
+       width
+       length
+
+    "Change name" allows you to change your name. The deity may not allow you
+to use this command. You will be asked for your password to verify your
+identity.
+
+    "Change password" allows you to change your password. You will be asked
+for your current password to verify your identity.
+
+    "Change player" will let you "become" another active player. The deity
+may not allow you to use this command. You will need to know the password
+for the player you wish to become.
+
+    "Change notify" will allow you to change the way Imperium notifies you
+of events that occur, usually by another players actions against you. There
+are 3 ways you can be notified. The default is "message", which means you
+will get a real-time message if you are online and the event occurs. If you
+are not online when the event occurs you will receive a telegram. The option
+"telegram" will cause you to ALWAYS receive a telegram, IE: you will get
+a "You have new telegrams" message at the next "command" prompt, which you
+must then use the "read" command to see. The last option, "both", will cause
+you to receive both messages AND telegrams for each event.
+
+    "Change compressed" allows you to toggle the default compressed mode for
+sensor reports. The current status is listed with the "status" command.
+
+    "Change fe" allows you to toggle the FE support mode. Normally this
+is enabled automatically by your front end (FE). The current status is listed
+with the "status" command.
+
+    "Change width" allows you to change the desired width of your screen.
+Imperium does not use this itself, but rather this information is provided
+for support of multiple window FE's or word-wrapping clients.
+
+    "Change length" allows you to change the desired length or "height" of
+your screen (number of lines). Imperium uses this to provide "paging" of
+"help" and "doc" files, and it may be used by special clients.
+
+See also:
+        READ, STATUS
+

@@ -1,0 +1,39 @@
+race
+
+    Displays a report of each race's current number of players, number of
+planets, tech level, research level, and status.
+    Example report:
+
+Stats of each race as of: Sat Feb 08 21:58:05 1992
+ ______________________________________________________________________
+| ## | Race Name                       | Tech Lev | # Planets | Status |
+|    | Home Planet Name                | Res Lev  | # Players |        |
+|======================================================================|
+|  0 | Xyphos                          |        0 |         1 | INACT  |
+|    | Xyphon                          |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  1 | Nakasumi                        |        0 |         1 | INACT  |
+|    | Fujiri                          |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  2 | Aeleiusa                        |        0 |         1 | INACT  |
+|    | Raeleon                         |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  3 | Voltar                          |        0 |         1 | ACTIVE |
+|    | Trafalmadoria                   |        0 |         1 |        |
+|----------------------------------------------------------------------|
+|  4 | Human                           |        0 |         1 | INACT  |
+|    | Terra                           |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  5 | Merove                          |        0 |         1 | INACT  |
+|    | Languedoc                       |        0 |         0 |        |
+|----------------------------------------------------------------------|
+|  6 | Poussin                         |        0 |         1 | INACT  |
+|    | Arcadia                         |        0 |         0 |        |
+|----------------------------------------------------------------------|
+
+    In the above example only the Voltar race is active, and they only have
+one player. That player also does not own any planets.
+
+Doc:
+        Society
+

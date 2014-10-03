@@ -1,0 +1,23 @@
+accept <loan> <what>
+
+    Allows you to consider a loan that has been offered to you. You will be
+shown the terms of the offer, and asked what you would like to do. <what> may
+be "accept", "decline", or "postpone".
+    Accept will allow you to receive the money that was offered to you at the
+terms of the loan, and will send a telegram to the player offering you the
+loan indicating that you accepted the offer.
+    Decline will remove the offer and send a telegram to the player that
+offered you the loan indicating that you are not interested in the loan.
+    Postpone will allow you to exit without removing the loan, or accepting
+it. It will send a telegram to the player who offered you the loan indicating
+that you are still considering the loan.
+    You should always use the accept command after receiving the telegram
+notifying you that the loan has been offered, at least to postpone the
+offer, so that the player offering you the loan knows that you have seen
+it and doesn't tie up his money waiting for you.
+
+See also:
+        LEDGER, LEND, REPAY
+Doc:
+        Economics
+

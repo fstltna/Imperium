@@ -1,0 +1,53 @@
+ships cargo <ships>
+      status <ships>
+      computers <ships>
+      engines <ships>
+      lifesupport <ships>
+      sensors <ships>
+      teleport <ships>
+      weapons <ships>
+      big <ships>
+
+    Allows you to get various reports on ships that you own. The ship will
+be updated before displaying the report. If no <ships> list is given then
+all ships owned by you will be considered.
+
+    The cargo report will list the ships current contents, by quantity.
+The ship's current amount of "free" space is listed under the "Avl"
+(available) column.
+
+Sample cargo report:
+
+ Ship #  T Avl|Civ|Sci|Mil|Off|Mis|Pln|Ore|Bar|Air|FTn|Cmp|Eng|Lif|Ele|Wpn
+--------------------------------------------------------------------------
+       0 a|10x|  5|  2|  5|  5|  0|  0|  0|  0|  0|  1|  1|  1|  1|  1|  0
+
+    The status report will display various other information about the ship,
+such as the fleet, it's row and column, the hull tech factor & efficiency,
+etc.
+
+Sample status report:
+
+ Ship #    T| Row,Col |F| Eff| TF|Energ| Fuel|Armor|Price|  Planet|Name
+----------------------------------------------------------------------------
+       0   a| 129,102 |*| 83%| 15|  127|   23|    0|    0|    1446|Foobar the Great
+
+    The other report formats allow you to display either one type of "big"
+items, or all big items on the ship. The reports all share the following
+format:
+
+ Item   | Ship   | TF | T | Wgt | Eff | Ins
+-------------------------------------------
+       3|       0| 15 | c |   34|  83 | Yes
+
+    The "item" field is the "big" items part number. The "TF" column is the
+items tech factor, the "T" column is the items type (in this case, a
+computer). The "Wgt" column is the items weight. "Ins" will be "yes" if the
+item is currently installed (useable by the ship) or "no" if the item is
+simply in the ship's cargo hold.
+    Items that are in the ships cargo hold can NOT be used by the ship, and
+do not "age" (have their tech factors degrade over time).
+
+Doc:
+        Ships
+

@@ -1,0 +1,15 @@
+report [naval|planet|item]
+
+    Displays a report of items that are available for sale, and/or the
+buying prices of items on planets. Specifying "report" by itself will list
+all open lots which are available to you (the seller/buyer must be at least
+neutral to you). Specifying "naval" will restrict the report to ships that
+are for sale. Specifying "planet" will restrict the report to the
+buying/selling prices of goods on planets. Specifying "items" will restrict
+the report to "big" items that are for sale.
+
+See also:
+        BUY, PRICE, SELL
+Doc:
+        Economics
+

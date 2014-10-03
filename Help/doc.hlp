@@ -1,0 +1,19 @@
+doc [topic] ... [topic]
+
+    Allows you to read the online doc files for Imperium, if the deity has
+chosen to install them. You can usually find a listing of the files
+available by typing "doc files".
+    Doc files are similar to help files, but tend to be several times
+longer, and relate to one "subject" rather than a particular command.
+    If you have set a screen length greater than 3, you will be given a
+" -- more -- :" prompt before each screenfull of data scrolls out of view.
+You can simply press <return> and get the next screen, or type one of the
+following two commands for additional action.
+    q - Stop reading the current file.
+    c - continue reading the current file in "continuous" mode. That is, you
+        will not receive any more " -- more -- " prompts.
+
+See also:
+        HELP
+Doc:
+	Files

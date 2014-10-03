@@ -1,0 +1,30 @@
+buy <lot>
+
+    Allows you to buy goods that are offered for sale by other players. The
+other players must be at least neutral to you in order to buy things from
+them.
+
+    When buying ships you will take ownership of the ship wherever it happens
+to be, and in whatever condition it happens to be in, and you will also
+gain ownership of all the items on board the ship.
+
+    When buying small items from a planet you may either load the items up via
+teleporters (if you have them) or by landing on the planet (which the planet
+owner may not allow). Landing on the planet insures that all items purchased
+will arrive on board your ship safely, while using teleporters allows you
+to obtain the items without landing on the planet. The person offering the
+items for sale may have chosen to pay the difference of goods lost via
+teleporters. See the section on the "sell" or "price" commands for more
+information.
+
+    When buying large items from a planet, you MUST be able to land on the
+planet. The planet owner will have to set up a checkpoint code for you to
+do this. So when you are ready to buy a large items you should send a telegram
+to the person offering the lot requesting the planet's checkpoint code,
+or that they create one if there is not currently one set.
+
+See also:
+        LOAD, PRICE, REPORT, SELL, UNLOAD
+Doc:
+        Economics
+

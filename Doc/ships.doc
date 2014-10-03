@@ -1,0 +1,232 @@
+
+
+
+                          Imperium -  Ships
+
+    When each player starts out in Imperium they are given a class A starship
+(the smallest) and enough supplies to go a short distance from your home
+planet.
+
+     Ships are built based upon a certain tonnage size, which determines the
+number and size of items they may carry. There is no notion of a "military" or
+"civilian" starship. Any ship may carry any item in any quantity that will fit,
+although there are limits on how many items may be used at a time on items such
+as engines or weapons. Certain items also require a minimum crew to operate.
+
+                           SHIP COMPONENTS
+
+The Hull
+
+     The hull is the most important part of the ship. If the hull is destroyed,
+the ship will explode, taking all of the items aboard with it. Of course by the
+time the hull is gone, the items have probably been severely damaged anyway.
+
+     The hull is the only part of the ship that can not be removed and
+replaced. It has a tech level based on the tech level of the planet it is built
+on at the time it is built. The tech level may be increased by bringing the
+ship back to port, however.
+
+    The hull is not normally accessed as an item. It is instead referred to by
+the ship number itself, since the two can not be separated.
+
+Engines
+
+     Engines provide the power for the ship, as well as the ability to move
+between the stars. Engines are all considered to be the same size, but you can
+load more than one (cargo limits permitting) to increase the ship's speed, the
+rate the energy banks recharge, etc. Engines also have a tech level, which is
+the tech level of the planet they were built on, at the time they were built.
+You can have various tech level engines in each ship, but the lower tech
+engines will bring down the average tech level of the higher engines. In
+general a higher tech level engine will provide more power, and will weigh
+less. Like most items, engines may be brought up in tech level. But bringing up
+an engines tech level will not make them lighter.
+
+Computers
+
+    Computers control almost every aspect of the ship. It is impossible for the
+ship to operate without them. The more computers you have, the better range
+you will get out of your sensors, the more accurate your weapons will be,
+and teleports will be more reliable.
+
+Weapons
+
+    There are several types of weapons available, including hybrid of a
+blaster and a laser, called a "blaser", and photon torpedoes.
+
+    Blasers:      Blasers do less damage than photon torpedoes, but as they are
+                  guided by the ships computer to their target and they travel
+                  at the speed of light, they are much more accurate. Blasers
+                  take their energy from the ship itself, and so they drain the
+                  ships energy banks, and if used too much they may make it
+                  impossible to leave the sector until the energy banks
+                  recharge.
+Photon torpedoes: Photon torpedoes do more damage than blasers, but because
+                  they travel slower than light, and occupy physical space,
+                  they are less accurate. They require an explosive charge,
+                  which must be carried by the starship, and which may explode
+                  if the starship takes enough damage. But they can usually
+                  destroy an enemy ship with one or two shots (if the ship
+                  has no armor), so they have some value.
+
+Sensors
+
+     The ships' sensors allow it to map out subsectors, and if it's technology
+level is high enough, to map out sectors as well. Sensors are also used to scan
+for ships in the area, and the higher the tech level, the more likely they are
+to pick up smaller ships farther away.
+
+    Sensors depend on the ship having functional computers, and having more or
+better computers will help to increase the range of the sensors, as well as the
+likelihood that ships will be detected.
+
+Teleports
+
+     Teleports allow a ship transport goods from ship to ship or ship to
+surface with other ships or planets in the same subsector. The higher the tech
+factor the larger the item that can be transported, and the more reliably the
+transfer will occur. For teleports, "larger" means the individual item size,
+not necessarily the gross item size. For instance, 1 person is considered
+"larger" than 1 ton of ore, since 1 ton of ore consists of a homogeneous mix
+of smaller ore pieces. It won't hurt anything if the teleports fuse a few
+pieces of the ore together, but you wouldn't want that for living things,
+thus teleporting people is only possible on higher-tech teleport systems.
+Teleports also depend on computers being operational.
+
+Shields
+
+    Shields provide a non-ablative (well, you are trading energy use for
+armor use) defense for the ship. The number and tech level of the shield units
+you have installed will determine how much energy you may put into the shields
+at any one time.
+
+                                SHIP DEFENSES
+
+     A ship defends itself by firing on ships that attack it, employing a
+"defense shield", and/or by carrying some amount of ablative armor. A ship
+with higher-tech hull and engines will also get the "defense" of being less
+visible to other ships. The armor will absorb all of the points of damage the
+ship should have taken until there is no more armor left, at which point the
+ship begins to take damage. Shields work similarly, except that they use
+energy that has been set aside for this purpose instead of an ablative
+layer.
+
+    Armor is large and heavy, and the ship must be brought back to port to have
+more armor added. Armor also increases the odds that your ship will be detected
+by sensor scans. Ships may also carry small fighter craft which can be used to
+defend it, if the ship is large enough.
+
+                                STARTING SHIP
+
+     Players start the game with a single "Class A" ship, loaded with a single
+engine, a single computer, a single life support system, a single sensor array,
+the equivalent of 2 fuel tanks worth of fuel, 10 civilians, 5 scientists, 10
+military, and 5 officers. The ship will have no armor, and will be located on
+the surface of the players home planet. All the "big" items on the ship will be
+created at the tech level of the player's race.
+
+                                SHIP OPERATIONS
+
+     Ships operate on "energy" stored in a toroidal Makazu field in each
+engine. These fields are fed via "active fuel arrays", which hold fuel that
+has been emptied out of "fuel tanks" that were loaded onto the ship. Once the
+player loads a fuel tank into the active fuel array it can not be unloaded. The
+engines will draw fuel from the active fuel array in an attempt to keep the
+Makazu field at maximum charge (as per basic magnetrinophysics). As each engine
+contains a part of the field, adding another engine will increase the amount of
+energy that may be stored up. When removing an engine it is necessary to drain
+the energy from the engine to be removed into the remaining engines, which will
+maintain the extra energy (to some degree - don't expect to remove 6 engines
+and store all that energy in just one), but will not replenish it when it is
+used up. Thus, a ship with more engines will be able to move more quickly from
+one place to another on the same amount of fuel than a ship with less engines.
+Damage to the ships engines can be cause the destruction of the whole ship if
+the Makazu field collapses with a large amount of energy still contained in it.
+
+    Shields work on a the principle of a modified Makazu field, which may not
+have been developed by all players or races. Basically, instead of containing
+the field inside the unit, as an engine does, a larger toroid is formed with
+the unit in the middle. Since this would leave the ship unprotected from most
+angles, the computer is used to "spin" the toroid by changing the dimensional
+stabilizer. It is possible for the ship inside the field to fire through the
+shield as the shield, as the ships computers will alter the rotation as needed
+to allow the weapons to pass through.
+
+                            SHIP CAPACITIES
+
+The different ship classes have different capacities for cargo, as well as
+how many of a certain item may be "installed" for use by the ship. Following
+is the DEFAULT number of these things, which MAY have been changed by the
+person setting up the game you are playing:
+
+    Ship Class           Cargo Limit
+    ================================
+        A                   3010
+        B                   6010
+        C                  12020
+        D                  24320
+        E                  51310
+        M                   3000
+
+Note that a class M (miner) ship class can NOT carry all types of goods.
+
+                        SHIP MOBILITY COSTS
+
+Each of the ship classes has a different base "mobility cost". That is, a
+fixed rate by which the other costs of moving the ship from sector to sector
+are scaled.
+
+    Ship Class          Nav Costs
+    =============================
+        A                 423
+        B                 644
+        C                 871
+        D                1016
+        E                1405
+
+Note as the miner class of ships is incapable of moving from place to place
+on it's own, it is not listed.
+
+                      SHIP MANUFACTURING COSTS
+
+Each of the ships costs a varying amount of planetary production units to
+build (taken from the "hull" production type). There is also a monetary cost
+to build each ship, which is usually 9 times the production cost.
+
+    Ship Class          Prod. Cost
+    ==============================
+        A                   120
+        B                   275
+        C                   425
+        D                   800
+        E                  1625
+        M                   275
+
+
+                      SHIP CREW REQUIREMENTS
+
+Each of the ship classes require a certain number of "crew" members to be
+present for them to operate. What is meant by "crew" will depend on the
+situation, but usually it refers to more educated passengers such as
+scientists or officers. Should you not have sufficient crew to operate a
+ship in it's present configuration you may be forced to remove an engine or
+weapon to bring the ship's systems down to a more manageable number.
+
+    Ship Class      Crew Per Engine         Crew Per Weapon
+    =======================================================
+        A                 2                       2
+        B                 5                       2
+        C                 8                       2
+        D                20                       8
+        E                40                      16
+        M                 0                       0
+
+
+Note:
+    The M (miner) ship class is special, and is discussed in it's own doc
+    file. Suffice it to say that you have no need of them unless you
+    intend to sell them to other players or you have mineral-poor habitable
+    planets surrounded by mineral-rich in-habitable planets which would
+    make it worthwhile for you to go to the effort of picking them up and
+    dropping them off.
+

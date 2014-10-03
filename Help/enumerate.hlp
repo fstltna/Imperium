@@ -1,0 +1,6 @@
+enumerate <planets>
+
+    Enumerate returns the number of planets that meet the conditions you
+supply. Primarily useful for macros that only want to do certain things when
+more than a given amount of planets meet the requirements.
+

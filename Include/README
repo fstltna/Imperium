@@ -1,0 +1,9 @@
+The *.c files in this directory allow you to create two stand-alone
+programs that will give you the size of various Imperium objects.
+For most users they are useless, which is why they don't get compiled
+by default.
+
+However, if you intend to modify the Imperium request structure or any
+datatype used in the ImpState_t structure you can make use of them to
+see if you need to increase any of the "private size" #define's to
+compensate for growth/alignment changes.

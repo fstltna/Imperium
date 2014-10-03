@@ -1,0 +1,13 @@
+refurbish ship <ship>
+          item <big item>
+
+    Allows you to bring a ship or a "big" item back up to specs and possibly
+improve it's tech level. To refurbish a ship or item the ship or item must be
+on the planet's surface, and the planet must have some production of the
+appropriate type (hull for ships, usually electronics for other items).
+Partial refurbs are possible if there is insufficient production units
+available.
+
+Doc:
+        Ships
+

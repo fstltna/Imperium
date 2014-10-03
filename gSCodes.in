@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# gSCodes - will ask the user for three codes and then create the file
+# "impsec.h" in the current directory.
+#
+# If "impsec.h" exists, it will let the user know and then exit (without
+# damaging the existing file).
+
+if test -f impsec.h
+then
+	echo "gSCodes: impsec.h already exists - doing nothing"
+	exit 0
+else
+	cat <<EOF
+Imperium uses "secret" codes (they are never displayed or entered) to
+prevent users from "spoofing" the Imperium server into doing things it
+would not normally allow them to do. The codes will be encrypted, if
+possible, and the server will look at the (possibly) encrypted codes and
+decide if the client is "known" before responding to it.
+
+For this to work I must create a file called "impsec.h" which will
+contain the codes that you wish to use. Note that only the first 8
+characters will be used for each code.
+
+EOF
+# It would be nice to do this as a function, but sh doesn't have them
+	ci_code=""
+	while test "$ci_code" = "";
+	do
+	    echo -n "Please enter a code for ConImp: "
+	    read ci_code
+	done
+	ic_code=""
+	while test "$ic_code" = "";
+	do
+	    echo -n "Please enter a code for ImpCtrl: "
+	    read ic_code
+	done
+	is_code=""
+	while test "$is_code" = "";
+	do
+	    echo -n "Please enter a code for ImpShut: "
+	    read is_code
+	done
+	echo "#define CON_IMP_CODE \"$ci_code\"" >impsec.h
+	echo "#define IMP_CTRL_CODE \"$ic_code\"" >>impsec.h
+	echo "#define IMP_SHUT_CODE \"$is_code\"" >>impsec.h
+	chmod 600 impsec.h
+	exit 0
+fi

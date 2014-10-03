@@ -1,0 +1,20 @@
+info [what]
+     [?]
+
+    This gives you info about the various counts and factors in the current
+world that affect the game. If you don't give a 'what', only general
+information is shown. Possible values for 'what' are:
+
+    production, mobilities, plague, costs, scales, updates,
+    fighting, sea, air, miscellaneous, flags, naval
+
+Additionally the 'naval' can be followed by one of:
+    cost, size, lrange, shrange, capacity, speed, damage
+
+    Specifying '?' for 'what', will display a summary of all the topics.
+
+See also:
+        CENSUS, UPDATE
+Doc:
+        Deity, Factors, Updates
+

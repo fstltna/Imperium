@@ -1,0 +1,72 @@
+# Makefile for Imperium link library
+
+include ../MakeLoc
+# ----
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+DEBUG = $(libdebug)
+
+RM = rm -f
+LN = @LN_S@
+AR = @AR@
+RANLIB = @RANLIB@
+
+INSTALL = @INSTALL@
+
+# This is the name of the output library
+STATIMPLIB = libimpm.a
+
+OBJFILES = messages.o util.o commands.o parse.o startup.o scan.o cmd_edit.o \
+	cmd_user.o update.o cmd_general3.o cmd_general1.o cmd_map.o \
+	cmd_general2.o cmd_naval.o cmd_move.o cmd_naval2.o cmd_verify.o \
+	cmd_action.o cmd_trade.o cmd_telep.o feSupp.o cmd_fight.o
+
+IMPINC = ../Include/Imperium.h
+IMPREQINC = ../Include/Request.h
+IMPFEMESS = ../Include/ImpFeMess.h
+IMPPRIV = ImpPrivate.h
+IMPSCANINC = Scan.h
+IMPCOMBINC = Combat.h
+
+ALLFLAGS = $(DEBUG) $(CFLAGS) -DIMP_BASE_REV="\"$(IMP_BR)\""
+
+INCFILES = $(IMPINC) $(IMPREQINC) $(IMPPRIV) ../config.h
+
+all: $(STATIMPLIB)
+
+.c.o:
+	$(CC) $(ALLFLAGS) -c -o $*.o $<
+
+$(STATIMPLIB): $(OBJFILES) Makefile
+	$(AR) r $(STATIMPLIB) $(OBJFILES)
+	$(RANLIB) $(STATIMPLIB)
+
+clean:
+	-$(RM) $(OBJFILES) $(STATIMPLIB)
+
+startup.o: startup.c $(INCFILES) ../Servers/ImpCtrl.h $(IMPFEMESS)
+util.o: util.c $(INCFILES)
+commands.o: commands.c $(INCFILES)
+parse.o: parse.c $(INCFILES)
+messages.o: messages.c $(INCFILES)
+scan.o: scan.c $(INCFILES) $(IMPSCANINC)
+cmd_edit.o: cmd_edit.c $(INCFILES)
+cmd_user.o: cmd_user.c $(INCFILES) $(IMPFEMESS)
+cmd_general3.o: cmd_general3.c $(INCFILES)
+update.o: update.c $(INCFILES)
+cmd_general1.o: cmd_general1.c $(INCFILES)
+cmd_map.o: cmd_map.c $(INCFILES) $(IMPFEMESS)
+cmd_naval.o: cmd_naval.c $(INCFILES)
+cmd_naval2.o: cmd_naval2.c $(INCFILES) $(IMPFEMESS)
+cmd_general2.o: cmd_general2.c $(INCFILES)
+cmd_move.o: cmd_move.c $(INCFILES)
+cmd_fight.o: cmd_fight.c $(INCFILES) $(IMPCOMBINC)
+cmd_trade.o: cmd_trade.c $(INCFILES)
+cmd_verify.o: cmd_verify.c $(INCFILES)
+cmd_action.o: cmd_action.c $(INCFILES) $(IMPFEMESS)
+cmd_telep.o: cmd_telep.c $(INCFILES)
+feSupp.o: feSupp.c $(INCFILES) $(IMPFEMESS)
+
+install:
+	@echo "No installation needed for static libs..."

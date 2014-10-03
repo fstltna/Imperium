@@ -1,0 +1,30 @@
+build <planets>
+
+    Build allows you to build items on a planet you own. You may build any
+of the following: computers, engines, life support systems, sensors,
+teleport units, weapons, and ships. There will also appear other items
+that can be built later into the game as your tech level increases.
+
+    For each planet entered you will be able to pick the type of item to
+build from the above list. Each of the items requires certain types and
+amounts of production units to be produced.
+
+        Item        Production type         Units
+        -------------------------------------------
+        computers   electronics
+        engines     engine
+        lifesupp    lifesupp
+        sensors     electronics
+        ships       hull
+        teleport    electronics
+        weapons     weapons
+
+
+    In addition to the production units required, the items cost you
+$9 per production unit to construct (think of production units as raw
+materials, and the extra charge the costs of labor to produce the goods from
+the raw materials).
+
+Doc:
+        Ships, War
+

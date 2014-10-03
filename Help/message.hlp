@@ -1,0 +1,23 @@
+message <player> [<message>]
+
+    Message allows you to send a real-time message to another player who
+is currently logged on. If you press enter after the player name or number
+you will be put into the Imperium editor to create your message, which may
+be several lines long. If you type anything after the player name or
+number Imperium will assume it is the message itself, and will not put you
+into the editor. For example:
+    message Bill How's your excellent adventure?
+will send "How's your excellent adventure?" to player Bill.
+    message Bill
+will put you into the editor to compose your message, which can be several
+lines long, or around 1.5k. Note that long messages are discouraged, and
+should instead be sent as telegrams.
+
+    If the player is not currently logged in you will be asked if you wish to
+send the message as a telegram instead.
+
+See also:
+        READ, TELEGRAM
+Doc:
+        Communication
+

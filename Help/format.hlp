@@ -1,0 +1,26 @@
+              Format of Imperium command descriptions
+
+    The Imperium online help and doc file all share a common "format" for
+describing how things work. This is primarily done by using symbols in the
+command descriptions. Following are the command formats used:
+
+Code             Description
+=============================================================================
+<ship>           A single ship number
+<ships>          One or more ships, specified by either a list of ship
+                 numbers, a fleet, a range of sectors, etc. which can be
+                 further limited by optional conditionals.
+<planet>         A single planet number
+<planets>        One or more planets specified by either a list of planet
+                 numbers, a realm, or a range of sectors, which can be further
+                 limited by optional conditionals.
+<miner>          A single miner number
+<miners>         One or more miners specified by either a list of miner
+                 numbers, ship numbers, planet numbers, which can be further
+                 limited by optional conditionals.
+[ ]              An optional argument to a command. You do not have to enter
+                 this.
+|                Separates several mutually-exclusive arguments. For example,
+                 [a|b|c] indicates that you may optionally enter a, b, or c,
+                 but when picking b you can't use a or c.
+

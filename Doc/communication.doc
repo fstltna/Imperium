@@ -1,0 +1,192 @@
+                       Imperium - Communication
+
+
+Communication between players of Imperium is an integral part of the game.
+In some Imperium games it may be possible to use "pseudonyms" for your player
+name to enhance the feel of the game or to hide who a player really is.
+If the deity is allowing players to use pseudonyms, you might want to pick
+out a name that sounds appropriate for the particular race you choose to be.
+Some deities using Imperium as a "door" in a BBS may not allow you to choose
+your own name, and will instead assign you the name used by the BBS itself.
+
+Basically in Imperium there can be communication relating to the game either
+within Imperium itself, or in some outside area (such as a BBS that hosts the
+Imperium game). When communication takes place outside of Imperium, it is
+suggested that there be a "communal" area in which general Imperium-related
+questions can be answered.
+
+Inside Imperium itself there are 4 ways to communicate with other players.
+The most common method is with "telegrams". You can send telegrams to one
+or more players at a time, and the telegrams will be noted in the newspaper.
+If a player has telegrams waiting (new or old) they will be told when they
+log in, or immediately if they happen to be online when the telegram
+arrives. You can send telegrams via the "telegram" command, and you can read
+them with the "read" command.
+    When you send a telegram you will be put into one of two types of text
+editors. Either the built-in Imperium text editor, a very simple line-oriented
+text editor, or the text editor of your choice (if you used the "editor"
+command-line option when starting ConImp). Note that if you are accessing
+Imperium via a BBS or through a menu, you may not have a choice as to which
+editor you can use (for security reasons).
+
+Note: At the present time the built-in editor is based on the Amiga Empire
+      editor, and so an excerpt from the Empire manual follows. In the near
+      future there will be a new, fuller-featured editor, as soon as time
+      permits it's integration into the Imperium library.
+
+-----------------------------------(from the Amiga Empire manual by Chris Gray)
+You will see the prompt:
+
+    Enter text of telegram (max 1920 chars). End with . :
+    1:
+
+The character limit is a result of the way telegrams are implemented via
+messages to the Imperium server program. Initially, you will be just
+adding lines to the telegram. The prompt will be the number of the line
+that is to be typed. Blank lines are allowed. To end the input phase,
+simply type a line consisting only of a period ('.'). At that point, you
+will be presented with the prompt:
+
+    Send, List, Replace, Delete, Insert, Cancel?
+
+Hitting a return is equivalent to 'Send'. Only the first letter of the
+option is needed. Option 'Send' will transmit the telegram as is to the
+recipient. Option 'List' will list out the body of the telegram, complete
+with line numbers. Option 'Replace' allows you to replace a single
+occurrence of a string in any line of the telegram. For example, if the
+telegram contains (via the 'List' option):
+
+    1: Hello there god!
+    2:
+    3: Could you be nice to a poor fool and guve me some more energy
+    4: in my ship #34?
+    5:
+    6: Thanks.
+
+and you want to change the 'guve' in line 3 to a 'give', you could type:
+
+    replace 3 /guve/give/
+
+to make the change. You will get the prompt again, and must do another
+'List' to see the changed telegram. You could also enter the above as:
+
+    r3*guve*give*
+
+since 'r' is sufficient for 'replace', the spaces are not needed, and any
+string separator character can be used.
+
+The 'Delete' command allows you to delete any of the lines in the telegram.
+Simply type 'delete' (or just a 'd'), followed by the number of the line to
+be deleted. The 'Insert' command allows you to insert new lines into the
+telegram. Type 'insert' or 'i', followed by the number of the line to
+insert after. If you want to insert before the first line, use line number
+0. Whatever text you type after the 'insert' command is added as the new
+line. The final option, 'Cancel', allows you to choose to not send the
+telegram at all.
+-------------------------------------------(end of excerpt)
+
+Note: The built-in editor "knows" how long your telegram/message can be, and
+      will warn you when you are getting near the end. When/if you use an
+      external editor it does NOT know how long a message can be, and so
+      can not warn you. You may enter a message as long as you like, but
+      only the first 1900 bytes or so will actually appear in the message.
+      If you are REALLY trying to send more than that, you should most likely
+      be exchanging data via standard Unix email.
+
+Most of the telegrams you will receive will not be from other players or
+the deity, but will be sent automatically by Imperium itself. These will be
+generated in many different situations, for instance, a ship you own is
+attacked or scanned, a planet you own is attacked or scanned, repayments
+on a loan by another player, etc. These telegrams are usually short, or
+just 1 line, and will be indicated as "anonymous".
+
+Additionally you may turn on a flag which instructs Imperium to send you
+real-time messages, telegrams, or both, if you happen to be logged in when
+the event that generates the message occurs. The default is a real-time
+message (explained later) only, but this can be changed via the "change"
+command.
+
+You may send copies of a telegram to more than one player at a time if the
+person hosting the game allows it. To send a telegram to ALL players use
+"*" as the player name. To send a telegram only to players ALLIED to
+you send it to "&". To send a telegram only to players who are neutral to
+you send it to "@". And to send a telegram to players who are at war
+with you send it to "!".
+
+When you use the "read" command to review your telegrams, you will see each
+telegram in the order in which it was generated. If the telegram was not
+automatically generated (anonymous), you will be given a chance to reply
+to it. If you wish to reply to it, you will be placed into the Imperium
+editor and can compose your message just as if you used the "telegram"
+command. After the last telegram has been displayed you will be asked if
+you wish to delete them. If you delete them they will be erased, if not
+they will be marked as "old" telegrams, and will appear before any new
+telegrams when you use the "read" command. There is no way to delete specific
+telegrams.
+
+The most used method of communication, although not usually for player-player
+discussions, is the newspaper. The "newspaper" is broken down into 4 sections,
+the first three of which are generated automatically by Imperium,
+and the last contains items created by players directly.
+Additionally the deity may create a short message which appears before section
+1, and is usually used to spread information to all players.
+Above section 1 "headlines" may appear which summarize activity over the
+last three days (by default), if it was interesting. On the first three pages
+if an item occurs several times in a row it will only be include a count of
+the number of times it occurred, and only be listed once.
+
+Description of sections:
+==================================================
+1 - Mainly military news
+2 - Misc. things like plague outbreaks, telegrams, etc.
+3 - Sales, loans, and other financial info
+4 - Player-generated items such as want ads, propaganda, etc. created with
+    the propaganda command.
+
+You can read the newspaper with the "newspaper" command. You can also
+specify a number of 'days' (48 Imperium Time Units (usually a half hour))
+to be displayed and only news events that far back will be displayed.
+
+If you only wish to see the summary "headlines" that appear before section 1,
+you can use the "headline" command, which also accepts and optional 'day'
+count.
+
+Another way to communicate with other players is the "message" command.
+This allows you to send a message to another player who is also online at
+the same time as you. As soon as the player finishes another command,
+presses <return> at the "Command:" prompt, or waits the timeout length in
+"chat" mode (described below), the message will appear with the name of the
+player who sent it.
+
+There are two ways to send a messages with the "message" command. The first
+is to type the message and the command on the same line, for example:
+
+    mess god Yikes! I have no energy in ship #92 and and it's being attacked!
+
+The other method is to just specify the player name on the command line and
+create the message as if it was a telegram.
+
+If the player should happen to log off before you complete your message you
+will be given a chance to send it to them as a telegram instead.
+Note that real-time messages do NOT show up on the newspaper.
+
+    The last method of player-player communication is the "chat" command.
+This works much like the "CB" mode on many major networks like
+CompuServe, with the exception that "channels" are not (currently) supported.
+When you enter chat mode you will be told which players are already in chat
+mode, and they will be told that you have entered as well.
+    When you are in chat mode any lines that you type and send by hitting
+<enter> that are not blank will be sent to all the other players in chat mode,
+prefixed by the name of the player who sent them. You can exit chat mode by
+typing "." on a line by itself and pressing <enter>.
+    You can see which players are in chat mode by using the "on" option of the
+"players" command. If a player is in chat mode, they will have a "<" after
+their player number.
+    Chatting is public - make sure that people who are in chat mode are people
+you want to receive what you type!
+
+    You will receive chat lines from other players every time you press enter
+(if there are any), or about every 1-2 seconds if you leave the line
+blank (if the client the deity is using supports this feature (the standard
+Unix client does)).
+

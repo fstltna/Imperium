@@ -1,0 +1,26 @@
+telegram <player> {<player> ... <player>}
+         * | & | ! | @
+
+    Sends a telegram to another player. A telegram is ended by an
+end-of-file marker (control-backslash) or by a period (.) on a line by itself.
+Private telegrams are sent by giving a single player name or number (a number
+MUST be used if the player name has spaces in it). A public message can be
+sent by entering '*' for the player name. This will send a copy of the message
+to every ACTIVE player that has LESS THAN 6k in their mailbox (they can still
+receive private mail).
+    Remember, this sends a COPY of the file, not just a pointer as on a BBS,
+so if you send a 1k message, the system will need to make up to 45 or more
+copies (45k), and this could take up time.
+    You may also send telegrams to players based on your diplomatic relations
+to them. Using & will send a copy of the telegram to all players that you are
+ALLIED with, using ! will send a copy of the telegram to all players you are
+at WAR with, and using @ will send a copy of the telegram to all players you
+are neutral towards.
+    If more than one player is specified, then a copy will be sent to each
+of those players.
+
+See also:
+        CHAT, MESSAGE, READ
+Doc:
+        Communication
+

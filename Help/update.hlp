@@ -1,0 +1,7 @@
+update <planets> [terse|verbose]
+
+    Update allows you to update the planets in the passed list. If you use
+the "terse" option you will get almost no messages about the update. If
+you use the "verbose" option you will get more messages than you would with
+no options set.
+

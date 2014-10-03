@@ -1,0 +1,12 @@
+land <ships>
+
+    Allows you to land a ship or group of ships on planets. The ships must
+be in the same subsector as the planet for them to land on, but all the
+ships do not have to be in the same subsector.
+
+See also:
+        LIFTOFF, NAVIGATE
+
+Doc:
+        Ships
+

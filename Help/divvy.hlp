@@ -1,0 +1,11 @@
+divvy <planet>
+
+    Allows you to change the work assignments for a planet you own. Any work
+you do not devote to other uses will create extra money for you, at the
+expense of less production out of the planet.
+
+See also:
+        CENSUS
+Doc:
+        Factors, Updates
+

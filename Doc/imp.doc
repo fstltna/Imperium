@@ -1,0 +1,747 @@
+Imperium Outline
+
+
+
+1) What is Imperium
+1.1) General description
+     Imperium is a game of interstellar conquest and exploration that is played
+by several people over a period of months over a modem or a direct serial line.
+The player takes the role of a person who has just received a large sum of
+money, and has chosen to venture into space to find fame and fortune. Players
+choose one of several "races", and will start out at that races "home" planet.
+     Players will be given a certain amount of money to pay for the expenses of
+operating a starship, and may try to increase their wealth at the gambling hall
+or on the stock market. Beware, the more money a player has, the more likely
+that they will be cheated at the gambling tables.
+The ultimate goal of the game is to amass as much money and power as possible,
+using whatever means you choose. Or maybe not. It's up to you.
+
+1.2) Space
+1.2.1) The Universe
+     The universe consists of a grid (which may or may not be square) of
+"Galactic" sectors that contain 100 subsectors (in a 10x10 square). Each of the
+galactic sectors is the equivalent of a solar system, and each subsector may
+contain the planets or stars in that solar system. Additionally, there may be
+items such as supernovas or black holes scattered throughout the galaxy, and
+they take up a whole "Galactic" sector.
+1.2.2) Planets
+     Planets range in size from 1 to 4 (by default), with each size higher
+being exponentially larger. Planets can have various atmosphere types, water
+contents, mineral contents, etc. The larger the planet, the more people it can
+hold (if it supports life), and the more goods it can produce (and the more it
+costs to increase and maintain the planets technology and utility factors).
+1.2.2.1) Planet production
+     Planets can produce various kinds of goods at different rates. For each of
+the various item types the owner may specify a percentage of that planets
+production that should be devoted to that type of item, including 0%. The rate
+at which that item is produced depends on the percentage the owner assigned to
+the item, and the ability of that particular planet to create that item.
+     Planets that are poor in minerals will not be able to make much of
+anything without having ore brought in.
+1.2.2.2) Donations to race
+     Players can donate part of the technology or research production of a
+planet to their race. Doing so will raise their races technology or research
+level, and any new players of this race will have their ships created at this
+level rather than level 0 (TF of 15). Donations of other items to their race
+must be done by transporting goods from other planets to their home planet. New
+players will then find the items there and can load them onto their ships.
+     Donating people on the home planet is a little different, as home planets
+require a certain population to exist before any people may be removed. It is
+up to the members of a race to bring people back to their home planet to meet
+this minimum requirement.
+1.2.3) Stars
+     Stars range in size from 5-10. Stars provide the energy in a "Galactic"
+sector, and this tends to show up in richer mineral contents of the planets in
+the sector (if any). But too many or too large stars will also prevent the
+formation of surface atmosphere and water on a planet. Stars must be navigated
+around within a "Galactic" sector. Sailing a ship through or stopping on a
+subsector which contains a star will destroy the ship instantly.
+1.2.4) Notation
+     The following notation is used to express a planet or stars location in
+the Imperium "space":
+        RRRa,CCCb
+where
+    R = "Galactic" row of object (not required if zero)
+    a = "subsector" row of object (0-9) (required)
+    C = "Galactic" column of object (not required if zero)
+    b = "subsector" column  of object (0-9) (required)
+For example, a ship at "subsector" location 4,7, in the "galactic" sector 32,27
+would be at location 324,277. Alternatively, if you choose, you can just think
+of the world as one big grid, going from 0 to <(world row size - 1) * 10> + 9
+by 0 to <(world col size - 1) * 10> + 9. In simpler terms, if you have a 32x32
+world, the rows and columns can go from 0 to 319.
+1.2.4.1) Named objects
+     Objects such as ships, planets, and stars may have optional names added to
+them. These names will show up when the item appears on a report, or in the
+automatic messages the system generates. You may not refer to the items by name
+when asked for a planet, star, or ship number, as the names are not indexed,
+and so there may be more than one item with the same name. (Thus it is
+important to remember the NUMBER of the item, so that some unscrupulous player
+doesn't trick you by naming a planet or ship the same as another).
+1.2.4.1.1) Planets
+     Planets may be named by the player who owns them. Home planets have the
+name designated by the deity when the world was created, and can not be changed
+by normal players.
+1.2.4.1.2) Stars
+     Stars are by default NOT named, and can only be named by the deity.
+1.2.4.1.3) Ships
+     Ships may be named by the ship owner. Names may be changed at any time,
+and more than one ship may have the same name.
+1.2.4.1.3.1) Suggested ship names
+     Because more than one ship can have the same name, and ship names are
+almost always visible to other players, they can be used to communicate to
+other players certain messages right away without their having to send messages
+back and forth. For example, the following ship names and naming conventions
+are suggested:
+    Rescue - The ship is on a rescue mission, and does not carry any offensive
+             weapons or shielding, and should be treated as a non-combatant
+             vessel. (Like the Red Cross)
+   Warning - The ship is currently infested with the plague or some other
+             hazard, and should be avoided.
+     Probe - The ship is an automatic probe ship which is designed to scout out
+             the galaxy, and should not be considered a combatant.
+  Civilian - The ship is a civilian transport vessel, carrying people such as
+             colonists, and should not be considered a combatant.
+  Merchant - The ship is used for automatic resupplying of a planet, or is a
+             commercial freighter hauling goods from one planet to another.
+
+     A ship with the name "rescue" should not be attacked, but may be scanned
+to determine that it truly does have no weapons installed. Therefore, any
+player who names a ship "rescue" in order to get near enemy planets and then
+attacks them deserves to be ganged up on by other players.
+     A ship with the name "probe" may be attacked or boarded, but this will be
+considered an act of war by most players, and you will certainly be telling
+them that another player is in that location, which is probably the whole
+reason for sending the ship in the first place.
+     Another way to name the ships that you may want to use is to place the
+first character of one of the above names (if any apply), followed by a minus
+sign, and the real name of the ship. This would let you give the ship a
+specific name while indicating what the ship's purpose is. For example
+"P-Voyager" would indicate the ship is a "probe" named "voyager".
+
+1.3) Races
+1.3.1) Description
+     Races, for the time being, are all considered to be life forms that can
+breathe the same air, drink the same water, and eat the same food. They
+originate from different planets, however, and may or may not be friendly with
+other races they meet. Races can be thought of as "countries" in the USA,
+Canada, Germany, etc. sense of the word. They represent a group of people of
+similar genetic background, but different cultures.
+1.3.2) Race Relations
+     Each player can decide their feelings toward the other races, and these
+feelings will be the defaults for people of that race the player meets. The
+player can also specify relations with players individually, so that you may
+create situations where "I don't like race xxx, but player yyy (of race xxx) is
+OK", or conversely "I am allied with race xxx, but player yyy is a traitor, so
+I am at war with him".
+1.3.3) Home planets
+1.3.3.1) Description
+     Each race has a "home" planet on which all players of that race will start
+out. The home planets are assured by the galaxy building program of being a
+"fair" distance apart from each other, and having a basically equal number of
+"vacant" planets near them for players to take over. If the home planets are
+attacked and taken over by another player, or in any other way have their
+population wiped out, then there can be no more new players of that race until
+one of the players of that race (if any) can repopulate the planet.
+1.3.3.2) Attacking a home planet
+     Home planets may not be attacked until there has been at least one player
+of that race.
+1.3.3.3) Restrictions
+     Home planets have special restrictions on what can be done to them (while
+they are acting as home planets, once taken over they behave as normal planets
+in most respects, until they are retaken by a player of the race they belonged
+to). Only players of the race may load or unload items from the planet, and
+players are prevented from loading up all the population of the planet.
+
+1.4) Ships
+1.4.1) Description
+     Ships are built based upon a certain tonnage size, which determines the
+number and size of items they may carry. There is no notion of a "military" or
+"civilian" starship. Any ship may carry any item in any quantity that will fit,
+although there are limits on how many items may be used at a time on items such
+as engines or weapons. Certain items also require a minimum crew to operate.
+1.4.2) Ship components
+1.4.2.1) Hull
+     The hull is the most important part of the ship. If the hull is destroyed,
+the ship will explode, taking all of the items aboard with it. Of course by the
+time the hull is gone, they have probably been damaged severely anyway.
+     The hull is the only part of the ship that can not be removed and
+replaced. It has a tech level based on the tech level of the planet it is built
+on at the time it is built. It may be increased by bringing the ship back to
+port, however. The hull is not normally accessed by the player as an item. It
+is instead referred to by the ship number itself, since the two can not be
+separated.
+1.4.2.2) Engines
+     Engines provide the power for the ship, as well as the ability to move
+between the stars. Engines are all considered to be the same size, but you can
+load more than one (cargo limits permitting) to increase the ship's speed, the
+rate the energy banks recharge, etc. Engines also have a tech level, which is
+the tech level of the planet they were built on, at the time they were built.
+You can have various tech level engines in each ship, but the lower tech
+engines will bring down the average tech level of the higher engines. In
+general a higher tech level engine will provide more power, and will weigh
+less. Like most items, engines may be brought up in tech level. But bringing up
+an engines tech level will not make them lighter.
+1.4.2.3)Weapons
+     There are several types of weapons available, including hybrid of a
+blaster and a laser, called a "blaser", and photon torpedoes.
+1.4.2.3.1) Blasers
+     Blasers do less damage than photon torpedoes, but as they are guided by
+the ships computer to their target and they travel at the speed of light, they
+are much more accurate. Blasers take their energy from the ship itself, and so
+they drain the ships energy banks, and if used too much they may make it
+impossible to leave the sector until the energy banks recharge.
+1.4.2.3.2) Photon torpedoes
+     Photon torpedoes do more damage than blasers, but because they travel
+slower than light, and occupy physical space, they are less accurate. They
+require an explosive charge, which must be carried by the starship, and which
+may explode if the starship takes enough damage. But they can usually destroy
+an enemy ship with one or two shots, so they have some value.
+1.4.2.4) Sensors
+     The ships's sensors allow it to map out subsectors, and if it's technology
+level is high enough, to map out sectors as well. Sensors are also used to scan
+for ships in the area, and the higher the tech level, the more likely they are
+to pick up smaller ships farther away.
+1.4.2.5) Teleports
+     Teleports allow a ship transport goods from ship to ship or ship to
+surface with other ships or planets in the same subsector. The higher the tech
+factor the large the item that can be transported, and the more reliably the
+transfer will occur.
+1.4.3) Ship defenses
+     A ship defends itself by firing on ships that attack it, and by carrying
+some amount of ablative armor. The armor will absorb all of the points of
+damage the ship should have taken until there is no more armor left, at which
+point the ship begins to take damage. Armor is large and heavy, and the ship
+must be brought back to port to have more armor added. Ships may also carry
+small fighter craft which can be used to defend it, if the ship is large
+enough.
+1.4.4) Starting ship
+     Players start the game with a single "Class A" ship, loaded with a single
+engine, a single computer, a single life support system, a single sensor array,
+the equivalent of 2 fuel tanks worth of fuel, 10 civilians, 5 scientists, 10
+military, and 5 officers. The ship will have no armor, and will be located on
+the surface of the players home planet. All the "big" items on the ship will be
+created at the tech level of the player's race.
+1.4.5) Ship operations
+     Ships operate on "energy" stored in a toroidal Makazu field in each
+engine. These fields are fed via "active fuel arrays", which hold fuel which
+has been emptied out of "fuel tanks" that were loaded onto the ship. Once the
+player loads a fuel tank into the active fuel array it can not be unloaded. The
+engines will suck out fuel from the active fuel array in an attempt to keep the
+Makazu field charged at the maximum (as per basic astrophysics). As each engine
+contains a part of the field, adding another engine will increase the amount of
+energy that may be stored up. When removing an engine it is necessary to drain
+the energy from the engine to be removed into the remaining engines, which will
+maintain the extra energy, but will not replenish it when it is used up. Thus,
+a ship with more engines will be able to move more quickly from one place to
+another on the same amount of fuel than a ship with less engines. Damage to the
+ships engines can be cause the destruction of the whole ship if the Makazu
+field collapses with a large amount of energy still contained in it.
+
+1.5) Items
+     Most items are considered "small", and do not have the level of detail of
+larger items such as engines or weapons. These items are not identified by a
+unique number per item, but by how many of them are present, such as "10
+civilians". These items do not have separate technology levels, but are all the
+same level.
+1.5.1) Small items
+1.5.1.1) Civilians
+     Civilians are the basic workers and population. They are assumed to have
+basic skills, but can not pilot ships, make technical discoveries, or do much
+of anything else besides work and reproduce. Based on the amount of production
+put into a planets educational system, they may become scientists however.
+1.5.1.2) Scientists
+     Scientists are civilians that have completed more advanced schooling, and
+can work to develop new technology, and can pilot ships if needed. They will
+not fire weapons however. In all other respects they are the same as civilians.
+Scientists will reproduce more civilians.
+1.5.1.3) Military
+     Military represent the common soldier. They may fire guns and use weapons,
+but they can not pilot a ship. They are used to defend planets and ships from
+attack by other players. Military do not reproduce. They must be enlisted.
+1.5.1.4) Officers
+     Officers are military that have completed more advanced training, and have
+a higher intelligence than the basic military. They can pilot ships, fire
+weapons, and will improve the defensive capabilities of whatever they are on
+(planet or ship). Officers do not reproduce, they must come from promoted
+military.
+1.5.1.5) Missiles
+     These are used for planet->ship combat, as well as photon torpedoes for
+ships.
+1.5.1.6) Ore
+     Ore is used to create "production" on planets. Ore is mined from the
+planets "mineral" content, and a planet having a higher mineral content will
+produce more ore in the same amount of time as a planet with a lower mineral
+content.
+1.5.1.7) Gold bars
+     Gold bars are produced by mining the planets "gold" content. Unlike ore,
+mining gold DOES deplete the resource from the planet, so a planet with a
+higher gold content will produce more gold bars rather than producing them
+quicker.
+1.5.1.8) Air tanks
+     Air tanks are carried by ships to temporarily offset the loss of their
+life support systems. Planets must have an atmosphere above 40% to produce air
+tanks.
+1.5.1.9) Fuel tanks
+     Fuel tanks are used to store fuel for ships, and represent a pre-packaged
+amount of fuel in a combustible, non-reusable container. Each tank holds 75
+units of fuel, and once put into the ships' active fuel array can not be
+unloaded. Fuel tanks MAY be carried by the ship as cargo, and unloaded if they
+are not used for fuel by the ship. Fuel tanks require a planet to have an
+atmosphere above 50%, as well as water above 25%, along with "ore"  for use in
+the production of the fuel tank containers.
+1.5.2) Big items
+     Big items are listed under 1.4.2 (Ship components).
+
+2) What are the components of Imperium
+2.1) Server
+     The server does all disk I/O relating to the private Imperium files. It
+also is responsible for player-player real-time communication.
+
+2.2) Shared library
+     The Imperium.library, which lives in the LIBS: directory contains all the
+Imperium code used by the game that does not have to be duplicated for each
+"client". This includes all game logic, the code to talk to the server, and
+memory management functions. Having this code in a shared library allows the
+clients to be very small, and to make it possible to run several users even
+when memory is tight. Additionally, by removing all the game code from the
+client, it allows the game to be upgraded without requiring any change to the
+clients (in most cases), a benefit to people using special "clients" for which
+they do not have the source code such as BBS doors.
+
+2.3) Clients
+     The various clients are responsible for all user I/O, and any disk I/O
+that relates to the specific user (such as recording a game session or printing
+out a map to the printer device). The standard clients provide an interface to
+the console, the serial port, C-Net BBSs, and several network systems. You must
+run one client for each user of Imperium that you wish have log on at the same
+time. There is no limit to the number of clients that may be running at the
+same time, except for memory constraints and the number of active players
+allowed in the game (if you have a 32 player game, you could theoretically have
+32 simultaneous players).
+
+3) Features of Imperium
+3.1) Features in pre-release version
+3.1.1) Support of Universe sizes from 10x10 to 256x256 galactic sectors.
+3.1.2) Unlimited number of simultaneous players.
+3.1.3) Shared library.
+3.1.4) Client/Server architecture.
+3.1.5) Ships that can be programmed in a simple manner
+3.1.6) "Standard" linkable module for easy creation of specialized "clients"
+       such as BBS doors.
+3.2) Features expected to be in first released version
+3.2.1) Support for play over a network.
+3.2.2) Support for play as a C-Net BBS "door".
+3.3) Features expected soon after first release
+3.3.1) Graphic front-end (support to be added at first release)
+3.3.2) Built-in C-like compiler for programming ships.
+
+4) Movement of goods
+4.1) Description
+     Goods are moved in Imperium by loading them onto ships and moving the
+ships from one location to another and then unloading them. Each ship may be
+"programmed" to move in a certain path, unloading and loading items at various
+points in that path.
+
+4.2) Ship movement
+     Ships (or fleets) may be moved manually, or automatically by means of a
+pre-programmed course and set of actions.
+4.2.1) Manual movement
+     Manual movement involves giving specific commands to move some quantity of
+ships from one place to another. You may type the entire course in at one time,
+type one movement at a time, or a combination of both.
+4.2.2) Pre-programmed movement
+     Ships may have a "course" preprogrammed into them (only the flagship of a
+fleet needs to be programmed, the other ships in the fleet will follow
+automatically). The course may also included "actions" at various places along
+the path, as well as a "loop" operator that says to repeat the course over and
+over.
+4.2.2.1) Actions
+     A certain number of actions may be created by the player, and shared among
+many different ships. For instance, an action could be created which unloaded
+all non-essential items of a ship, and the action placed in the "course" of a
+ship which was used to supply planets with goods. By combining this action with
+another action which loaded up the ship and the "loop" operator the ship would
+operate automatically as a supply ship.
+4.2.2.1.1) Load
+     Loads a set amount of items (up to the number on the planet and the ship's
+capacity to carry them). Percentages can not be used since loading one item
+affects the number of other items that may be loaded. {use percent as percent
+of planets items?}
+4.2.2.1.2) Unload
+     Unloads either a fixed number of items (up to the number on the ship and
+the planet's capacity to hold them) or a percentage of the number of items on
+the ship.
+4.2.2.1.3) Long range scan
+     Do a long range scan from the ship's current position.
+4.2.2.1.4) Short range scan
+     Do a short range scan from the ship's current position.
+4.2.2.1.5) Visual scan
+     Do a visual scan from the ship's current position.
+4.2.2.1.6) Land on planet
+     Attempt to land on the planet in the current subsector.
+4.2.2.1.7) Take off from planet
+     Attempt to take off from a planet the ship is on.
+4.2.2.1.8) Teleport items down to planet
+     Attempt to use the ship's teleport system to beam smaller items down to
+the planet without landing. You must be in the same subsector as the planet,
+and must have a functional computer and teleporter. Works the same as the
+unload command otherwise. NOTE: You *must* own the planet to use this command.
+4.2.2.1.9) Teleport items up from planet
+     Attempt to use the ship's teleport system to beam smaller items up from
+the planet without landing. You must be in the same subsector as the planet,
+and must have a functional computer and teleporter. Works the same as the load
+command otherwise. NOTE: You *must* own the planet to use this command.
+4.2.2.2) Loop operator
+     The "@" character indicates that the course should "loop" around
+continuously. Note that this does NOT reverse the DIRECTIONS in the course, so
+you must code both TO and FROM direction commands to create a loop. This also
+lets you code a different FROM path (faster, but less protected) and TO path
+(slower, but more protected since carrying goods), or create a path which is
+not a simple 2 destination path (such as a circle).
+     You may place navigation or action commands BEFORE the loop character, but
+they will not be saved. You can use this as a "lead-in" for one-time actions
+that get the ship into position to execute the loop. For instance:
+    a223@9999b1111c
+would execute action "a", move down two subsectors, down and right one
+subsector, then execute the loop. Assuming the ship went through the entire
+loop once, the programmed course would look like this:
+    @9999b1111c
+You may *not* have more than one loop operator in the program. You will not be
+prevented from adding one, but it will not work as you would expect.
+4.2.2.3) "Count" operators
+     All movement commands may be  preceded by a "count" of the number of times
+to do the action. This must be of the following form:
+   [cur,end]<direction>
+where "cur" is the number of times the action has already been done (needed, as
+the ship may not have enough fuel to move all the needed moves in one action,
+and you would not want to have to reprogram the ship just because it ran out of
+fuel). "end" is the number of times to execute the item (inclusive). For
+instance: [0,2]4 would move the ship left 2 times, while [1,2]4 would move the
+ship left once (resetting the count string to [0,2], if the course was set to
+repeat). You should normally not set the first character of the count to
+anything other than 0, as this will result in a "slew" in the course that will
+not bring the ship back in exactly the same sectors next time through any loop
+(since the count will be reset to 0 when the ship has executed the move however
+many more you have specified). Also, this should obviously only be used when it
+will save you room in your path. Since using a count operator is uses up, at a
+minimum, 5 characters of your available path, you should probably only use them
+when you want to move more than 5 times in a single direction. Note that only
+MOVEMENT commands can be prefixed by a count operator. You can not put count
+operators in front of actions.
+
+4.3) Item movement
+     Items may be moved on or off ships by either landing the ship on the
+surface of a planet and using the "load" or "unload" commands, by orbiting the
+planet and using the "teleport" command, or by moving into the same subsector
+as another ship and using the "tend" command.
+4.3.1) Teleport warning
+     Teleporting items is somewhat risky compared to just physically moving the
+item from one location to another. Until your tech level is high enough there
+is a very good chance that a teleport operation will result in damage or
+complete loss of the items you are trying to move. In addition, you can only
+teleport "small" items such as people or gold bars. You can not teleport "big"
+items such as engines or weapons. What good is teleporting then? Well, it
+allows you to exchange items with a planets surface without having to land,
+thus allowing you to remain in orbit and ready for a speedy getaway if the need
+should arise, plus saving the extra fuel needed for another takeoff and
+landing.
+4.3.2) Plague warning
+     Note that putting any item onto a ship or planet that was previously on an
+infected ship or planet will contaminate the new ship or planet with the
+plague.
+
+5) Trade
+5.1) Description
+     Players can trade goods at a set price per item by landing on a planet (or
+orbiting the planet and using the teleport system) and buying or selling goods
+at the price the planet owner has decided (if any). The planet owner may set
+the price for each small item (big items are their own lots), and a lot will be
+created for the planet. The planet owner must set a selling price for you to be
+able to buy anything, and likewise a buying price for you to be able to sell
+him anything.
+5.1.1) Buying and selling prices
+     The owner may set separate buying and selling prices for each item,
+including a buying price of 0 (not buying these) and a selling price of 0
+(these aren't for sale). The prices are independent of each other, so a planet
+may be buying ore at $10, but selling it at $20. This allows the owner to earn
+some money by buying goods from ships that have items for sale and reselling
+them to ships who want them, automatically.
+5.1.2) Trade after landing
+     Trading after a ship has landed insures that all items desired will safely
+reach the correct party, and not be damaged or lost via a malfunctioning
+teleport system.
+5.1.3) Trading via teleports
+     It is possible to trade via teleports, if your ship has them. Doing so is
+riskier than directly landing on the planet, but depending on your relation to
+the planet owner, may be the only way to get the items. The planet owner can
+decide if the person who teleports the items is responsible for all damages
+that the teleport process might cause. For instance, if the planet owner has
+decided that the ship owner is responsible, and you teleport up 10 items, but
+only 6 arrive, you are still charged for all 10. Conversely, if you teleport
+down 10 items but only 6 arrive safely, you will only be paid for the 6. This
+is probably the most common situation. However, sometimes a planet owner may be
+desperate for a certain item that they will be willing to accept all damages.
+
+5.2) Trading "big" items
+     Because "big" items can not be moved via transporter, you must land on a
+planet in order to transfer them. Items for sale on a planet may not be loaded
+into a ship. In the case of weapons, items that are for sale will not be used
+to defend the planet during attack. Items for sale on a ship may not be
+unloaded or installed, and can not be installed at the time they are put up for
+sale.
+5.2.1) Buying from a planet
+     "Buying" a big item automatically loads the big item into your ship, and
+so you must have enough cargo space free to buy the item. This requires no
+contact with the owner of the planet, assuming that you know the checkpoint
+code or the owner does not require the checkpoint for you to land.
+5.2.2) Buying from a ship
+     To buy something from a ship requires that you send the owner a message
+indicating that you are interested in the item, and have them navigate the ship
+to a planet you own and land on the surface. You may buy the item without
+waiting for a message when the ship is on the surface of a planet you own. The
+main reason for putting things up for sale on the ship is to indicate to other
+players that you have the item available (via the trade report), and the
+general location of your ship (so that someone on the other side of the galaxy
+doesn't try to get you to bring the items to them).
+
+5.3) Selling ships
+     You can sell an entire ship as well. Any items (large or small) on the
+ship will also become the property of the new owner. The price set on a ship is
+"per ton", and so will change depending on what is loaded in the ship. Ships
+that are for sale can not be in a fleet when put up for sale, and can not be
+added to a fleet while they are for sale. When purchasing a ship, the new owner
+takes possession of the ship wherever it is. Also, ship locations will not be
+specified exactly unless the ship is on the surface of a planet, in order to
+prevent pirates from finding the exact location and stealing the ship.
+
+5.4) Trade report
+     There is a trade report which will list each lot and it's location, for
+all players that are at least "neutral" to you.
+
+5.5) "Giving" items away
+     If you wish to give items away for free, you must allow people to land on
+your planet and use the load command. Alternatively you can give away an entire
+planet or ship with the "grant" command. Wholesale giving away of planets and
+ships is not usually looked upon with kindness by other players (after all,
+when was the last time you saw anyone give away a multi-million dollar oil
+tanker or cargo vessel, much less an entire country (planet)). But creating a
+planet on which your allies may load up their fleets for free is a good and
+fair idea, and crucial for any long-term interplanetary conflict.
+     To this end Imperium makes it fairly difficult to just set up "giveaway"
+planets, and makes it impossible to create lots with a price of $0. If you
+TRULY want to set up a planet on which anyone can just pick up items for free,
+you have to load up all the population and abandon the planet so that anyone
+can land upon it and take it over (thus being able to load up their ships),
+trusting that they will also abandon the planet when done. Alternatively your
+deity, if they sanction this type of thing, may create a "dummy" player which
+is not used by any real person, but who owns the planet and has declared an
+alliance with everyone, thereby allowing everyone to land on the planet(s) they
+own without taking them over or abandoning them. Again, this is not normally
+encouraged. The most common use is to only allow allies to land on the planet
+and load items, and all you have to do in this case is give out the checkpoint
+code to players you wish to be able to land on the planet.
+
+5.6) "Giving" money away
+     While not as unlikely as giving away an entire ship or planet, Imperium
+also restricts how you may give money away. If you wish to give money to
+another player, the "lend" command will allow you to do so, at a certain
+interest rate (which may be 0) for a certain number of days (which may also be
+0). If you specify a rate of 0%, then the person only has to repay you what you
+lent them, no matter how long they wait. Specifying any other rate will add
+that percent of the original amount to their balance EACH DAY (48 ITUs) until
+the loan is paid off.
+     If you specify any length other than 0 the player will have that many days
+to repay the loan, plus interest (if any). At the end of that many days, you
+can foreclose on various items of property the players owns, if they are valued
+about the same as the amount owed.
+     If you do specify a length of 0, then the loan will never go into default,
+and the player has the entire game to repay you (and you can never repossess
+any of their property due you by this loan). By allowing you to set a rate of
+0% and a duration of 0, Imperium will allow you to "give" money to player,
+while still keeping a record that the player owes you some money. Imperium will
+also take into account a players outstanding loans when calculating their
+standing in the power report. For instance, to be fair, a player which "seems"
+rich because they have a lot of money on the power report is not really all
+that powerful if they got the money due to the graciousness of other players.
+
+6) Exploration
+     Exploration is accomplished by moving your ships away from the more
+explored regions near your home planet and into the darker regions of space...
+6.1) Limits
+     You can not move left past column 0, right past than the number of columns
+in the world minus 1 times 10, plus 9,  up past row 0, or down past the number
+of rows in the world minus 1 times 10, plus 9. There is no "wrap around" and
+all players/races use the same coordinate scheme (after all the stars are the
+same for everyone, and by comparing what you see to what another player sees it
+would be possible to deduce the coords anyway (doing this in Empire requires
+that you trade the coordinates of one of the weather centers with another
+player), so not allowing this would just be an arbitrary restriction). For
+instance, in a 10x10 world, you can't go right or down more than 99.
+
+6.2) Moving safely
+     There are many hazards in the reaches of space, and you must take care not
+to make obvious mistakes that can be fatal to the crew on your ships.
+6.2.1) Hazards
+6.2.1.1) Black holes
+     Black holes take up an entire galactic sector, and moving into them may or
+may not be fatal. There is a chance that a ship that moves into a black hole
+will reappear somewhere else in the galaxy completely unharmed, it may reappear
+with no energy left in the banks, possibly stranding you if you have no fuel
+left. And of course, the ship may disappear for good, never to be seen again.
+You should avoid black holes in all but the most desperate cases, such as when
+you are being attacked and are certain to be destroyed anyway.
+6.2.1.2) Supernovas
+     A supernova also takes up an entire galactic sector, and moving into one
+of them will turn your ship(s) into rapidly expanding vapor immediately.
+6.2.1.3) Stars
+     Stars only take up one subsector, but moving through them will almost
+certainly destroy your ship(s).
+6.2.2) Prevention
+     The best prevention for all of these is to avoid moving out of the area of
+your last sensor scan. As at most 12% of a galactic sector will be occupied by
+planets or stars, and only stars are dangerous, you stand a good chance of
+being safe while moving WITHIN a known safe galactic sector. If you always make
+sure and scan when moving near the edge of a galactic sector the first time
+(the subsectors ending in 0 or 9), you should be able to detect the black holes
+or supernovas before you move into them.
+
+6.3) Taking new planets
+     You can take over new (currently unowned) planets by putting some of your
+people on the surface, either by teleporter or by landing the ship. Be aware
+that if a planet was recently vacated due to the plague that it may still be
+able to infect your landing party.
+6.3.1) Setting up a planet
+     When you take over a planet, you will be able to set things such as the
+planet name, the work percentage, etc.
+6.3.1.1) Planet names
+     Planet names do not have to be unique, but you should probably try to keep
+them this way, either by adding a number after the name such as "Invictus II"
+or somesuch, to avoid confusing yourself and others.
+6.3.1.2) Planet work percentages
+     You can adjust the amount of the total planetary production devoted to the
+various types of construction to fit the planets ability to produce the items,
+your need for the items, greed, etc. Any work not assigned to one of the other
+types of production will be assigned to "cash" and will earn you money
+directly. You may also donate a portion of the "technology" and "research"
+productions to your race, and any new players of your race will start at a
+higher tech level, thanks to you.
+6.3.1.3) Planet stats
+     Planets are of different sizes and classes, both of which affect what you
+should try and put on them.
+6.3.1.3.1) Planet size
+     A larger planet will hold more people comfortably, and will have a higher
+birth/death ratio. This means that without any outside interference the planet
+will create more people before it finally reaches the point at which it's
+population will not increase. Additionally, a larger planet will not become
+polluted as quickly (but conversely will take longer to clean up) and is easier
+to defend (more places for people to hide).
+6.3.1.3.2) Planet class
+     There are several "classes" of planets, each with their own general stats.
+For instance some planet classes have no land mass, and so you can't land on
+them. Others have no atmosphere, and you must be careful not to unload people
+on them. And their have been rumors of planets with tremendous riches just
+waiting to be found.
+6.3.1.3.3) Planet Atmosphere
+     A planets atmosphere is fairly simplified in Imperium. It basically
+represents how "suitable" the atmosphere is to player-controlled life. You can
+consider it as a combination of things like density, gas combinations, vacuum,
+etc. The higher the number the better the atmosphere is, up to the maximum of
+100%. Players can live comfortably at 60% and above, can get by with 45% and
+up, and will die on planets with an atmosphere below this point. The planets
+atmosphere is reflected by the "gas" entry in the census reports.
+6.3.1.3.4) Planet surface
+     A planets surface is also simplified. The surface is either "land" or
+"water", which can be considered "unsuitable" land such as lava flows, acid
+lakes, etc. Ships can land only on the "land" portion of a planet, so a planet
+that is 100% water can not be landed upon. Attempting to do so will destroy the
+ship(s). The amount of the surface area covered by water will also affect
+population growth. Each percentage of water on the planet will reduce the
+maximum number of people by 1/2%. So a planet with 40% water would hold 20%
+less people than a planet with no "water".
+6.3.1.3.5) Pollution
+     Pollution occurs from industrial development. Every time something is
+built on a planet a certain amount of "waste" is produced. "Waste" is also
+produced when increasing the planets efficiency level. All this waste is
+represented by the "pollution index" of a planet. This is a number from 0 to
+100 which indicates just how polluted the planet is. The higher the pollution
+index, the higher the chance of the planet developing the plague, civilians
+revolting (if the planet was acquired by hostile takeover), and the slower that
+civilians reproduce. A pollution index of 100% will increase the planets odds
+of catching the plague by 50%. The pollution index can be reduced by devoting
+some of the planets production to research (which will also cause research
+breakthroughs on the planet).
+
+6.4) Taking planets owned by other players
+     Taking planets owned by other players will usually require that you bomb
+the planet enough to reduce the number of military on it, and then assault the
+planet from several ships. If the planet has no military on it, you can simply
+assault the planet and take it over. Taking a planet like this, even from an
+ally (who probably won't be after this) will always cause the civilians to
+resent you, which has many consequences.
+6.4.1) Civilian revolt
+     Since your new "comrades" will consider you lower than the muck on the
+bottom of a septic tank, you will have to keep a fair amount of military on the
+planet to keep them in line. Usually 15-20% of the population, or the people
+will revolt, decreasing the number of your military on the planet, possibly
+enough that they take the planet back.
+6.4.2) Reduced production
+     Since you have to watch over everyone's shoulder to prevent 6.4.1, the
+planets production will not be as high as it normally would.
+6.4.3) Inability to load civilians
+     Since these people want nothing to do with you they will resist the
+request to get on your ships (where they are afraid they will be tortured), so
+you will have to use quite brutal "persuasion" techniques, thus causing a loss
+in people actually loaded. For example, loading 100 people may result in only
+75 or so actually getting on board, the rest not surviving your "readjustment"
+sessions.
+6.4.4) Inability to unload civilians
+     Being resentful of your aggressions the population will try and eliminate
+any one they feel might be a sympathizer to your cause. Thus unloading
+civilians will result in the deaths of some who are "found out", and civilians
+you previously unloaded may have to take part in these assassinations just to
+maintain their cover. Plus, when your own people find out what you have done on
+the planet, they will most likely resent you as well. So it is impossible to
+gain control of a planet no matter how many civilians you unload.
+6.4.5) Snipers
+     The civilians will take any opportunity they get to kill your military if
+they can get away with it, so you can expect at least one soldier per day to be
+killed on larger planets.
+6.4.6) Increased military pay
+     Enlisted military get 1/3rd more pay for duty on hostile planets.
+6.4.7) Decreased enlistment rate
+     Enough said.
+6.4.8) Stopping civilian revolt
+     There are only two ways to stop civilian revolt. By killing every civilian
+on the planet (before you take it over), or by giving the planet back to the
+original owner (or if they win the planet back). A player who takes a planet
+from (or is given it by) a player who took it by force will still have to deal
+with revolt.
+
+6.5) Universe formation
+     The Imperium universe is modeled after the "big bang" theory, with
+subsequent collapse of the matter spewed from the center into "clusters". This
+means that there will usually be galactic sectors that contain neither planets
+or stars, and others with a high density of stars and planets. The world
+creator uses heuristics to verify that the spread is "fair" however, so each
+race 'in theory' should have just as many planets nearby that can be taken over
+as any other *at the start of the game*.
+     Obviously once the game starts there is nothing preventing a player for
+taking planets near the home planet of another race, so entering the game later
+on and picking a race that nobody else is using may not be a good idea... On
+the other hand, planets near the home planets of other players may already be
+taken over, so picking a new race has it's merits.
+
+7) Suggestions to players
+7.1) Planets near your home planet
+     If you take over a planet near your home planet you may want to consider
+using it as a "general store" for other players of your race. Many players will
+want to pick up more supplies, such as fuel, before venturing out far from
+their home planet, and if yours is the nearest planet, they may have no choice
+but to pay your prices :-).
+
+7.2) Towing service
+     You may want to offer some kind of "towing" or "rescue" service to other
+players near planets you own, by agreeing to bring them fuel or supplies if
+they get stranded near you, for a fee of course.
+

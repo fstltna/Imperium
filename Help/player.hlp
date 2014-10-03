@@ -1,0 +1,27 @@
+player [on]
+
+    Allows you to get a listing of the Imperium players. By default lists
+all players. Using the "on" option restricts the players listed to those that
+are currently logged in.
+    If a "*" appears by the last access time it indicates that the player
+is currently online. If a "<" appears by the last access time it indicates
+that the player is online and in "chat" mode.
+
+                        Sample Output
+
+Current time Sun May 26 23:20:12 1991, world created Thu May 09 23:34:13 1991
+ #   last access            time  BTU's status    race   player name
+--------------------------------------------------------------------
+ 0  *Sun May 26 22:41:11   [9999] [ 96] DEITY     NONE   god
+ 1   Thu May 23 22:43:52   [  60] [ 96] Active    Nakasu Me
+ 2   Sun May 26 22:40:51   [  60] [ 96] Active    Nakasu Guy
+ 3  *Mon May 20 18:00:57   [  60] [ 96] Active    Voltar Whosis
+ 4   Mon May 20 20:05:07   [  57] [ 94] Active    Nakasu Xanth
+ 5   Wed May 22 23:50:20   [  28] [ 15] Active    Nakasu Quaid
+ 6   Fri May 24 00:04:21   [  30] [ 37] Active    Human  Rob
+
+See also:
+        CHAT, RACE, STATUS
+Doc:
+        Communication, Society
+

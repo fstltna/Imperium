@@ -1,0 +1,13 @@
+CC = @CC@
+
+RM = rm -f
+
+all: ImpSize ImpLibSize
+
+ImpSize: ImpSize.c Imperium.h Request.h ../Library/Scan.h ../Library/ImpPrivate.h
+	$(CC) -s -o ImpSize ImpSize.c
+ImpLibSize: ImpLibSize.c ImpLib.h
+	$(CC) -s -o ImpLibSize ImpLibSize.c
+
+clean:
+	-$(RM) ImpSize ImpLibSize *.o

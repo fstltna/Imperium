@@ -1,0 +1,9 @@
+repay <loan> <amount>
+
+    Allows you to repay some or all of a loan that you owe money on.
+
+See also:
+        ACCEPT, LEDGER, LEND
+Doc:
+        Economics
+

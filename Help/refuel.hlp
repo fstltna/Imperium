@@ -1,0 +1,12 @@
+refuel <ship>
+
+    Allows you to transfer fuel from a fuel tank in the cargo area to the
+active fuel array. This fuel will be converted to energy by the ship's
+engines (up to the maximum amount of energy your engines will support)
+at the next update period. Once you use this command to transfer fuel you
+may not get it back in fuel tank form, as the tank casing is lost in the
+process.
+
+Doc:
+        Ships
+

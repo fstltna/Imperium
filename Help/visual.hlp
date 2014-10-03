@@ -1,0 +1,6 @@
+visual <ship number>
+       <planet number>
+
+    Allows you to "visually" look around your ship or planet, much as you
+would from an optical telescope.
+

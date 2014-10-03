@@ -1,0 +1,63 @@
+# makefile for Imperium servers
+include ../MakeLoc
+
+CC = @CC@
+CFLAGS = -DBROKEN_PIPE -DBROKEN_MKNOD @CFLAGS@
+DEBUG = $(servdebug)
+LDFLAGS = @CFLAGS@
+
+RM = rm -f
+
+# Imperium link targets
+IMPLIB = ../Library/libimpm.a
+CRYPTLIB = @LIBCRYPT@
+
+INSTALL = @INSTALL@
+
+IMPINC = ../Include/Imperium.h
+SERVINC = Server.h
+CONFINC = ../config.h
+SERVOBJ = ServerMain.o FileIO.o
+
+INCFILES = $(IMPINC)
+ALLFLAGS = $(DEBUG) $(CFLAGS) -DFIFO_DIR="\"$(IMP_DEST)/fifo\"" -DIMP_BASE_REV="\"$(IMP_BR)\""
+
+.c.o:
+	$(CC) $(ALLFLAGS) -c -o $*.o $<
+
+all:    ImpServ ImpShut ImpCtrl ic.allow is.allow
+
+ServerMain.o: ServerMain.c $(INCFILES) $(SERVINC) ../Include/Request.h $(CONFINC) ../impsec.h
+
+FileIO.o: FileIO.c $(INCFILES) $(SERVINC) $(CONFINC)
+
+ImpServ: $(SERVOBJ)
+	$(CC) $(LDFLAGS) -o ImpServ $(SERVOBJ) -lcrypt
+
+ImpShut.o: ImpShut.c $(INCFILES) ../Include/Request.h $(CONFINC) ../impsec.h
+
+ImpShut: ImpShut.o
+	$(CC) $(LDFLAGS) -o ImpShut ImpShut.o -lcrypt
+
+ImpCtrl: ImpCtrl.o $(IMPLIB)
+	$(CC) $(LDFLAGS) -o ImpCtrl ImpCtrl.o $(IMPLIB) -lc -lcrypt
+
+$(IMPLIB):
+	cd ../Library; make
+
+ImpCtrl.o: ImpCtrl.c $(INCFILES) ImpCtrl.h $(CONFINC) ../Include/Request.h ../Include/ImpLib.h ../impsec.h
+
+../impsec.h:
+	cd ..;sh gSCodes
+
+clean:
+	-$(RM) ImpCtrl ImpShut ImpServ *.o
+
+install: ImpCtrl ImpShut ImpServ
+	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/servers
+	$(INSTALL) -g $(IMP_GRP) -m 711 -o $(IMP_OWN) ImpCtrl $(IMP_DEST)/servers
+	$(INSTALL) -g $(IMP_GRP) -m 711 -o $(IMP_OWN) ImpShut $(IMP_DEST)/servers
+	$(INSTALL) -g $(IMP_GRP) -m 4700 -o $(IMP_OWN) ImpServ $(IMP_DEST)/servers
+	$(INSTALL) -g $(IMP_GRP) -m 644 -o $(IMP_OWN) ic.allow $(IMP_DEST)
+	$(INSTALL) -g $(IMP_GRP) -m 644 -o $(IMP_OWN) is.allow $(IMP_DEST)
+

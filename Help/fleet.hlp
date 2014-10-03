@@ -1,0 +1,19 @@
+fleet <fleet> [<ships>]
+
+    Allows you to add the ships to the given fleet. Using fleet "*" will
+remove a ship from a fleet that it is currently in (if any). <fleet> may
+be any letter from A-Z and a-z.
+    When you create a fleet the first ship in the list will be the "flagship"
+of that fleet. If the flagship's energy drops enough that it can no longer
+move, the entire fleet will stop. So you should normally keep the slowest ship
+in the fleet as the flagship. Any other ship in the fleet that runs out of
+energy will simply stop moving where it is and will get left behind, although
+you will be told where it stopped.
+    If you do not give any ships then all the ships in that fleet will be
+displayed.
+
+See also:
+        NAVIGATE, SHIPS
+Doc:
+        Ships, War
+

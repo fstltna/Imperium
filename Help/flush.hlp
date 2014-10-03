@@ -1,0 +1,13 @@
+flush
+
+    Allows you to flush all the items that the Imperium server has in it's
+cache to disk right away. The deity may choose to prevent normal users
+from executing this command.
+    You can use this command to assure yourself that any "moves" you have
+made will not be lost should the host computer die before writing them to
+disk. Normally the clients will be set to flush the buffers every time a
+player logs out, so this command will not normally be needed.
+
+Doc:
+        Hosting, ImpServ
+

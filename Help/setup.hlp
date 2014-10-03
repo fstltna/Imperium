@@ -1,0 +1,10 @@
+setup <action>
+
+    Allows you to set up an "action" which may be placed in a ship's
+programmed "course". You may use the action in as many ships as you like.
+
+See also:
+        PROGRAM, RUN, SHOW
+Doc:
+        Programming
+

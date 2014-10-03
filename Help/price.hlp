@@ -1,0 +1,36 @@
+price ship <ship> <price per ton>
+      item <big item> <price>
+      planet <planet> <[buying|selling]> <payor> <items>
+
+    Allows you to set the selling price of various items. For ships you enter
+a price per ton. The selling price will remain correct even if you load or
+unload items from the ship. Ships that are for sale may NOT be in a fleet.
+    The "item" option lets you set the price for "big items" that are located
+on planets. For people to be able to buy them from you, you WILL need to have
+a checkpoint code set for the planet that allows people to land on it (they
+do not need to be able to load items).
+    The "planet" option lets you set the buying or selling price for "small"
+items located on the surface of a planet. You may specify that either the
+ship owner pays teleporter damages, or the planet owner (you) will accept
+damages. This will be handled as follows:
+    For selling:
+        Ship owner pays
+            You will get paid for the full amount, even if less than this
+            amount arrive on the ship safely.
+        Planet owner pays
+            You will only get paid for the actual number of items that arrive
+            safely on the ship.
+    For buying:
+        Ship owner pays
+            You only have to pay for items that arrive on your planet safely.
+            If no items arrive safely, you will not even be notified that the
+            player attempted to sell you the items.
+        Planet owner pays
+            You will pay for the total number of items transported down,
+            even if less than this number arrive safely.
+
+See also:
+        BUY, CHECKPOINT, REPORT, SELL
+Doc:
+        Economics
+

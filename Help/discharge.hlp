@@ -1,0 +1,9 @@
+discharge <planets> <number>
+
+    Discharge allows you to release some of the military (not officers) to
+civilian status. You must already have more than 25 civilians and 5 military
+on the planet to be able to discharge any.
+
+See also:
+        ENLIST
+

@@ -1,0 +1,14 @@
+program
+
+    Allows you to program your ship to navigate along a predefined course,
+and optionally execute actions along the way. The course may loop around
+at the end, and you can enter a repeat range that a given movement direction
+will be repeated to save space.
+    The actions must be set up beforehand, and may be shared by multiple
+ship programs.
+
+See also:
+        RUN, SHOW, SETUP
+Doc:
+        Programming
+

@@ -1,0 +1,20 @@
+# This file determines which users may use which ImpCtrl commands.
+# You may use the username of "all" to allow all users access to
+# certain features. If there is an entry for a given user, that will
+# override any settings for "all". If no "all" is specified, it is
+# assumed users not listed are not allowed to use the command.
+#
+# Root is always allowed to use all commands.
+#
+# You may specify "none" as the sole command for a user to deny them
+# access to ImpCre even if you have an "all" entry created.
+#
+# The format of the file is as follows:
+# <username><space><command1>,<command2>, ... etc.
+#
+# The commands that may be specified are the single-letter command-line
+# options.
+impown all
+sys all
+adm all
+root all

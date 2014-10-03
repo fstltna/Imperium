@@ -1,0 +1,15 @@
+read
+
+    Allows you to read any telegrams that you have in your mailbox. After each
+telegram from a "real" user (as opposed to an "anonymous" message the system
+may send you), you will be given a chance to reply to it before proceeding to
+the next message (if any). After the last telegram you will be asked if you
+want to delete your telegrams. You should do this as soon as possible, to make
+sure that you can receive public messages (you will not receive them if your
+mailbox gets over a fixed size).
+
+See also:
+        MESSAGE, TELEGRAM
+Doc:
+        Communication
+

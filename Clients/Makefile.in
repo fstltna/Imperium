@@ -1,0 +1,67 @@
+include ../MakeLoc
+IMP_BIN_DEST = @bindir@
+
+# Cflags Options:
+#
+# BROKEN_PIPE - If your open() command needs O_RDWR instead of O_RDONLY
+#
+# TERMIO - If your system uses "termio.h"
+#
+# TERMIOS - If your system uses "termios.h"
+#
+# BROKEN_MKNOD - If your system's mknod() does not set the mode flags you
+#                request.
+
+CC = @CC@
+CFLAGS = -DBROKEN_PIPE -DTERMIOS -DBROKEN_MKNOD @CFLAGS@
+DEBUG = 
+
+# Imperium library link targets
+IMPLIB = ../Library/libimpm.a
+
+LN = @LN_S@
+RM = rm -f
+
+INSTALL = @INSTALL@
+
+IMPINC = ../Include/ImpLib.h
+IMPREQINC = ../Include/Request.h
+IMPPRAG = ../Include/ImpPragmas.h
+
+INCFILES = $(IMPINC) $(IMPREQINC)
+
+ALLFLAGS = $(DEBUG) $(CFLAGS) -DFIFO_DIR="\"$(IMP_DEST)/fifo\""
+LDFLAGS = @LDFLAGS@
+
+.c.o:
+	$(CC) $(ALLFLAGS) -c -o $*.o $<
+
+MODREV = 0.4w
+
+all: ConImp TelImp
+
+ConImp: ConImp.o $(IMPLIB)
+	$(CC) $(LDFLAGS) -o ConImp ConImp.o $(IMPLIB) -lc -lcrypt
+
+TelImp: TelImp.o $(IMPLIB)
+	$(CC) $(LDFLAGS) -o TelImp TelImp.o $(IMPLIB) -lc -lcrypt
+
+ConImp.o: ConImp.c $(INCFILES) ../config.h ../impsec.h
+
+TelImp.o: TelImp.c $(INCFILES) ../config.h ../impsec.h
+
+$(IMPLIB):
+	cd ../Library;make
+../impsec.h:
+	cd ..;sh gSCodes
+clean:
+	-$(RM) ConImp ConImp.o TelImp TelImp.o
+
+install: ConImp TelImp
+	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/clients
+	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) ConImp $(IMP_DEST)/clients
+	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) TelImp $(IMP_DEST)/clients
+	-$(RM) $(IMP_BIN_DEST)/ConImp
+	-$(RM) $(IMP_BIN_DEST)/TelImp
+	$(LN) $(IMP_DEST)/clients/ConImp $(IMP_BIN_DEST)/ConImp
+	$(LN) $(IMP_DEST)/clients/TelImp $(IMP_BIN_DEST)/TelImp

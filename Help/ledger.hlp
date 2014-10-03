@@ -1,0 +1,10 @@
+ledger [<loan>]
+
+    With no arguments displays your entire ledger. You may optionally
+specify a specific loan to be displayed.
+
+See also:
+        ACCEPT, LEND, REPAY
+Doc:
+        Economics
+

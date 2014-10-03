@@ -1,0 +1,8 @@
+log
+log <file name>
+
+    The log command allows you to record all or a portion of an Imperium
+session to disk as an ASCII file. Specifying no name after the command turns
+off logging and closes the file. Note that the deity probably has the log
+command disabled for most players.
+

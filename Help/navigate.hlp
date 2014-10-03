@@ -1,0 +1,15 @@
+navigate <ships> [<directions>]
+
+    Navigate allows you to manually move ships throughout the galaxy. The
+ships must all be at least 60% efficient, may not be on the surface of a
+planet, and must have enough energy in their energy banks for the movement
+commands you give.
+    If they are on the surface of a planet you must use the liftoff command to
+get them into orbit before moving them.
+
+See also:
+        LAND, LIFTOFF, PROGRAM, RUN
+
+Doc:
+        Movement, Programming, Ships
+

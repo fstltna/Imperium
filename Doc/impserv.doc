@@ -1,0 +1,51 @@
+
+
+ImpServ [sectorcache=<size>] [shipcache=<size>] [planetcache=<size>]
+	[itemcache=<size>]
+ 	[clearplay=on|off]
+	[port=<port>] or [-p<port>]
+	[nonews=on|off] or [-n]
+
+    ImpServ is the Imperium file server. It accepts requests from clients, and
+returns them the objects they asked for, preventing deadlocks when more than
+one client wishes to access a given item at a time.
+
+    The "port=" or "-p" option allows you to specify the port name that
+ImpServ should use to talk to clients. This is only useful if you wish to
+run more than one ImpServ at a time on the same machine. For example, you
+might have a "beginners" game and an "experienced players" game, or maybe a
+"fast" game at the same time as a "normal" game.
+
+    The "nonews=" or "-n" option allows you to tell ImpServ that it should NOT
+create news items. This is mainly useful for "fast" games (games with a low
+ITU (time per update)).
+
+    The "clearplay=" option allows you to automatically clear out the flag in
+every player that indicates that they are logged in. This will allow you to
+recover after a system crash without the deity having to edit the player
+records of people who were logged in when it happened. Note that this is
+NOT recommended, as there will almost CERTAINLY be other problems in the data
+after the crash that should be taken care of before allowing people in again.
+
+    The various "*cache=" entries allow you to enlarge (or shrink) the size
+of the cache's used by Imperium to speed up access to common items that it
+does not keep in RAM all the time (all player structures & the "world" state
+are always kept in RAM). Imperium implements a write-through cache system, and
+thus NOTHING will be written to disk (except when the files are flushed) or
+read from disk again after the first reference if you increase the various
+cache sizes enough (except for "incidentals" like news items or telegrams).
+
+    The defaults are as follows:
+
+
+	Cache Type	Number	Size Each (in bytes)
+	============================================
+	SECTORCACHE	30		54
+	SHIPCACHE	180		416
+	PLANETCACHE	60		148
+	ITEMCACHE	450		27
+
+    You should always stop the server by using ImpShut or sending the
+server process a SIGINT signal so that it can properly flush the buffers to
+disk before exiting. Using ImpShut is prefered.
+

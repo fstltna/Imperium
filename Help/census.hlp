@@ -1,0 +1,127 @@
+census <report type> <planets>
+
+    Displays a report on various aspects of a list of planets.
+
+<report type> may be any one of the following:
+
+    population
+    geology
+    production
+    items
+
+Each of the reports has their own format.
+
+Population:
+
+    The population report is used to display the quantity of the various
+"people" types on the planets, and has the following format:
+
+  PC  civl   scien     mil   offic  Race   Planet
+  -----------------------------------------------
+
+    PC = Planet Class
+ Civil = # of civilians on the planet
+ Scien = # of scientists on the planet
+   Mil = # of military on the planet
+ Offic = # of officers on the planet
+  Race = The race that owns the planet (should usually be your race)
+Planet = The planet's number
+
+Additionally, there are some flags that can appear to the left of the
+Planet Class. A "P" indicates that the planet is in the infectious stages of
+the plague. A "*" indicates that the planet has a checkpoint code set.
+
+Geology:
+
+    The geology report is used to display the geological stats for each
+planet, and has the following format:
+
+ PC eff min gld pol gas wat  mob   ore   bar  Planet  Position
+ -------------------------------------------------------------
+
+    PC = Planet Class
+   Eff = Planet efficiency
+   Min = Planet's mineral content
+   Gld = Planet's gold content
+   Pol = The percent of pollution
+   Gas = The how much of an atmosphere the planet has
+   Wat = How much of the planet's surface is covered with water
+   Mob = Mobility units on the planet
+   Ore = Units of ore that are available on the planet (also listed in items)
+   Bar = Number of gold bars on the planet
+Planet = The planet's number
+Position = The planets position
+
+    A "*" to the left of the planet class indicates that the planet is
+checkpointed.
+
+Production:
+
+    The production report lists the production units available on the planet
+for each production type, along with the percentage of the planets total
+production that is dedicated to that particular type.
+
+    The production report is the most complex report, having two lines per
+planet instead of one. To make it easier to keep track of which columns
+belong to which planets, each planet listed is separated by a line. The
+production report has the following format:
+
+|Civ|Mil|Tec|Res|Edu|OCS| OM| GM|Wea|Eng|Hul|Mis|Pln|Elc|Csh|        |
+|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Prd|Planet #|
+|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|Wk%|        |
+----------------------------------------------------------------------
+
+The top line is the heading for the production type, these being:
+    Civ - civilians
+    Mil - military
+    Tec - technology
+    Res - research
+    Edu - education
+    OCS - officer candidate school
+     OM - ore mining
+     GM - gold mining
+    Wea - weapons production
+    Eng - engine production
+    Hul - hull (ship) production
+    Mis - missile production (ammo for weapons)
+    Pln - plane (fighter) production
+    Elc - electronics production (for sensors, computers, etc.)
+    Csh - cash (generates money for you directly)
+
+The "Prd" line lists the production units for that particular production type,
+in a special format. between 0-999 they are listed in their actual amounts.
+Between 1000-9999 they are listed as "10x" for example, and are 100 times the
+amount listed (12x = 1200). Between 10000-32767 they are listed as "10k" for
+example, and are 1000 times the amount listed (12k = 12000). The last thing in
+the "Prd" line is the planet number that this group corresponds to.
+
+The "Wk%" line lists the percent of the total planets production that is
+devoted to each production type.
+
+Items:
+
+    The items report lists the number of each of the item types that is
+located on the planet, and has the following format:
+
+|miss|plne|ore |bars|airt|ftnk|comp|eng |life|sens|tele|weap|Planet|
+--------------------------------------------------------------------
+
+    Miss - missiles
+    Plne - planes (fighters)
+     Ore - units of ore available
+    Bars - number of gold bars located on the planet
+    Airt - number of air tanks
+    Ftnk - number of fuel tanks (units) on the planet
+    Comp - number of computers on the planet
+     Eng - number of engines on the planet
+    Life - number of life support systems
+    Sens - number of sensor arrays on the planet
+    Tele - number of teleport units available
+    Weap - number of weapons
+  Planet - the planet number that these items are on
+
+See also:
+        DIVVY, UPDATE
+Doc:
+        Factors, Updates
+

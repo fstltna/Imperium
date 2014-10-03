@@ -1,0 +1,12 @@
+map <sectors>
+
+    Map allows a deity to get a map display of either galactic sectors or
+subsectors. If the <sectors> evaluates out to being only one "galactic"
+sector (for instance, 10:19,30:39) then the subsector map will be
+displayed, in a 10x10 grid. Anything else will cause it to display a map in
+which each "sector" displayed will be the normal single-character sector
+sector type that is displayed for long-range scans.
+
+See also:
+        SCAN
+

@@ -1,0 +1,15 @@
+teleport <up|down> <ship> [percent]
+
+    Allows you to teleport items up to or down from a ship in orbit over a
+planet. If the ship is on the surface of a planet, just use the "load" and
+"unload" commands to transfer items to/from the ship's hold. You can only
+teleport "small" items such as people, ore, etc.
+    If "percent" is specified, you will not be asked to for the quantity to
+teleport, and a percentage of the total amount of the items available will be
+transferred instead.
+
+See also:
+        LOAD, UNLOAD
+Doc:
+        Ships
+

@@ -1,0 +1,16 @@
+remove <ship> <big item>
+
+    Remove "un"-installs a "big" item such as an engine or computer from the
+ships active use slots, and returns it to the ship's cargo area so that it can
+be unloaded. You can not unload an item while it is installed.
+
+    Note: While a big item is "installed" it's tech factor will go down while
+it's efficiency will be maintained at 100%. When a big item is NOT installed
+the tech factor will not decrease, but the efficiency will not increase
+either.
+
+See also:
+        INSTALL, LOAD, UNLOAD
+Doc:
+        Ships
+

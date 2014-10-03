@@ -1,0 +1,12 @@
+news [days]
+
+    News allows you to print out the newspaper events for the given number
+of days, or for today only if no days are specified. News will also print the
+"headlines" for the number of days specified, or for the past 3 days if none
+are specified.
+
+See also:
+        HEADLINES
+Doc:
+        Communication
+

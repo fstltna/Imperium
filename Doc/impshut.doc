@@ -1,0 +1,56 @@
+
+
+ImpShut [-s] [-p] [-P] [-l] [-b] -[B]
+
+   ImpShut allows you to shut down the Imperium server in an orderly and
+safe fashion. ImpShut sends a shutdown request to the server and then exits.
+If there are no clients active, ImpServ will flush the buffers and exit. If
+there are active clients, they will be periodically notified that ImpServ
+wants to shut down, and ImpServ will exit when they leave.
+
+    The various options allow you to change the request type that ImpShut
+will send to the server. The "-s" option is not normally needed, as it is the
+default action if no other option is specified. It is listed only so you know
+what command value to enter in the is.allow file. The "-p" option allows you
+to tell the server that the AC power has gone out and we are operating on
+battery power. This will work much like the default "shutdown" request type in
+that the server will attempt to shut down any idle clients, and will exit when
+the last client is gone. However, this request can be canceled, while a normal
+shutdown can not.
+
+    The "-P" option allows you to cancel a previous "-p" request (if the
+server is still running). This will NOT restart any clients that have been
+killed off, but it WILL prevent any more from being killed and the server
+will not exit. Note that if there are no active clients when you issue the
+"-p" request that the server will exit almost immediately, and it will be
+too late to use the "-P" request.
+
+    The "-l" option allows you to tell the Imperium server that the UPS
+battery power is running low, and it should exit right away, if it has not
+already done so. This WILL shut the server down on whatever player(s) still
+happen to be logged in, and will most likely leave them marked as "logged
+in", so you will have to edit them and change their status before they can
+play the game again. This option is a last resort and should not be used to
+shut down ImpServ in normal situations. This is mainly for use when leaving
+the system up even a minute or two longer my cause the data files to
+become corrupted.
+
+    The -b option allows you to request that ImpServ go into "backup" mode.
+What will happen is that any active players will be notified that you wish
+to do a system backup, and when they log out no new players will be allowed
+in until the backup is finished. ImpServ will NOT shut down. IMPORTANT: Unlike
+the other options, this command will NOT return until the last player has
+exited the game. When you return from this command it will either indicate an
+error condition (exit code of 5) or that you may now start backing up files
+(exit code of 0).
+
+    The -B option tells ImpServ that you are done doing backups and that it
+may start allowing players to log in once more.
+
+    Note that you may only specify ONE of the above options, and that the
+"-l" option takes precedence over the others. (IE, doing a "-l" will cause
+ImpServ to terminate any "-b" condition that may exist).
+
+*** Be sure to read the file "security.doc" for information on setting up
+    the is.allow file properly!
+

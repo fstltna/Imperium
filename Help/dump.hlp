@@ -1,0 +1,44 @@
+dump <planets>
+
+    Dump prints out complete info on each of the planets in the list in a
+very compact hexadecimal format designed for use by a front end.
+
+    The format of the dump is as follows:
+
+<time of dump in "normal" Imperium format>
+<blank line>
+!           - indicates that this is a planet dump
+xxxxxxxx    - planet number
+xxxx        - planet row
+xxxx        - planet col
+xxxxxxxx    - planet tech level
+xxxxxxxx    - last update time
+x           - 0 = no visible plague, 1 = known plagued
+x           - 0 = planet was not taken by force, 1 = natives are hostile
+x           - planet class
+xxxx        - mobility
+xx          - efficiency
+xx          - minerals
+xx          - gold
+xx          - pollution
+xx          - gas %
+xx          - water %
+x           - planet size
+xxxx        - planet's BTU's
+x           - 0 = planet not checkpointed, 1 = checkpointed
+    (if the player is a deity, then the following block will appear)
+    (otherwise, skip to next block)
+*           - indicates that a deity block follows
+xx          - current owner number
+xx          - previous owner number
+xx          - plague stage
+xx          - time left in this stage
+
+@           - indicates that this is the start of the variable length
+              section
+xxxx        - for each of the item types, the number of those items
+              on the planet
+xxxx        - for each of the production types, the amount of production (4)
+xx            and the work percent (2)
+<end of line>
+

@@ -1,0 +1,9 @@
+grant <planet> <player>
+
+    Grant allows you to give a planet to another player. The other player
+must be an active player (to prevent you from giving a planet to a player
+that was wiped out), and of course you must own the planet.
+
+Doc:
+        Society
+

@@ -1,0 +1,38 @@
+# makefile for Imperium
+
+# Pull in common defs
+include MakeLoc
+
+# =================== Only autoconf setting below here
+INSTALL=@INSTALL@
+
+all:
+	cd Library;make
+	cd Clients;make
+	cd Servers;make
+	cd ImpCre;make
+
+archive:
+	make clean
+	tar cvf impsrc.tar Clients Doc Help ImpCre Include Library Servers Makefile TODO Changes
+	gzip -9 -v impsrc.tar
+
+clean:
+	cd Clients;make clean
+	cd Servers;make clean
+	cd Library;make clean
+	cd Include;make clean
+	cd ImpCre;make clean
+
+install:
+	cd Library;make install
+	cd Clients;make install
+	cd Servers;make install
+	cd ImpCre;make install
+	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/help
+	cd Help;for z in *.hlp; do $(INSTALL) -g $(IMP_GRP) -m 444 -o $(IMP_OWN) $$z $(IMP_DEST)/help; done
+	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/doc
+	cd Doc;for i in *.doc; do $(INSTALL) -g $(IMP_GRP) -m 444 -o $(IMP_OWN) $$i $(IMP_DEST)/doc; done
+	$(INSTALL) -d -g $(IMP_GRP) -m 777 -o $(IMP_OWN) $(IMP_DEST)/fifo
+	$(INSTALL) -d -g $(IMP_GRP) -m 777 -o $(IMP_OWN) $(IMP_DEST)/fifo/server
+

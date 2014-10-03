@@ -1,0 +1,11 @@
+lend <player> <amount> <rate> <duration>
+
+    Allows you to lend money to another player. You may choose the interest
+rate and the duration of the loan, but if you make them too high the other
+player will probably decline your offer.
+
+See also:
+        ACCEPT, LEDGER, REPAY
+Doc:
+        Economics
+
