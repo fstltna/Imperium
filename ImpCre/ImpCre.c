@@ -1158,8 +1158,8 @@ BOOL buildSector(FILE *planetFd, Sector_t *s, USHORT grow,
     ULONG totStars, totPlanets;
     USHORT i, curRace, holdRace=99;
     UBYTE subrow, subcol;
-    UBYTE subsect[10][10];
-    Planet_t pl;
+    UBYTE subsect[11][11];
+    static Planet_t pl;
     BOOL needHome;
 
     /* check for a vacant sector */
