@@ -79,7 +79,7 @@ BOGUS - ConImp not supported on this machine due to missing select() call!
 #include <stdlib.h>
 #endif
 
-#include <signum.h>
+#include <bits/signum.h>
 #include <signal.h>
 
 #include <sys/types.h>
