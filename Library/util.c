@@ -54,6 +54,7 @@
 #else
 #include <string.h>
 #endif
+#include <stdio.h>
 #include <math.h>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -2550,7 +2551,7 @@ void doUninstall(Ship_t *sh, register ULONG biNum, BigPart_t what)
 }
 
 /* Sends an email */
-void sendEmail(IMP, char *sendto, char *subject, char *emailbody)
+void sendEmail(IMP, const char *sendto, const char *subject, const char *emailbody)
 {
 	char cmd[255]; /* holds the cli command */
 	char tempFile[100];
@@ -2561,13 +2562,13 @@ void sendEmail(IMP, char *sendto, char *subject, char *emailbody)
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
 	sprintf(cmd, "sendmail %s < %s", sendto, tempFile); /* prepare command. */
-	system(cmd); /* execute it. */
+	(void) system(cmd); /* execute it. */
 	/* remove temp file */
 	unlink(tempFile);
 }
 
 /* Sends a system email */
-void sendSystemEmail(IMP, char *subject, char *emailbody)
+void sendSystemEmail(IMP, const char *subject, const char *emailbody)
 {
 	char cmd[255]; /* holds the cli command */
 	char tempFile[100];
@@ -2578,7 +2579,7 @@ void sendSystemEmail(IMP, char *subject, char *emailbody)
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
 	sprintf(cmd, "sendmail %s < %s", &IS->is_world.w_emailAddress[0], tempFile); /* prepare command. */
-	system(cmd); /* execute it. */
+	(void) system(cmd); /* execute it. */
 	/* remove temp file */
 	unlink(tempFile);
 }

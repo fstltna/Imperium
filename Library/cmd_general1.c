@@ -83,7 +83,7 @@ void cmd_change(IMP)
         /* note that for most of the options you must be an active player */
         switch(what)
         {
-            /* change compressed state */
+            /* change email send mode */
             case 10:
                 if (IS->is_player.p_status != ps_visitor)
                 {
@@ -113,6 +113,7 @@ void cmd_change(IMP)
                     user(IS, "You must be an active player to use this "
                         "option\n");
                 }
+                break;
             /* change btu warning level */
             case 9:
                 if (IS->is_player.p_status != ps_visitor)

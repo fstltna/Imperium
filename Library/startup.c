@@ -936,22 +936,16 @@ BOOL newPlayerPassword(IMP)
 
 BOOL newPlayerEmail(IMP)
 {
-    char emailaddress[EMAIL_LEN];
     BOOL ok;
 
     uPrompt(IS, "Enter new email address");
     ok = clReadUser(IS);
     if (ok)
     {
-        if (strcmp(&emailaddress[0], &IS->is_textIn[0]) == 0)
-        {
-            memcpy(&IS->is_player.p_email[0], &emailaddress[0],
-                EMAIL_LEN - 1);
+            memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
             return TRUE;
-        }
-        return FALSE;
-    }
-    return FALSE;
+     }
+     return FALSE;
 }
 
 /*

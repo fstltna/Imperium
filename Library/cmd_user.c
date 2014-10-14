@@ -406,6 +406,9 @@ void cmd_status(IMP)
     {
         ptr = "OFF\n";
     }
+    /* show current email address */
+    user3(IS, "Current email address is '", &IS->is_player.p_email[0], "'\n");
+
     /* print out the compressed mode */
     user2(IS, "Compressed mode is ", ptr);
     if (IS->is_player.p_feMode != 0)
