@@ -49,6 +49,7 @@
 
 #define NAME_LEN                32      /* max length of player name    */
 #define PASSWORD_LEN            10      /* max length of password       */
+#define EMAIL_LEN               128     /* max length of password       */
 #define PLAN_NAME_LEN           16      /* max length of planet names   */
 #define PLAN_PSWD_LEN           8       /* max length of planet pswd    */
 #define SHIP_NAME_LEN           20      /* max length of ship names     */
@@ -316,7 +317,8 @@ typedef struct
             w_maxPlayers,               /* maximum allowed number of users  */
             w_currPlayers;              /* number of entered users          */
         char
-            w_password[PASSWORD_LEN];   /* password to create a player */
+            w_password[PASSWORD_LEN],   /* password to create a player */
+            w_emailAddress[EMAIL_LEN];   /* password to create a player */
 
         /* global counters */
 
@@ -545,6 +547,7 @@ typedef struct
         char
             p_name[NAME_LEN],           /* player name              */
             p_password[PASSWORD_LEN],   /* password                 */
+            p_email[EMAIL_LEN],         /* email address            */
             p_realm[REALM_MAX][REALM_LEN];
         Relation_t
             p_racerel[RACE_MAX],        /* player-race relations    */
@@ -562,7 +565,9 @@ typedef struct
         unsigned int
             p_newPlayer:1;              /* true if player is new    */
         unsigned int
-            p_tmp:27;                   /* for future use  must == 32 */
+            p_sendEmail:1;              /* true if player is new    */
+        unsigned int
+            p_tmp:26;                   /* for future use  must == 32 */
 #define nt_telegram 0                   /* notify => telegram       */
 #define nt_message  1                   /* notify => message        */
 #define nt_both     2                   /* notify => both           */

@@ -111,6 +111,8 @@ MaxPlan=5
 # The size of the home planets. Must be >= MinPlan and <= MaxPlan
 HomeSize=2
 
+# Email address to send mail from/to
+EmailAddr=changeme@foobar.com
 
 # Boolean flags - set to "1" for true, and "0" for false
 
@@ -136,4 +138,5 @@ export Race5Name Race6Name Race7Name Race8Name Race1Planet Race2Planet \
 export NumPlay ConTime SecItu StartingCash MinPlSpc MinPlAdj MinUnclaimed \
 	MaxReach MaxSpread LowStarPct HiStarPct MinStar MaxStar LowPlPct \
 	HiPlPct MinPlan MaxPlan HomeSize ChangePlayers PublicMessages
+export EmailAddr
 exec ImpCre -v

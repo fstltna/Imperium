@@ -106,7 +106,8 @@ static char
     gbGodPassword[PASSWORD_LEN],
     gbLastWinner[NAME_LEN],
     gbPlanetsFile[255],
-    gbSectorsFile[255];
+    gbSectorsFile[255],
+    gbEmailAddress[128];
 static ULONG
     gbVertSize,
     gbHorizSize,
@@ -1586,6 +1587,7 @@ void writeFiles(void)
         cleanup(20);
     }
     strcpy(&World.w_password[0], gbCreationPassword);
+    strcpy(&World.w_emailAddress[0], gbEmailAddress);
     if (fwrite((void *)&World, sizeof(char), sizeof(World_t),
 	fd) != sizeof(World_t))
     {
@@ -2408,6 +2410,9 @@ short startGenerate(void)
 
     /* read in the LastWinner now */
     getEnvDef(gbLastWinner, "LastWinner", "");
+
+    /* read in the server email address */
+    getEnvDef(gbEmailAddress, "EmailAddr", "changeme@foobar.com");
 
     /* read in the GodPassword now */
     getEnvDef(gbGodPassword, "GodPassword", "imperium");
