@@ -721,11 +721,9 @@ void runImperium(void)
 void splatZombie(void)
 {
 	union wait wstatus;
-printf("Position 1\n");
 	while(wait3(&wstatus, WNOHANG, NULL) > 0)
 	{
 	}
-printf("Position 2\n");
 	signal(SIGCHLD, splatZombie); /* Needed for SYSV */
 }
 
@@ -814,22 +812,17 @@ int establish_sock(unsigned short portnum)
 
 int get_connection(int s)
 {
-printf("Position A\n");
 	struct sockaddr_in isa; /* Sock addr */
 	int i;                  /* size of addr */
 	int t;                  /* socket of connection */
 
 	i=sizeof(isa);
-printf("Position B\n"); /* ZZZ */
 	getsockname(s, &isa, &i); /* For accept() */
-printf("Position C\n"); /* ZZZ */
 
 	if ((t=accept(s, &isa, &i)) < 0) /* Accept connection one exists */
 	{
-printf("Position D\n"); /* ZZZ */
 		return(-1);
 	}
-printf("Position E\n"); /* ZZZ */
 	return(t);
 }
 
@@ -862,22 +855,17 @@ void runNetImperium(void)
 {
 	int s;
 
-printf("Position 3\n"); /* ZZZ */
 	if ((s=establish_sock(PORTNUM)) < 0)
 	{
 		perror("establish_sock");
 		return;
 	}
-printf("Position 4\n"); /* ZZZ */
 	signal(SIGCHLD, splatZombie);
-printf("Position 5\n"); /* ZZZ */
 
 	while (-1)
 	{
-printf("Position 6\n"); /* ZZZ */
 		if ((GameSocket=get_connection(s)) < 0)
 		{
-printf("Position 6.5\n"); /* ZZZ */
 			if (errno == EINTR)
 			{
 				continue;
@@ -885,7 +873,6 @@ printf("Position 6.5\n"); /* ZZZ */
 			perror("accept");
 			return;
 		}
-printf("Position 7\n"); /* ZZZ */
 		switch(fork())
 		{
 			case -1:
@@ -1004,7 +991,6 @@ int main(int argc, char *argv[])
         if (!hadError)
         {
 	    signal(SIGINT, breakHandler);
-printf("Position AAA"); /* ZZZ */
             runNetImperium();
         }
     cleanup(0);
