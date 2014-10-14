@@ -2557,7 +2557,7 @@ void sendEmail(IMP, const char *sendto, const char *subject, const char *emailbo
 	char tempFile[100];
 	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
 	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
-	fprintf(fp, "%s\r\n", subject); /* write body to it. */
+	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */
 	fprintf(fp, "\r\n"); /* seperate headers from body */
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
@@ -2574,7 +2574,7 @@ void sendSystemEmail(IMP, const char *subject, const char *emailbody)
 	char tempFile[100];
 	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
 	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
-	fprintf(fp, "%s\r\n", subject); /* write body to it. */
+	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */
 	fprintf(fp, "\r\n"); /* seperate headers from body */
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
