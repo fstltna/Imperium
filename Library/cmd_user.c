@@ -388,6 +388,16 @@ void cmd_status(IMP)
     }
     /* print out the notify method */
     user2(IS, "Notify via: ", ptr);
+    if (IS->is_player.p_sendEmail)
+    {
+        ptr = "ON\n";
+    }
+    else
+    {
+        ptr = "OFF\n";
+    }
+    /* print out the email sending option */
+    user2(IS, "Sending email is ", ptr);
     if (IS->is_player.p_compressed)
     {
         ptr = "ON\n";

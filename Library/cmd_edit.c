@@ -213,6 +213,17 @@ void examinePlayer(IMP, USHORT who)
             break;
     }
     user2(IS, "Notify via: ", ptr);
+    if (IS->is_player.p_sendEmail)
+    {
+        ptr = "ON\n";
+    }
+    else
+    {
+        ptr = "OFF\n";
+    }
+    /* print out the email sending option */
+    user2(IS, "Sending email is ", ptr);
+
     /* print the chat status */
     if (p->p_inChat)
     {
@@ -1101,6 +1112,30 @@ void editPlayer(IMP, USHORT who)
             strcpy(&p.p_password[0], &IS->is_textIn[0]);
         }
     }
+    user3(IS, "Email Address: ", &p.p_email[0], "\n");
+    uPrompt(IS, "Email Address");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[EMAIL_LEN - 1] = '\0';
+            strcpy(&p.p_email[0], &IS->is_textIn[0]);
+        }
+    }
+    if (p.p_sendEmail)
+    {
+        if (ask(IS, "Sendimg email. Disable this? "))
+        {
+            p.p_sendEmail = FALSE;
+        }
+    }
+    else
+    {
+        if (ask(IS, "Not sending email. Enable this? "))
+        {
+            p.p_sendEmail = TRUE;
+        }
+    }
     p.p_status = repUNum(IS, p.p_status, ps_deity, ps_idle, "Status");
     p.p_planetCount = repUNum(IS, p.p_planetCount, 0, 0xffffffff,
         "Planet count");
@@ -1514,6 +1549,16 @@ void editWorld(IMP)
         60 * 24, "Maximum connect time in minutes");
     IS->is_world.w_maxBTUs = repUNum(IS, IS->is_world.w_maxBTUs, 10, 999,
         "Maximum BTUs held by one player");
+    user3(IS, "Server Email Address: ", &IS->is_world.w_emailAddress[0], "\n");
+    uPrompt(IS, "Server Email Address");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[EMAIL_LEN - 1] = '\0';
+            strcpy(&IS->is_world.w_emailAddress[0], &IS->is_textIn[0]);
+        }
+    }
     user3(IS, "Player creation password: ", &IS->is_world.w_password[0], "\n");
     uPrompt(IS, "Player creation password");
     if (clReadUser(IS))
@@ -2105,6 +2150,7 @@ void cmd_info(IMP)
     if (firstChar == '\0')
     {
         user3(IS, "Last game won by: ", &IS->is_world.w_winName[0], "\n");
+        user3(IS, "Server Email Address: ", &IS->is_world.w_emailAddress[0], "\n");
         user(IS, "World created ");
         uTime(IS, IS->is_world.w_buildDate);
         user(IS, ".\n");

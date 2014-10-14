@@ -930,6 +930,31 @@ BOOL newPlayerPassword(IMP)
 }
 
 /*
+ * newPlayerEmail - get a new email address for the player. Verify it.
+ *      return 'TRUE' if it is verified, and install into the player.
+ */
+
+BOOL newPlayerEmail(IMP)
+{
+    char emailaddress[EMAIL_LEN];
+    BOOL ok;
+
+    uPrompt(IS, "Enter new email address");
+    ok = clReadUser(IS);
+    if (ok)
+    {
+        if (strcmp(&emailaddress[0], &IS->is_textIn[0]) == 0)
+        {
+            memcpy(&IS->is_player.p_email[0], &emailaddress[0],
+                EMAIL_LEN - 1);
+            return TRUE;
+        }
+        return FALSE;
+    }
+    return FALSE;
+}
+
+/*
  * updateTimer - updates connect time limit, returns 'FALSE' if we should quit
  */
 
@@ -1278,11 +1303,13 @@ void ImpCntrl(IMP)
             IS->is_player.p_race = NO_RACE;
             strcpy(&IS->is_player.p_name[0], "System Utility");
             strcpy(&IS->is_player.p_password[0], "foobar");
+            strcpy(&IS->is_player.p_email[0], "");
             IS->is_player.p_loggedOn = TRUE;
             IS->is_player.p_inChat = FALSE;
             IS->is_player.p_compressed = FALSE;
             IS->is_player.p_doingPower = FALSE;
             IS->is_player.p_feMode = 0;
+            IS->is_player.p_sendEmail = 0;
             IS->is_player.p_newPlayer = FALSE;
             IS->is_player.p_notify = nt_message;
             server(IS, rt_setPlayer, IS->is_player.p_number);
