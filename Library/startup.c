@@ -1966,8 +1966,12 @@ void Imperium(IMP)
                                     *p = *rp;
                                     server(IS, rt_unlockPlayer, i);
                                     (void) resetTimer(IS);
-                                    log3(IS, "*** Player ", name,
-                                        " created.");
+				    {
+					char MessageBody[2048];
+                                    	log3(IS, "*** Player ", name, " created.");
+                                    	sprintf(MessageBody, "*** Player %s created", name);
+                                    	sendSystemEmail(IS, "New User Created", MessageBody);
+				    }
                                     makeUserShip(IS);
                                 }
                             }

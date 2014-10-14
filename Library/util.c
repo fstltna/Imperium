@@ -2561,7 +2561,7 @@ void sendEmail(IMP, const char *sendto, const char *subject, const char *emailbo
 	fprintf(fp, "\r\n"); /* seperate headers from body */
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
-	sprintf(cmd, "sendmail %s < %s", sendto, tempFile); /* prepare command. */
+	sprintf(cmd, "/usr/sbin/sendmail %s < %s", sendto, tempFile); /* prepare command. */
 	(void) system(cmd); /* execute it. */
 	/* remove temp file */
 	unlink(tempFile);
@@ -2578,7 +2578,7 @@ void sendSystemEmail(IMP, const char *subject, const char *emailbody)
 	fprintf(fp, "\r\n"); /* seperate headers from body */
 	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
 	fclose(fp); /* close it. */
-	sprintf(cmd, "sendmail %s < %s", &IS->is_world.w_emailAddress[0], tempFile); /* prepare command. */
+	sprintf(cmd, "/usr/sbin/sendmail %s < %s", &IS->is_world.w_emailAddress[0], tempFile); /* prepare command. */
 	(void) system(cmd); /* execute it. */
 	/* remove temp file */
 	unlink(tempFile);
