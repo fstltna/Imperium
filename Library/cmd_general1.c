@@ -460,20 +460,24 @@ void cmd_change(IMP)
                         else if (what == 1)
                         {
                             /* they want to change their password */
-                            (void) newPlayerPassword(IS);
-                            server(IS, rt_lockPlayer, IS->is_player.p_number);
-                            strcpy(&IS->is_request.rq_u.ru_player.p_password[0],
-                                &IS->is_player.p_password[0]);
-                            server(IS, rt_unlockPlayer, IS->is_player.p_number);
+                            if (newPlayerPassword(IS))
+			    {
+                                server(IS, rt_lockPlayer, IS->is_player.p_number);
+                                strcpy(&IS->is_request.rq_u.ru_player.p_password[0],
+                                    &IS->is_player.p_password[0]);
+                                server(IS, rt_unlockPlayer, IS->is_player.p_number);
+			    }
                         }
                         else
                         {
                             /* they want to change their email address */
-                            (void) newPlayerEmail(IS);
-                            server(IS, rt_lockPlayer, IS->is_player.p_number);
-                            strcpy(&IS->is_request.rq_u.ru_player.p_email[0],
-                                &IS->is_player.p_email[0]);
-                            server(IS, rt_unlockPlayer, IS->is_player.p_number);
+                            if (newPlayerEmail(IS))
+			    {
+                                server(IS, rt_lockPlayer, IS->is_player.p_number);
+                                strcpy(&IS->is_request.rq_u.ru_player.p_email[0],
+                                    &IS->is_player.p_email[0]);
+                                server(IS, rt_unlockPlayer, IS->is_player.p_number);
+			    }
                         }
                     }
                     else

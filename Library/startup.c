@@ -66,6 +66,10 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "ImpPrivate.h"
 #include "../Servers/ImpCtrl.h"
 
+/* These are for pcre */
+#include "/usr/include/pcre.h"
+#define OVECMAX 30
+
 static const char rcsid[] = "$Id: startup.c,v 1.3 2000/05/18 07:29:41 marisa Exp $";
 
 /*
@@ -936,13 +940,33 @@ BOOL newPlayerPassword(IMP)
 
 BOOL newPlayerEmail(IMP)
 {
+    //static const char *pattern = "^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+    static const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
     BOOL ok;
+    const char *err_msg;
+    int err, rc;
+    int offsets[OVECMAX];
+
+    pcre *re = NULL;
 
     uPrompt(IS, "Enter new email address");
     ok = clReadUser(IS);
     if (ok)
     {
-            memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
+	    /* Entered something, validate the data */
+	    re = pcre_compile(pattern, 0, &err_msg, &err, NULL);
+	    if (re == NULL)
+	    {
+		    user(IS, "Regex Creation Failed\n");
+		    return FALSE;
+	    }
+	    rc = pcre_exec(re, NULL, &IS->is_textIn[0], strlen(&IS->is_textIn[0]), 0, 0, offsets, OVECMAX);
+            if (rc < 1)
+	    {
+		user(IS, "Invalid email address\n");
+		return FALSE;
+	    }
+	    memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
             return TRUE;
      }
      return FALSE;
