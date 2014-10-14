@@ -772,6 +772,7 @@ void initializePlayer(USHORT player)
         /* clear out the names to be safe */
         memset(&p->p_name[0], '\0', NAME_LEN * sizeof(char));
         memset(&p->p_password[0], '\0', PASSWORD_LEN * sizeof(char));
+        memset(&p->p_email[0], '\0', EMAIL_LEN * sizeof(char));
     }
     /* set all the player-race/player-player relations */
     for (i = tempval; i < RACE_MAX; i++)
@@ -799,6 +800,7 @@ void initializePlayer(USHORT player)
     p->p_compressed = 1;
     p->p_doingPower = tempval;
     p->p_newPlayer = 1;
+    p->p_sendEmail = 0;
     p->p_tmp = tempval;
 
     /* set the notify type */
