@@ -17,6 +17,7 @@
    create a shell "wrapper" that turns on desired options (different port,
    no "log" command, etc) and replace the public "ConImp" link with your
    shell wrapper.
+4.5) Use the "TelImp" client to accept incoming game players from the internet
 5) Shut down the server when done playing. Use the "ImpShut" program to
    do this. You MUST do this step before turning the machine off or
    rebooting. Failure to do so may result in the game files becoming
