@@ -32,8 +32,11 @@ possible, using whatever means you choose. Or maybe not. It's up to you.
 
  ------------
 
-Imperium currently has been tested on the following machines at some
-point over the last 4 or 5 years:
+Imperium currently has recently been tested on the following machines
+Linux Ubuntu 12.x
+Linux Ubuntu 13.x
+
+And older versions:
 Linux 0.99pl10 (SLS)
 Linux 0.99pl12 (SLS)
 Linux 0.99pl12a (SLS)
@@ -47,9 +50,3 @@ Solaris 2.5
 Solaris 2.6
 Solaris 2.7
 
-And is supported on:
-Linux 1.x
-Linux 2.x
-
-And I hope to have it working on LinuxPPC (YellowDogLinux distribution) as
-I now have a G3 to test it on.
