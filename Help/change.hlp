@@ -1,5 +1,7 @@
 change name
        password
+       email address
+       send email
        player
        notify [message] [telegram] [both]
        compressed
@@ -13,6 +15,11 @@ identity.
 
     "Change password" allows you to change your password. You will be asked
 for your current password to verify your identity.
+
+    "Change email address" allows you to change your email address.
+You will be asked for your password to verify your identity.
+
+    "Change send email" allows you to set whether various email should be sent
 
     "Change player" will let you "become" another active player. The deity
 may not allow you to use this command. You will need to know the password
