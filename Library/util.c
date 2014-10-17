@@ -2551,10 +2551,14 @@ void doUninstall(Ship_t *sh, register ULONG biNum, BigPart_t what)
 }
 
 /* Sends an email */
-void sendEmail(IMP, const char *sendto, const char *subject, const char *emailbody)
+void sendEmail(IMP, const BOOL emailenabled, const char *sendto, const char *subject, const char *emailbody)
 {
 	char cmd[255]; /* holds the cli command */
 	char tempFile[100];
+	if (!emailenabled)
+	{
+		return;
+	}
 	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
 	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
 	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */

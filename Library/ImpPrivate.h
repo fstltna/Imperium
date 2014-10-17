@@ -322,7 +322,7 @@ void getLowHi(IMP, register ULONG *, register ULONG *);
 void getPlRange(IMP, ULONG *, ULONG *, USHORT, USHORT, USHORT);
 USHORT isHomePlanet(IMP, register ULONG);
 void doUninstall(Ship_t *, register ULONG, ItemType_t);
-void sendEmail(IMP, const char *, const char *, const char *);
+void sendEmail(IMP, const BOOL, const char *, const char *, const char *);
 void sendSystemEmail(IMP, const char *, const char *);
 
     /* messages.c */
