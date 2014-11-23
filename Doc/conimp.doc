@@ -1,0 +1,23 @@
+ConImp [-a] [-t] [n<name>] [m<time>] [e<editor>]
+	-a = non-ANSI terminal
+	-t = use test port
+	-n = force user name
+	-m = maximum play time
+	-e<editor> = allow external editor
+
+-a:
+    If your terminal is not ANSI compatible use this to prevent
+    ANSI codes being sent
+
+-t:
+    Use the testing port
+
+-n<name>:
+    Force the username to this user, used in BBS doors
+
+-m<time>:
+    Set maximim play time
+
+-e<editor>:
+    Set the external editor, if any. For example to use VI
+
