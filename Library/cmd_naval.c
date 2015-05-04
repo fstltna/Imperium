@@ -68,6 +68,7 @@ void doShReport(IMP, register Ship_t *sh, BigPart_t part)
     Ship_t saveSh;
     ULONG *pArr;
     ItemType_t it;
+    int InstalledGroup = 0;
 
     /* set these up for later */
     rbi = &IS->is_request.rq_u.ru_bigItem;
@@ -82,8 +83,37 @@ void doShReport(IMP, register Ship_t *sh, BigPart_t part)
         {
             return;
         }
-        /* see if all the items are installed */
-        if (saveSh.sh_items[it] == numInst(IS, &saveSh, part))
+        /* see if all the items are installed, need to add up all of each */
+	/* of the multi type big items ZZZ */
+        /*if (saveSh.sh_items[it] == numInst(IS, &saveSh, part))*/
+        switch(part)
+        {
+                case bp_computer:
+        	    InstalledGroup = numInst(IS, &saveSh, bp_computer);
+                    break;
+                case bp_engines:
+        	    InstalledGroup = numInst(IS, &saveSh, bp_engines);
+                    break;
+                case bp_lifeSupp:
+        	    InstalledGroup = numInst(IS, &saveSh, bp_lifeSupp);
+                    break;
+                case bp_sensors:
+                case bp_teleport:
+                case bp_shield:
+                case bp_tractor:
+        	    InstalledGroup = numInst(IS, &saveSh, bp_sensors);
+        	    InstalledGroup += numInst(IS, &saveSh, bp_teleport);
+        	    InstalledGroup += numInst(IS, &saveSh, bp_shield);
+        	    InstalledGroup += numInst(IS, &saveSh, bp_tractor);
+                    break;
+                case bp_photon:
+                case bp_blaser:
+        	    InstalledGroup = numInst(IS, &saveSh, bp_photon);
+        	    InstalledGroup += numInst(IS, &saveSh, bp_blaser);
+                    break;
+	}
+        /*if (saveSh.sh_items[it] == numInst(IS, &saveSh, part))*/
+        if (saveSh.sh_items[it] == InstalledGroup)
         {
             switch(part)
             {
@@ -118,9 +148,11 @@ void doShReport(IMP, register Ship_t *sh, BigPart_t part)
                 {
                     return;
                 }
-                feShBig(IS);
-                /* read the item in */
                 server(IS, rt_readBigItem, pArr[count]);
+		if (part == rbi->bi_part) /* ZZZ */
+		{
+                /* read the item in */
+                feShBig(IS);
                 userF(IS, rbi->bi_number, 8);
                 userC(IS, '|');
                 userF(IS, rbi->bi_itemLoc, 8);
@@ -134,6 +166,7 @@ void doShReport(IMP, register Ship_t *sh, BigPart_t part)
                 userF(IS, rbi->bi_effic, 3);
                 /* do some optimization here, since always true */
                 user(IS, " | Yes\n");
+		}
             }
             /* all done now */
             return;

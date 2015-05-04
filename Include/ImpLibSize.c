@@ -28,6 +28,5 @@ main()
 	printf("sizeof(Request_t) = %d bytes\n", sizeof(Request_t));
 	printf("REQUEST_PRIVATE_SIZE = %d bytes\n", REQUEST_PRIVATE_SIZE);
 	printf("IMPERIUM_PRIVATE_SIZE = %d bytes\n", IMPERIUM_PRIVATE_SIZE);
-	exit(0);
 }
 

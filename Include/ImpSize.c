@@ -23,6 +23,5 @@ main()
 	printf("sizeof(Player_t) = %d bytes\n", sizeof(Player_t));
 	printf("sizeof(Planet_t) = %d bytes\n", sizeof(Planet_t));
 	printf("sizeof(Ship_t) = %d bytes\n", sizeof(Ship_t));
-	exit(0);
 }
 
