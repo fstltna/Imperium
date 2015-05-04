@@ -66,6 +66,10 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "ImpPrivate.h"
 #include "../Servers/ImpCtrl.h"
 
+/* These are for pcre */
+#include "/usr/include/pcre.h"
+#define OVECMAX 30
+
 static const char rcsid[] = "$Id: startup.c,v 1.3 2000/05/18 07:29:41 marisa Exp $";
 
 /*
@@ -930,6 +934,45 @@ BOOL newPlayerPassword(IMP)
 }
 
 /*
+ * newPlayerEmail - get a new email address for the player. Verify it.
+ *      return 'TRUE' if it is verified, and install into the player.
+ */
+
+BOOL newPlayerEmail(IMP)
+{
+    //static const char *pattern = "^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+    static const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+    BOOL ok;
+    const char *err_msg;
+    int err, rc;
+    int offsets[OVECMAX];
+
+    pcre *re = NULL;
+
+    uPrompt(IS, "Enter new email address");
+    ok = clReadUser(IS);
+    if (ok)
+    {
+	    /* Entered something, validate the data */
+	    re = pcre_compile(pattern, 0, &err_msg, &err, NULL);
+	    if (re == NULL)
+	    {
+		    user(IS, "Regex Creation Failed\n");
+		    return FALSE;
+	    }
+	    rc = pcre_exec(re, NULL, &IS->is_textIn[0], strlen(&IS->is_textIn[0]), 0, 0, offsets, OVECMAX);
+            if (rc < 1)
+	    {
+		user(IS, "Invalid email address\n");
+		return FALSE;
+	    }
+	    memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
+            return TRUE;
+     }
+     return FALSE;
+}
+
+/*
  * updateTimer - updates connect time limit, returns 'FALSE' if we should quit
  */
 
@@ -1278,11 +1321,13 @@ void ImpCntrl(IMP)
             IS->is_player.p_race = NO_RACE;
             strcpy(&IS->is_player.p_name[0], "System Utility");
             strcpy(&IS->is_player.p_password[0], "foobar");
+            strcpy(&IS->is_player.p_email[0], "");
             IS->is_player.p_loggedOn = TRUE;
             IS->is_player.p_inChat = FALSE;
             IS->is_player.p_compressed = FALSE;
             IS->is_player.p_doingPower = FALSE;
             IS->is_player.p_feMode = 0;
+            IS->is_player.p_sendEmail = 0;
             IS->is_player.p_newPlayer = FALSE;
             IS->is_player.p_notify = nt_message;
             server(IS, rt_setPlayer, IS->is_player.p_number);
@@ -1945,8 +1990,12 @@ void Imperium(IMP)
                                     *p = *rp;
                                     server(IS, rt_unlockPlayer, i);
                                     (void) resetTimer(IS);
-                                    log3(IS, "*** Player ", name,
-                                        " created.");
+				    {
+					char MessageBody[2048];
+                                    	log3(IS, "*** Player ", name, " created.");
+                                    	sprintf(MessageBody, "*** Player %s created", name);
+                                    	sendSystemEmail(IS, "New User Created", MessageBody);
+				    }
                                     makeUserShip(IS);
                                 }
                             }

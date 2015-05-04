@@ -1,6 +1,3 @@
-1) Client password validation doesn't work... Server core dumps if the password
-is invalid
-
-2) TelImp input is coming in line mode rather than character mode, need to
+1) TelImp input is coming in line mode rather than character mode, need to
 disable echoing of LF.
 

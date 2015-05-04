@@ -6,12 +6,9 @@ on machines on other systems via direct access to sockets or the like.
 However, it may be possible to do this if one machine is able to mount the
 file system on which the Imperium server creates it's FIFOs (such as via NFS).
 	In any case, the "prefered" way of making an Imperium game available
-via the net is to add a properly set up "ConImp" entry to your TCP/IP
-"services" file, such that ConImp gets started up with features like the
-"log" command disabled, and maybe to select a certain game (if you run more
-than one). I would expect you will need to be root to do this. Once you have
-it set up this way there is no problem with people using "telnet" or some
-similar program to start up an Imperium session.
+via the net is to use the new "TelImp" client. Once you have it set up this
+way there is no problem with people using "telnet" or some similar program to
+start up an Imperium session.
 
 	To prevent other people from reading the Imperium data files directory
 you need to be sure of a few things:

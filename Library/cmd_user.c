@@ -388,6 +388,16 @@ void cmd_status(IMP)
     }
     /* print out the notify method */
     user2(IS, "Notify via: ", ptr);
+    if (IS->is_player.p_sendEmail)
+    {
+        ptr = "ON\n";
+    }
+    else
+    {
+        ptr = "OFF\n";
+    }
+    /* print out the email sending option */
+    user2(IS, "Sending email is ", ptr);
     if (IS->is_player.p_compressed)
     {
         ptr = "ON\n";
@@ -396,6 +406,9 @@ void cmd_status(IMP)
     {
         ptr = "OFF\n";
     }
+    /* show current email address */
+    user3(IS, "Current email address is '", &IS->is_player.p_email[0], "'\n");
+
     /* print out the compressed mode */
     user2(IS, "Compressed mode is ", ptr);
     if (IS->is_player.p_feMode != 0)

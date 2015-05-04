@@ -54,6 +54,7 @@
 #else
 #include <string.h>
 #endif
+#include <stdio.h>
 #include <math.h>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -2548,4 +2549,43 @@ void doUninstall(Ship_t *sh, register ULONG biNum, BigPart_t what)
         which++;
     }
 }
+
+/* Sends an email */
+void sendEmail(IMP, const BOOL emailenabled, const char *sendto, const char *subject, const char *emailbody)
+{
+	char cmd[255]; /* holds the cli command */
+	char tempFile[100];
+	if (!emailenabled)
+	{
+		return;
+	}
+	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
+	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
+	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */
+	fprintf(fp, "\r\n"); /* seperate headers from body */
+	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
+	fclose(fp); /* close it. */
+	sprintf(cmd, "/usr/sbin/sendmail %s < %s", sendto, tempFile); /* prepare command. */
+	(void) system(cmd); /* execute it. */
+	/* remove temp file */
+	unlink(tempFile);
+}
+
+/* Sends a system email */
+void sendSystemEmail(IMP, const char *subject, const char *emailbody)
+{
+	char cmd[255]; /* holds the cli command */
+	char tempFile[100];
+	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
+	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
+	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */
+	fprintf(fp, "\r\n"); /* seperate headers from body */
+	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
+	fclose(fp); /* close it. */
+	sprintf(cmd, "/usr/sbin/sendmail %s < %s", &IS->is_world.w_emailAddress[0], tempFile); /* prepare command. */
+	(void) system(cmd); /* execute it. */
+	/* remove temp file */
+	unlink(tempFile);
+}
+
 

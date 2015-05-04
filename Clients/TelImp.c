@@ -721,7 +721,6 @@ void runImperium(void)
 void splatZombie(void)
 {
 	union wait wstatus;
-
 	while(wait3(&wstatus, WNOHANG, NULL) > 0)
 	{
 	}

@@ -236,6 +236,7 @@ void news(IMP, register const NewsType_t, register const USHORT,
     register const USHORT);
 BOOL getPassword(IMP, register char *, register char *);
 BOOL newPlayerPassword(IMP);
+BOOL newPlayerEmail(IMP);
 BOOL updateTimer(IMP);
 BOOL resetTimer(IMP);
 void clServerReq(IMP);
@@ -321,6 +322,8 @@ void getLowHi(IMP, register ULONG *, register ULONG *);
 void getPlRange(IMP, ULONG *, ULONG *, USHORT, USHORT, USHORT);
 USHORT isHomePlanet(IMP, register ULONG);
 void doUninstall(Ship_t *, register ULONG, ItemType_t);
+void sendEmail(IMP, const BOOL, const char *, const char *, const char *);
+void sendSystemEmail(IMP, const char *, const char *);
 
     /* messages.c */
 

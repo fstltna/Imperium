@@ -106,7 +106,8 @@ static char
     gbGodPassword[PASSWORD_LEN],
     gbLastWinner[NAME_LEN],
     gbPlanetsFile[255],
-    gbSectorsFile[255];
+    gbSectorsFile[255],
+    gbEmailAddress[128];
 static ULONG
     gbVertSize,
     gbHorizSize,
@@ -771,6 +772,7 @@ void initializePlayer(USHORT player)
         /* clear out the names to be safe */
         memset(&p->p_name[0], '\0', NAME_LEN * sizeof(char));
         memset(&p->p_password[0], '\0', PASSWORD_LEN * sizeof(char));
+        memset(&p->p_email[0], '\0', EMAIL_LEN * sizeof(char));
     }
     /* set all the player-race/player-player relations */
     for (i = tempval; i < RACE_MAX; i++)
@@ -798,6 +800,7 @@ void initializePlayer(USHORT player)
     p->p_compressed = 1;
     p->p_doingPower = tempval;
     p->p_newPlayer = 1;
+    p->p_sendEmail = 0;
     p->p_tmp = tempval;
 
     /* set the notify type */
@@ -1586,6 +1589,7 @@ void writeFiles(void)
         cleanup(20);
     }
     strcpy(&World.w_password[0], gbCreationPassword);
+    strcpy(&World.w_emailAddress[0], gbEmailAddress);
     if (fwrite((void *)&World, sizeof(char), sizeof(World_t),
 	fd) != sizeof(World_t))
     {
@@ -2408,6 +2412,9 @@ short startGenerate(void)
 
     /* read in the LastWinner now */
     getEnvDef(gbLastWinner, "LastWinner", "");
+
+    /* read in the server email address */
+    getEnvDef(gbEmailAddress, "EmailAddr", "changeme@foobar.com");
 
     /* read in the GodPassword now */
     getEnvDef(gbGodPassword, "GodPassword", "imperium");

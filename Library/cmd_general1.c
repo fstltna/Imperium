@@ -76,13 +76,44 @@ void cmd_change(IMP)
 
     /* find out what they want to change */
     if (reqChoice(IS, &what, "name\0password\0player\0notify\0compressed\0"
-        "width\0length\0fe\0time\0btu\0", "Change what (btu warn/compressed/"
-        "fe mode/length/name/notify/password/player/time warn/width)"))
+        "width\0length\0fe\0time\0btu\0sendemail\0emailaddr\0", "Change what (btu warn/compressed/email address/"
+        "fe mode/length/name/notify/password/player/send email/time warn/width)"))
     {
         rp = &IS->is_request.rq_u.ru_player;
         /* note that for most of the options you must be an active player */
         switch(what)
         {
+            /* change email send mode */
+            case 10:
+                if (IS->is_player.p_status != ps_visitor)
+                {
+                    /* lock the current player */
+                    server(IS, rt_lockPlayer, IS->is_player.p_number);
+                    /* change the flag in the buffer */
+                    IS->is_request.rq_u.ru_player.p_sendEmail =
+                        !IS->is_request.rq_u.ru_player.p_sendEmail;
+                    /* unlock the current player */
+                    server(IS, rt_unlockPlayer, IS->is_player.p_number);
+                    /* copy the new flag into the current player */
+                    IS->is_player.p_sendEmail =
+                        IS->is_request.rq_u.ru_player.p_sendEmail;
+                    /* tell them what mode they just selected */
+                    user(IS, "Send email mode is now ");
+                        if (IS->is_player.p_sendEmail)
+                        {
+                            user(IS, "ON\n");
+                        }
+                        else
+                        {
+                            user(IS, "OFF\n");
+                        }
+                }
+                else
+                {
+                    user(IS, "You must be an active player to use this "
+                        "option\n");
+                }
+                break;
             /* change btu warning level */
             case 9:
                 if (IS->is_player.p_status != ps_visitor)
@@ -367,9 +398,10 @@ void cmd_change(IMP)
                 }
                 break;
 
+            case 11:
             case 1:
             case 0:
-                /* they want to change their name or password */
+                /* they want to change their name, email address, or password */
                 if (IS->is_player.p_status != ps_visitor)
                 {
                     /* make sure they are the real player */
@@ -425,14 +457,27 @@ void cmd_change(IMP)
                                 }
                             }
                         }
-                        else
+                        else if (what == 1)
                         {
                             /* they want to change their password */
-                            (void) newPlayerPassword(IS);
-                            server(IS, rt_lockPlayer, IS->is_player.p_number);
-                            strcpy(&IS->is_request.rq_u.ru_player.p_password[0],
-                                &IS->is_player.p_password[0]);
-                            server(IS, rt_unlockPlayer, IS->is_player.p_number);
+                            if (newPlayerPassword(IS))
+			    {
+                                server(IS, rt_lockPlayer, IS->is_player.p_number);
+                                strcpy(&IS->is_request.rq_u.ru_player.p_password[0],
+                                    &IS->is_player.p_password[0]);
+                                server(IS, rt_unlockPlayer, IS->is_player.p_number);
+			    }
+                        }
+                        else
+                        {
+                            /* they want to change their email address */
+                            if (newPlayerEmail(IS))
+			    {
+                                server(IS, rt_lockPlayer, IS->is_player.p_number);
+                                strcpy(&IS->is_request.rq_u.ru_player.p_email[0],
+                                    &IS->is_player.p_email[0]);
+                                server(IS, rt_unlockPlayer, IS->is_player.p_number);
+			    }
                         }
                     }
                     else
