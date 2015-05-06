@@ -940,6 +940,7 @@ BOOL newPlayerPassword(IMP)
 
 BOOL newPlayerEmail(IMP)
 {
+#ifdef WANTPCRE
     //static const char *pattern = "^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
     static const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
     BOOL ok;
@@ -969,6 +970,7 @@ BOOL newPlayerEmail(IMP)
 	    memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
             return TRUE;
      }
+#endif
      return FALSE;
 }
 
@@ -1348,7 +1350,7 @@ BOOL playNameEqu(IMP, USHORT playNum, char *name)
 
     rp = &IS->is_request.rq_u.ru_player;
     server(IS, rt_readPlayer, playNum);
-    if (strcmp(&rp->p_name[0], name) == 0)
+    if (strcasecmp(&rp->p_name[0], name) == 0)
     {
         return TRUE;
     }
