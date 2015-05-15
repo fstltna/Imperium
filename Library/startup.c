@@ -2068,8 +2068,17 @@ void Imperium(IMP)
                     user(IS,
                        "\n*** Warning!!! Your player was already marked"
                        " as logged on!!!\n\n");
-                    aborting = TRUE;
                     log3(IS, "*** Player ", name, " is already logged on.");
+                    /* see if they want to create it */
+                    if (ask(IS, "Do you want to log on anyway? "))
+		    {
+                        log3(IS, "*** Player ", name, " logged on anyway.");
+		    }
+		    else
+		    {
+                        log3(IS, "*** Player ", name, " did not log on anyway.");
+                        aborting = TRUE;
+		    }
                 }
             }
         }
