@@ -11,5 +11,4 @@
 	activate the ImpShut/ImpCre features.
 4)	Need to add ability to edit the weapons installed on planets
 5)	Need to add edit/examine routines for big items.
-6)	Make autoconf detect the location of pcre libs instead of hard coding path
-7)	Add sdump command to dump all ship data
+6)	Add sdump command to dump all ship data

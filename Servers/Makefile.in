@@ -40,7 +40,7 @@ ImpShut: ImpShut.o
 	$(CC) $(LDFLAGS) -o ImpShut ImpShut.o -lcrypt
 
 ImpCtrl: ImpCtrl.o $(IMPLIB)
-	$(CC) $(LDFLAGS) -o ImpCtrl ImpCtrl.o $(IMPLIB) /usr/lib/i386-linux-gnu/libpcre.a -lc -lcrypt
+	$(CC) $(LDFLAGS) -o ImpCtrl ImpCtrl.o $(IMPLIB) -lc -lcrypt
 
 $(IMPLIB):
 	cd ../Library; make

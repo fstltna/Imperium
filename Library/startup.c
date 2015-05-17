@@ -66,10 +66,6 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "ImpPrivate.h"
 #include "../Servers/ImpCtrl.h"
 
-/* These are for pcre */
-#include "/usr/include/pcre.h"
-#define OVECMAX 30
-
 static const char rcsid[] = "$Id: startup.c,v 1.3 2000/05/18 07:29:41 marisa Exp $";
 
 /*
@@ -940,38 +936,100 @@ BOOL newPlayerPassword(IMP)
 
 BOOL newPlayerEmail(IMP)
 {
-#ifdef WANTPCRE
-    //static const char *pattern = "^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-    static const char *pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
     BOOL ok;
-    const char *err_msg;
-    int err, rc;
-    int offsets[OVECMAX];
-
-    pcre *re = NULL;
+    const char *c, *domain;
+    static char *rfc822_specials = "()<>@,;:\\\"[]";
+    int count = 0;
 
     uPrompt(IS, "Enter new email address");
     ok = clReadUser(IS);
     if (ok)
     {
 	    /* Entered something, validate the data */
-	    re = pcre_compile(pattern, 0, &err_msg, &err, NULL);
-	    if (re == NULL)
+	    /* first we validate the name portion (name@domain) */
+	    for (c = &IS->is_textIn[0];  *c;  c++)
 	    {
-		    user(IS, "Regex Creation Failed\n");
-		    return FALSE;
+		if (*c == '\"' && (c == &IS->is_textIn[0] || *(c - 1) == '.' || *(c - 1) == '\"'))
+		{
+	      	    while (*++c)
+		    {
+		        if (*c == '\"') break;
+		        if (*c == '\\' && (*++c == ' ')) continue;
+		        if (*c <= ' ' || *c >= 127)
+			{
+			    user(IS, "Invalid email address\n");
+			    return FALSE;
+			}
+		    }
+	            if (!*c++)
+		    {
+		        user(IS, "Invalid email address\n");
+		        return FALSE;
+		    }
+		    if (*c == '@') break;
+		    if (*c != '.')
+		    {
+		        user(IS, "Invalid email address\n");
+		        return FALSE;
+		    }
+		    continue;
+		 }
+	         if (*c == '@') break;
+    		 if (*c <= ' ' || *c >= 127)
+		 {
+		     user(IS, "Invalid email address\n");
+		     return FALSE;
+		 }
+        	 if (strchr(rfc822_specials, *c))
+		 {
+		     user(IS, "Invalid email address\n");
+		     return FALSE;
+		 }
 	    }
-	    rc = pcre_exec(re, NULL, &IS->is_textIn[0], strlen(&IS->is_textIn[0]), 0, 0, offsets, OVECMAX);
-            if (rc < 1)
+	    if (c == &IS->is_textIn[0] || *(c - 1) == '.')
 	    {
-		user(IS, "Invalid email address\n");
-		return FALSE;
+	        user(IS, "Invalid email address\n");
+	        return FALSE;
 	    }
-	    memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
-            return TRUE;
-     }
-#endif
-     return FALSE;
+
+	    /* next we validate the domain portion (name@domain) */
+	    if (!*(domain = ++c))
+	    {
+	        user(IS, "Invalid email address\n");
+	        return FALSE;
+	    }
+  	    do
+	    {
+	        if (*c == '.')
+		{
+	            if (c == domain || *(c - 1) == '.')
+	    	    {
+	        	user(IS, "Invalid email address\n");
+	        	return FALSE;
+	    	    }
+		    count++;
+		}
+	        if (*c <= ' ' || *c >= 127)
+	    	{
+	            user(IS, "Invalid email address\n");
+	            return FALSE;
+	    	}
+		if (strchr(rfc822_specials, *c))
+	    	{
+	            user(IS, "Invalid email address\n");
+	            return FALSE;
+	    	}
+	    } while (*++c);
+
+    if (count >= 1)
+    {
+	memcpy(&IS->is_player.p_email[0], &IS->is_textIn[0], EMAIL_LEN - 1);
+	return TRUE;
+    }
+    else
+    {
+	    return FALSE;
+    }}
 }
 
 /*
