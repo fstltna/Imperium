@@ -565,7 +565,7 @@ typedef struct
         unsigned int
             p_newPlayer:1;              /* true if player is new    */
         unsigned int
-            p_sendEmail:1;              /* true if player is new    */
+            p_sendEmail:1;              /* true if player wants email */
         unsigned int
             p_tmp:26;                   /* for future use  must == 32 */
 #define nt_telegram 0                   /* notify => telegram       */
