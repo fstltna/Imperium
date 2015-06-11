@@ -49,6 +49,16 @@ players will then find the items there and can load them onto their ships.
 require a certain population to exist before any people may be removed. It is
 up to the members of a race to bring people back to their home planet to meet
 this minimum requirement.
+1.2.2.3) Planet Types
+     H    - a home planet
+     A    - rocky, lifeless, no minerals
+     B    - entirely water, no land masses
+     C    - gaseous
+     D    - generic planet class, but no intelligent life
+     M    - earth-type, likely to support int. life
+     N    - rocky, no native life  good min
+     O    - about the same as N, but good gold
+     Q    - Q should be fairly rare, maybe 1 per game
 1.2.3) Stars
      Stars range in size from 5-10. Stars provide the energy in a "Galactic"
 sector, and this tends to show up in richer mineral contents of the planets in
