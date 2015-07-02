@@ -126,7 +126,7 @@ void printPlayer(IMP, USHORT i, BOOL onlyOn)
             racePtr = "NONE";
         }
         (void) sprintf(&tempBuf[0],
-"%2.2u  %c%-20.20s  [%4.4u] [%3.3u] %-9.9s %-6.6s %-20.20s\n",
+"%3.3u  %c%-20.20s  [%4.4u] [%3.3u] %-9.9s %-6.6s %-20.20s\n",
             i, actChar, &timeBuf[0], p->p_timeLeft, p->p_btu, actPtr,
             racePtr, &p->p_name[0]);
         user(IS, &tempBuf[0]);
@@ -199,7 +199,7 @@ void cmd_player(IMP)
     user(IS, ", world created ");
     uTime(IS, IS->is_world.w_buildDate);
     userNL(IS);
-    user(IS, " #   last access            time  BTU's status  "
+    user(IS, "_ #   last access            time  BTU's status  "
         "  race   player name\n");
     dash(IS, 68);
     if (IS->is_player.p_status == ps_deity)

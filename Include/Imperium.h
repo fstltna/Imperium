@@ -57,7 +57,7 @@
 #define REALM_MAX               6       /* max number of realms         */
 #define REALM_LEN               80      /* length of each realm string  */
 
-#define PLAYER_MAX              96      /* max number of players        */
+#define PLAYER_MAX              253      /* max number of players        */
 /* never set PLANET_MAX below 12, or various things might break         */
 #define PLANET_MAX              12      /* max # of planets per sect    */
 /* Do not set FLEET_MAX to over 254!                                    */
@@ -318,7 +318,7 @@ typedef struct
             w_currPlayers;              /* number of entered users          */
         char
             w_password[PASSWORD_LEN],   /* password to create a player */
-            w_emailAddress[EMAIL_LEN];   /* password to create a player */
+            w_emailAddress[EMAIL_LEN];  /* system email address	       */
 
         /* global counters */
 
