@@ -1,5 +1,9 @@
 Changes grouped by release:
 
+07-01-15 Release (1.1pl0)
+================
+* Set PLAYER_MAX to 253
+
 05-27-15 Release
 ================
 * Added this file
