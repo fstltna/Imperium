@@ -29,7 +29,7 @@ PctOth=5
 PctBH=50
 
 # The intended number of players for the game (including the deity)
-NumPlay=95
+NumPlay=253
 
 # The maximum daily connect time allowed for players
 ConTime=60
