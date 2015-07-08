@@ -1616,13 +1616,9 @@ void writeFiles(void)
     clearFile(POWER_FILE);
 
     puts("Writing telegram files:");
-    strcpy(&FileName[0], &Path[0]);
-    j = strlen(&Path[0]) + 10;
-    strcat(&FileName[0], "telegrams.XX");
     for (i = 0; i < World.w_maxPlayers; i++)
     {
-        FileName[j] = i / 10 + '0';
-        FileName[j + 1] = i % 10 + '0';
+    	sprintf(&FileName[0], "%stelegrams.%03.3u", &Path[0], i);
         zapFile();
     }
     puts("\nImperium universe created!\n");
