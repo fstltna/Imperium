@@ -900,7 +900,7 @@ void sendTelegram(register Request_t *rq)
     char fileName[257];
     register ULONG len;
 
-    sprintf(&fileName[0], "%stelegrams.%2.2hd", &Path[0],
+    sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
 	rq->rq_u.ru_telegram.te_to);
     fd = fopen(&fileName[0], "r+b");
     if (fd != NULL)
@@ -999,7 +999,7 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
             case TELE_DELETE:
                 player->p_telegramsTail = 0;
                 player->p_telegramsNew = 0;
-		sprintf(&fileName[0], "%stelegrams.%2.2hd", &Path[0],
+		sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
 		    cl->cl_playerNumber);
                 (void) unlink(&fileName[0]);
                 tempPtr = fopen(&fileName[0], "w");
@@ -1013,7 +1013,7 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
                 break;
             default:
                 /* first read of telegrams */
-		sprintf(&fileName[0], "%stelegrams.%2.2hd", &Path[0],
+		sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
 		    cl->cl_playerNumber);
                 cl->cl_fd = fopen(&fileName[0], "r+b");
                 if (cl->cl_fd == NULL)
