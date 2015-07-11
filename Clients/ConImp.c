@@ -802,7 +802,9 @@ BOOL runImperium(void)
 
 void useage(void)
 {
-    puts("Useage is: ConImp [-a] [-t] [n<name>] [m<time>]\n"
+    printf("ConImp v%s.pl%d\n\n", IMP_BASE_REV, 0);
+
+    puts("Useage is: ConImp [-a] [-t] [n<name>] [m<time>] [e<editor>]\n"
         "    -a = non-ANSI terminal\n    -t = use test port\n"
         "    -n = force user name        -m = maximum play time\n"
 	"    -e<editor> = allow external editor");

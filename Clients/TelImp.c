@@ -733,9 +733,12 @@ void splatZombie(void)
 
 void useage(void)
 {
-    puts("Useage is: TelImp [-a] [-t] [m<time>]\n"
+    printf("TelImp v%s.pl%d\n\n", IMP_BASE_REV, 0);
+
+    puts("Useage is: TelImp [-a] [-t] [port=<port>] [m<time>] [time=<time>]\n"
         "    -a = non-ANSI terminal\n    -t = use test port\n"
-        "    -m = maximum play time");
+        "    -m = maximum play time\n    time=<time> - maximum play time\n"
+	"    port=<port>\n");
 }
 
 /*

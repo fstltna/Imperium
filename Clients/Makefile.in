@@ -30,7 +30,7 @@ IMPPRAG = ../Include/ImpPragmas.h
 
 INCFILES = $(IMPINC) $(IMPREQINC)
 
-ALLFLAGS = $(DEBUG) $(CFLAGS) -DFIFO_DIR="\"$(IMP_DEST)/fifo\""
+ALLFLAGS = $(DEBUG) $(CFLAGS) -DFIFO_DIR="\"$(IMP_DEST)/fifo\"" -DIMP_BASE_REV="\"$(IMP_BR)\""
 LDFLAGS = @LDFLAGS@ -L/usr/lib/i386-linux-gnu
 
 .c.o:
