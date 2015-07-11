@@ -1,0 +1,15 @@
+#!/bin/sh
+while :
+do
+cd /usr/local/lib/imperium/clients
+running=`ps ax|grep TelImp|grep -v grep`
+if [ -z "$running" ]; then
+       # The Log Entry
+       TIME="TelImp Down, Restarting: `date +"%A, %B %d - %r"`"
+       echo $TIME >>/usr/local/lib/imperium/TelImp.log
+	cd /usr/local/lib/imperium/clients
+       screen -fa -S TelImp -d -U -m ./TelImp
+fi
+       sleep 120
+done
+exit 0

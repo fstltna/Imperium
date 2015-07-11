@@ -1,0 +1,15 @@
+#!/bin/sh
+while :
+do
+cd /usr/local/lib/imperium/data
+running=`ps ax|grep ImpServ|grep -v grep`
+if [ -z "$running" ]; then
+       # The Log Entry
+       TIME="ImpServ Down, Restarting: `date +"%A, %B %d - %r"`"
+       echo $TIME >>/usr/local/lib/imperium/ImpServ.log
+	cd /usr/local/lib/imperium/data
+       screen -fa -S ImpServ -d -U -m ../servers/ImpServ
+fi
+       sleep 120
+done
+exit 0
