@@ -52,7 +52,7 @@ imperium.files - contains the paths to the other files/directories used by
      imp.world - (.8k) various stats defining the world, the options the deity
                  has set, various factors, etc. In short, all the "global"
                  settings that are the same for all players.
-    imp.player - (100k) contains all the "player" structures for the game.
+    imp.player - (350k) contains all the "player" structures for the game.
                  These structures contains all the "player specific" settings.
     imp.sector - (variable) an array of all the "galactic" sectors of the
                  world. Each "sector" is about 130 bytes, so a 10x10 world
@@ -172,3 +172,4 @@ the command line of ImpServ and any client you wish to use to access this
 server. You MUST have separate data files for each game, but you may share
 the doc and help files among all games.
 
+You may wish to start up the server and telimp client at boot time. See the files in InitScripts for info on doing this
