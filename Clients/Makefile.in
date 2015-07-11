@@ -61,6 +61,7 @@ install: ConImp TelImp
 	$(INSTALL) -d -g $(IMP_GRP) -m 755 -o $(IMP_OWN) $(IMP_DEST)/clients
 	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) ConImp $(IMP_DEST)/clients
 	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) TelImp $(IMP_DEST)/clients
+	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) starttelimpscreen $(IMP_DEST)/clients
 	-$(RM) $(IMP_BIN_DEST)/ConImp
 	-$(RM) $(IMP_BIN_DEST)/TelImp
 	$(LN) $(IMP_DEST)/clients/ConImp $(IMP_BIN_DEST)/ConImp

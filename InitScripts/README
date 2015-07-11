@@ -1,6 +1,6 @@
 Init Scripts
 ============
-These start up ImpServ and TelImp witha "screen" process.
+These start up ImpServ and TelImp with a "screen" process.
 
-1) Copy these into /etc/init.d
+1) Copy startimp into /etc/init.d
 2) Run /etc/init.d/startimp

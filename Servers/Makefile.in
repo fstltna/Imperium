@@ -58,6 +58,7 @@ install: ImpCtrl ImpShut ImpServ
 	$(INSTALL) -g $(IMP_GRP) -m 711 -o $(IMP_OWN) ImpCtrl $(IMP_DEST)/servers
 	$(INSTALL) -g $(IMP_GRP) -m 711 -o $(IMP_OWN) ImpShut $(IMP_DEST)/servers
 	$(INSTALL) -g $(IMP_GRP) -m 4700 -o $(IMP_OWN) ImpServ $(IMP_DEST)/servers
+	$(INSTALL) -g $(IMP_GRP) -m 751 -o $(IMP_OWN) startimpscreen $(IMP_DEST)/servers
 	$(INSTALL) -g $(IMP_GRP) -m 644 -o $(IMP_OWN) ic.allow $(IMP_DEST)
 	$(INSTALL) -g $(IMP_GRP) -m 644 -o $(IMP_OWN) is.allow $(IMP_DEST)
 

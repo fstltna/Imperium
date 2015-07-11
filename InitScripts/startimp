@@ -13,10 +13,10 @@
 case "$1" in
 
 start)		echo "Starting Imperium... "
-		nohup /etc/init.d/startimpscreen > /usr/local/lib/imperium/ImpServScreen.log&
+		nohup /usr/local/lib/imperium/servers/startimpscreen > /usr/local/lib/imperium/ImpServScreen.log&
 		sleep 4
 		echo "Starting TelImp... "
-		nohup /etc/init.d/starttelimpscreen >  /usr/local/lib/imperium/TelImpScreen.log&
+		nohup /usr/local/lib/imperium/clients/starttelimpscreen >  /usr/local/lib/imperium/TelImpScreen.log&
 		;;
 stop)		echo "Can not stop Imperium with this script... "
 		exit 1
