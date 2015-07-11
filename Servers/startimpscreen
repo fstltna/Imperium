@@ -10,6 +10,6 @@ if [ -z "$running" ]; then
 	cd /usr/local/lib/imperium/data
        screen -fa -S ImpServ -d -U -m ../servers/ImpServ
 fi
-       sleep 120
+       sleep 600
 done
 exit 0

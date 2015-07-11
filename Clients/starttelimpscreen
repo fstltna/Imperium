@@ -10,6 +10,6 @@ if [ -z "$running" ]; then
 	cd /usr/local/lib/imperium/clients
        screen -fa -S TelImp -d -U -m ./TelImp
 fi
-       sleep 120
+       sleep 600
 done
 exit 0
