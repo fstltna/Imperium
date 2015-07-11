@@ -3181,19 +3181,21 @@ void startServing(void)
     BusyClients = NULL;
     if (UseTest)
     {
-            log("Test server 1.0w started up.");
+	    sprintf(&lineBuf[0], "Test server %s started up.", IMP_BASE_REV);
+            log(&lineBuf[0]);
     }
     else
     {
             if (PlayPort[0] != '\0')
             {
-                sprintf(&lineBuf[0], "Imperium server 1.0w starting up on port"
-                    " \"%s\"", &PlayPort[0]);
+                sprintf(&lineBuf[0], "Imperium server %s starting up on port"
+                    " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
                 log(&lineBuf[0]);
             }
             else
             {
-                log("Imperium server 1.0w started up.");
+	    	sprintf(&lineBuf[0], "Imperium server %s started up.", IMP_BASE_REV);
+            	log(&lineBuf[0]);
             }
     }
     if (ClearPlayers)
@@ -3206,19 +3208,21 @@ void startServing(void)
     writeWorld(&World, &Player[0]);
     if (UseTest)
     {
-            log("Test server 1.0w shut down.");
+	    sprintf(&lineBuf[0], "Test server %s shut down.", IMP_BASE_REV);
+            log(&lineBuf[0]);
     }
     else
     {
             if (PlayPort[0] != '\0')
             {
-                sprintf(&lineBuf[0], "Imperium server 1.0w shutting down on "
-                    "port \"%s\"", &PlayPort[0]);
+                sprintf(&lineBuf[0], "Imperium server %s shutting down on port"
+                    " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
                 log(&lineBuf[0]);
             }
             else
             {
-                log("Imperium server 1.0w shut down.");
+	    	sprintf(&lineBuf[0], "Imperium server %s shut down.", IMP_BASE_REV);
+            	log(&lineBuf[0]);
             }
     }
     closeFiles();
