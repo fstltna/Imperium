@@ -173,3 +173,6 @@ server. You MUST have separate data files for each game, but you may share
 the doc and help files among all games.
 
 You may wish to start up the server and telimp client at boot time. See the files in InitScripts for info on doing this
+
+To keep the server from starting up create a file called nostart in
+/usr/local/lib/imperium/data. Remove it when you want the server to start.

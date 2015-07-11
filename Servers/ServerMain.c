@@ -3306,6 +3306,7 @@ int main(int argc, char *argv[])
     USHORT curArg;
     BOOL hadError;
     char *par;
+    FILE *LockFD;
 
     UseTest = FALSE;
     DoNews = TRUE;
@@ -3329,7 +3330,13 @@ int main(int argc, char *argv[])
     {
         /* running from CLI */
         hadError = FALSE;
-        if (argc > 1)
+    	LockFD = fopen("/usr/local/lib/imperium/data/nostart", "r");
+	if (LockFD != NULL)
+	{
+		log("Lock File Present - not starting Imperium server");
+		exit(1);
+	}
+	if (argc > 1)
         {
             curArg = 1;
             while (curArg < argc)
