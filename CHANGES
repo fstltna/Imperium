@@ -1,5 +1,9 @@
 Changes grouped by release:
 
+07-11-15
+================
+* Fix hard coding of version number
+
 07-08-15 Release (1.1pl0)
 ================
 * Set PLAYER_MAX to 253
