@@ -25,7 +25,7 @@
  * Fix more T/F issues
  *
  * Revision 1.4  2000/05/23 20:24:16  marisa
- * Added inclusion of crypt.h else Linux won't see the prototype for crypt()
+ * Added inclusion of crypt.h else GNU/Linux won't see the prototype for crypt()
  * Fix %lu as %u in printf()'s
  *
  * Revision 1.3  2000/05/18 06:41:40  marisa
@@ -443,7 +443,7 @@ void timedInput(unsigned int blTime, unsigned int maxTime)
 		IS->is_argBool = TRUE;
 		return;
 	    }
-	    /* Linux seems to send char 127 for BS */
+	    /* GNU/Linux seems to send char 127 for BS */
 	    if ((*curPos == '\b') || (*curPos == 127))
 	    {
 		*curPos = '\0';

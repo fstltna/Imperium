@@ -20,7 +20,7 @@
  * $Log: ServerMain.c,v $
  * Revision 1.5  2000/05/23 20:25:42  marisa
  * Added pl_weapon[] element to Planet_t struct
- * Added inclusion ofcrypt.hfor Linux
+ * Added inclusion ofcrypt.hfor GNU/Linux
  *
  * Revision 1.4  2000/05/18 08:11:13  marisa
  * Autoconf working

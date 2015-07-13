@@ -15,6 +15,10 @@ The ultimate goal of the game is to amass as much money and power as possible, u
 
  ------------
 
+Imperium is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.
+
+All of the files in the Doc and Help directories are also released under the GPLv1
+
 Imperium currently has recently been tested on the following machines: Linux Ubuntu 12.x, Linux Ubuntu 13.x, Linux Ubuntu 14.x
 
 And older versions: Linux 0.99pl10 (SLS), Linux 0.99pl12 (SLS), Linux 0.99pl12a (SLS), Linux 0.99pl13 (SlackWare), Linux 0.99pl14 (SlackWare), SCO Unix 3.2.2.0, SCO Unix 3.2.4.0, SCO Unix 3.2.4.1, SCO Unix 3.2.4.2, Solaris 2.5, Solaris 2.6, Solaris 2.7
