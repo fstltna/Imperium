@@ -408,7 +408,8 @@ void updatePlanet(IMP)
             rp->pl_polution += umin((USHORT) 100 - rp->pl_polution, (USHORT) q);
             q *= IS->is_world.w_efficCost;
             earnings -= q;
-            if (isMine || isHome)
+            /*if (isMine || isHome) */ /* ZZZ No imprevement cost */
+            if (isMine)
             {
                 IS->is_improvementCost += q;
             }
@@ -569,7 +570,8 @@ void updatePlanet(IMP)
         if (q != 0)
         {
             earnings -= q;
-            if (isMine || isHome)
+            /*if (isMine || isHome) */ /* ZZZ No chearge for home planet */
+            if (isMine)
             {
                 IS->is_militaryCost += q;
             }
@@ -739,7 +741,8 @@ void updatePlanet(IMP)
         {
             q = (deltaTime * IS->is_world.w_utilityRate) * rp->pl_size;
             earnings -= q;
-            if (isMine || isHome)
+            /*if (isMine || isHome)*/ /* ZZZ No charge for home planets */
+            if (isMine)
             {
                 IS->is_utilitiesCost += q;
             }
@@ -769,7 +772,8 @@ void updatePlanet(IMP)
             q = deltaTime * rp->pl_quantity[it_bars] * 4 *
                 IS->is_world.w_interestRate / 100;
             earnings += q;
-            if (isMine || isHome)
+            /*if (isMine || isHome)*/ /*ZZZ no interest on home planets */
+            if (isMine)
             {
                 IS->is_interestEarnings += q;
             }
@@ -783,7 +787,8 @@ void updatePlanet(IMP)
                     case pp_research:
                         q = deltaTime * IS->is_world.w_utilityRate;
                         earnings -= q;
-                        if (isMine || isHome)
+                        /*if (isMine || isHome)*/ /* ZZZ no utilities on home planet */
+                        if (isMine)
                         {
                             IS->is_utilitiesCost += q;
                         }
@@ -1121,7 +1126,8 @@ void updatePlanet(IMP)
             /* since we have the player locked anyway, put in any */
             /* money that may have been earned */
             play->p_money += earnings;
-            if (isMine || isHome)
+            /* if (isMine || isHome) */ /* ZZZ No earnings on home planet */
+            if (isMine)
             {
                 IS->is_player.p_money = play->p_money;
                 IS->is_player.p_planetCount = play->p_planetCount;
@@ -1232,7 +1238,8 @@ void updatePlanet(IMP)
 		ownerNum);
             play = &IS->is_request.rq_u.ru_player;
             play->p_money += earnings;
-            if (isMine || isHome)
+            /*if (isMine || isHome)*/ /* ZZZ no earnings */
+            if (isMine)
             {
                 IS->is_player.p_money = play->p_money;
                 IS->is_player.p_planetCount = play->p_planetCount;
