@@ -1579,7 +1579,7 @@ void editWorld(IMP)
     {
         if (*IS->is_textInPos != '\0')
         {
-            IS->is_textIn[62] = '\0';
+            IS->is_textIn[47] = '\0';
             strcpy(&IS->is_world.w_gameName[0], &IS->is_textIn[0]);
         }
     }
@@ -1589,7 +1589,7 @@ void editWorld(IMP)
     {
         if (*IS->is_textInPos != '\0')
         {
-            IS->is_textIn[62] = '\0';
+            IS->is_textIn[47] = '\0';
             strcpy(&IS->is_world.w_gameHost[0], &IS->is_textIn[0]);
         }
     }
@@ -1599,7 +1599,7 @@ void editWorld(IMP)
     {
         if (*IS->is_textInPos != '\0')
         {
-            IS->is_textIn[8] = '\0';
+            IS->is_textIn[6] = '\0';
             strcpy(&IS->is_world.w_gamePort[0], &IS->is_textIn[0]);
         }
     }
