@@ -2586,4 +2586,52 @@ void sendSystemEmail(IMP, const char *subject, const char *emailbody)
 	unlink(tempFile);
 }
 
+/*
+ *  displayTime - returns the human readable time string
+ */
+
+char * displayTime(ULONG t)
+{
+    static char buffer[30];
+
+    strcpy(&buffer[0], ctime(&t));
+    /* eliminate the '\n' that ctime() adds */
+    buffer[strlen(buffer) - 1] = '\0';
+    return(&buffer[0]);
+}
+
+/*
+ * publishStats - send our stats to the global server
+ */
+
+void publishStats(IMP)
+{
+    char cmd[255]; /* holds the cli command */
+    char tempFile[100];
+    char emailbody[2048];
+
+    log3(IS, "*** ", "Starting to publish stats", " ***");
+    sprintf(emailbody, "sname=%s\ncurpl=%u\nmaxpl=%u\nw_row=%u\nw_col=%u\nmaxcn=%u\nmaxbt=%u\nsrvvr=%s\nstdat=%s\n",
+		    "server name will be here after next server update", /* required DB change */
+		    IS->is_world.w_currPlayers,
+		    IS->is_world.w_maxPlayers,
+		    IS->is_world.w_rows,
+		    IS->is_world.w_columns,
+		    IS->is_world.w_maxConnect,
+		    IS->is_world.w_maxBTUs,
+		    IMP_BASE_REV,
+		    displayTime(IS->is_world.w_buildDate));
+    /* generate temp file name. */
+    strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
+    FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
+    fprintf(fp, "Subject: Server Publish Data\r\n"); /* write body to it. */
+    fprintf(fp, "\r\n"); /* seperate headers from body */
+    fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
+    fclose(fp); /* close it. */
+    sprintf(cmd, "/usr/sbin/sendmail %s < %s", SENDPUBTO, tempFile); /* prepare command. */
+    (void) system(cmd); /* execute it. */
+    /* remove temp file */
+    unlink(tempFile);
+    log3(IS, "*** ", "Publishing complete", " ***");
+}
 

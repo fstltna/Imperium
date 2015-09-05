@@ -276,6 +276,7 @@ ULONG ulmin(ULONG, ULONG);
 USHORT mapSector(IMP, register USHORT, register USHORT);
 void accessShip(IMP, ULONG);
 void accessPlanet(IMP, ULONG);
+void publishStats(IMP);
 USHORT readPlQuan(IMP, Planet_t *, ItemType_t);
 void writePlQuan(IMP, Planet_t *, ItemType_t, USHORT);
 USHORT getTransportCost(IMP, Planet_t *, ItemType_t, register USHORT);

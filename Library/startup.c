@@ -1346,6 +1346,13 @@ void ImpCntrl(IMP)
                 log3(IS, "Server buffers flushed to disk", "", "");
             }
             break;
+        case IC_PUBLISH:
+            if (doLog)
+            {
+                log3(IS, "Control utility sending stats to directory", "", "");
+            }
+            publishStats(IS);
+            break;
         default:
             server(IS, rt_readWorld, 0);
             IS->is_world = IS->is_request.rq_u.ru_world;

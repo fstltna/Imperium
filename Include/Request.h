@@ -131,6 +131,7 @@
 #define rt_backStart            80
 #define rt_backDone             81
 #define rt_broadcastMsg         82
+#define rt_publish              83
 
 typedef UBYTE RequestType_t;
 

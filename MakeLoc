@@ -3,7 +3,7 @@
 IMP_DEST=/usr/local/lib/imperium
 IMP_OWN=impown
 IMP_GRP=games
-IMP_BR=1.3
+IMP_BR=1.4
 #libdebug=
 libdebug=-DDEBUG_LIB
 servdebug=

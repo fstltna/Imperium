@@ -99,6 +99,11 @@
  * do not change anything from here on down
  */
 
+/* This is where server puclishing emails go -
+ * Don't change this if you want to be in the official list
+ */
+static const char SENDPUBTO[]="imppub@empiredirectory.net";
+
 /*
  * Type definitions
  */

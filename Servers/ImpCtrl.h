@@ -49,6 +49,7 @@
 #define IC_INCUSR   7   /* incremensts the user count   */
 #define IC_DECUSR   8   /* decrements the user count    */
 #define IC_DOFLUSH  9   /* flush the server's buffers   */
+#define IC_PUBLISH  10  /* publish the server data to the directory */
 
 /*
  * Additional notes:

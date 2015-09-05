@@ -42,6 +42,9 @@ Unix "-" format) in a group: IE: "-lumPL" instead of "-l -u -m -P -L".
     selectable flag has been turned on that flushes buffers when a player
     logs out.
 
+-s  Sends the info on the server to the global registery - this helps
+    people find your game! Please do not run this more than once a day...
+
 servlog=<on>|<off> [on]
     Indicates whether or not ImpCtrl should generate server log files for it's
     operation. This will prevent your log file from being filled with

@@ -497,6 +497,9 @@ BOOL runImpCtrl(void)
                                 case 'f':
                                     ISt->is_argShort = IC_DOFLUSH;
                                     break;
+                                case 's':
+                                    ISt->is_argShort = IC_PUBLISH;
+                                    break;
                                 case '\x50': /* Get around metaconfig problem */
                                 default:
                                     ISt->is_argShort = IC_FPOWER;
@@ -554,7 +557,7 @@ void useage(void)
 {
     printf("ImpCtrl V%s.pl%d\n\n", IMP_BASE_REV,
 	0);
-    puts("Useage is: ImpCtrl [-l] [-L] [-p] [-\x50] [-u] [-m] [-f] [-t]\n"
+    puts("Useage is: ImpCtrl [-l] [-L] [-p] [-\x50] [-u] [-m] [-f] [-t] [-s]\n"
         "    Note: The order options are specified is the order they will be\n"
         "          executed\n"
         "    l = indicate start of update commands\n"
@@ -564,6 +567,7 @@ void useage(void)
         "    u = global update of all planets\n"
         "    m = global update of all miners\n"
         "    f = flush server buffers to disk\n"
+        "    s = publish our game in the directory\n"
         "    t = use test port\n\n"
         " * - May require input and should not be used non-interactively");
 }
@@ -735,6 +739,7 @@ void checkCmds(FILE *allowFD, const char *userName)
 	    case 'l':
 	    case 'L':
 	    case 'f':
+	    case 's':
 	    case '\x50': /* Get around metaconfig problem */
 		if (strchr(&lineBuf[nameLen], cmds[curCmd]) == NULL)
 		{
@@ -856,6 +861,11 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+                else if (memcmp(par, "publish", 7) == 0)
+                {
+                    cmds[NumCmds] = 's';
+                    NumCmds++;
+                }
                 else if (memcmp(par, "flush=", 6) == 0)
                 {
                     par += 6 * sizeof(char);
@@ -892,6 +902,7 @@ int main(int argc, char *argv[])
                             case 'l':
                             case 'L':
                             case 'f':
+                            case 's':
                                 cmds[NumCmds] = *par;
                                 NumCmds++;
                                 break;

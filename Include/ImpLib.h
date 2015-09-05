@@ -65,6 +65,7 @@
 #define rt_backDone     81      /* indicate to the server you are   */
                                 /* done with a backup               */
 #define rt_broadcastMsg 82      /* send a message to all clients    */
+#define rt_publish      83      /* publish our server               */
 
   /* note that there are many others that are private! */
 typedef UBYTE RequestType_t;

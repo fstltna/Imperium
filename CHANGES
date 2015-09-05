@@ -1,5 +1,9 @@
 Changes grouped by release:
 
+09-05-15 Release (1.4pl0)
+================
+* Added server publishing option to ImpCtrl
+
 08-09-15 Release (1.3pl0)
 ================
 * No costs when updating home planet
