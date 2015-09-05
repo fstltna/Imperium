@@ -308,18 +308,7 @@ the production of the fuel tank containers.
      The server does all disk I/O relating to the private Imperium files. It
 also is responsible for player-player real-time communication.
 
-2.2) Shared library
-     The Imperium.library, which lives in the LIBS: directory contains all the
-Imperium code used by the game that does not have to be duplicated for each
-"client". This includes all game logic, the code to talk to the server, and
-memory management functions. Having this code in a shared library allows the
-clients to be very small, and to make it possible to run several users even
-when memory is tight. Additionally, by removing all the game code from the
-client, it allows the game to be upgraded without requiring any change to the
-clients (in most cases), a benefit to people using special "clients" for which
-they do not have the source code such as BBS doors.
-
-2.3) Clients
+2.2) Clients
      The various clients are responsible for all user I/O, and any disk I/O
 that relates to the specific user (such as recording a game session or printing
 out a map to the printer device). The standard clients provide an interface to
