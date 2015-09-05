@@ -2,6 +2,7 @@ Changes grouped by release:
 
 09-05-15 Release (1.4pl0)
 ================
+* Database is not backwards compatible! Do not upgrade on existing server!
 * Added server publishing option to ImpCtrl
 
 08-09-15 Release (1.3pl0)
