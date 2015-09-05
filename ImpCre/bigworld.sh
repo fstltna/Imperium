@@ -13,6 +13,11 @@ GodPassword=imperium
 # Set this to the password needed to create a new player
 CreationPassword=add.me
 
+# Imperium Game DB Publishing
+Name="Default Server"
+Host=change.me
+Port=3458
+
 # Set this to the random number seed, or 0 to have one picked for you
 RandomSeed=0
 

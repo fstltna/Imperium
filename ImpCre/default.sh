@@ -7,6 +7,11 @@
 # Add the location of ImpCre to our path
 PATH=$PATH:/usr/local/lib/imperium/impcre;export PATH
 
+# Imperium Game DB Publishing
+Name="Default Server"
+Host=change.me
+Port=3458
+
 # Here are the various ENV variables you can set, along with their default
 # values.
 

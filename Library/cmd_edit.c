@@ -599,6 +599,10 @@ void examineWorld(IMP)
     userN2(IS, "\nNext planet: ", IS->is_world.w_planetNext);
     userN2(IS, "\nNext big item: ", IS->is_world.w_bigItemNext);
     userNL(IS);
+    user3(IS, "Game Name: ", IS->is_world.w_gameName, "\n");
+    user3(IS, "Game Host: ", IS->is_world.w_gameHost, "\n");
+    user3(IS, "Game Port: ", IS->is_world.w_gamePort, "\n");
+    userNL(IS);
 }
 
 /*
@@ -1567,6 +1571,36 @@ void editWorld(IMP)
         {
             IS->is_textIn[PASSWORD_LEN - 1] = '\0';
             strcpy(&IS->is_world.w_password[0], &IS->is_textIn[0]);
+        }
+    }
+    user3(IS, "Game Name: ", &IS->is_world.w_gameName[0], "\n");
+    uPrompt(IS, "Game Name");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[62] = '\0';
+            strcpy(&IS->is_world.w_gameName[0], &IS->is_textIn[0]);
+        }
+    }
+    user3(IS, "Game Host: ", &IS->is_world.w_gameHost[0], "\n");
+    uPrompt(IS, "Game Host");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[62] = '\0';
+            strcpy(&IS->is_world.w_gameHost[0], &IS->is_textIn[0]);
+        }
+    }
+    user3(IS, "Game Port: ", &IS->is_world.w_gamePort[0], "\n");
+    uPrompt(IS, "Game Port");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[8] = '\0';
+            strcpy(&IS->is_world.w_gamePort[0], &IS->is_textIn[0]);
         }
     }
     user3(IS, "Last game won by: ", &IS->is_world.w_winName[0], "\n");

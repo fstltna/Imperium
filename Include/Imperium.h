@@ -481,6 +481,12 @@ typedef struct
             w_mobCost[IT_LAST + 1],     /* mob cost for items       */
         /* scaled default "weights" of items for ships  */
             w_weight[IT_LAST + 1];      /* default weight of items  */
+
+	char
+	    w_gameName[64],        /* Name of the game              */
+	    w_gameHost[64],        /* Name of the game              */
+	    w_gamePort[12];        /* Name of the game              */
+
     } World_t;
 
 #define ps_deity    0
