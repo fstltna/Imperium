@@ -2611,8 +2611,10 @@ void publishStats(IMP)
     char emailbody[2048];
 
     log3(IS, "*** ", "Starting to publish stats", " ***");
-    sprintf(emailbody, "sname=%s\ncurpl=%u\nmaxpl=%u\nw_row=%u\nw_col=%u\nmaxcn=%u\nmaxbt=%u\nsrvvr=%s\nstdat=%s\n",
+    sprintf(emailbody, "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\n",
 		    "server name will be here after next server update", /* required DB change */
+		    "server host will be here after next server update", /* required DB change */
+		    "server port will be here after next server update", /* required DB change */
 		    IS->is_world.w_currPlayers,
 		    IS->is_world.w_maxPlayers,
 		    IS->is_world.w_rows,
