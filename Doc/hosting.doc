@@ -49,10 +49,10 @@ wish. The files used by the game (and their sizes) are:
 imperium.files - contains the paths to the other files/directories used by
                  Imperium. Normally not present, which causes ImpServ to
                  look in the current directory for everything.
-     imp.world - (.8k) various stats defining the world, the options the deity
+     imp.world - (.9k) various stats defining the world, the options the deity
                  has set, various factors, etc. In short, all the "global"
                  settings that are the same for all players.
-    imp.player - (350k) contains all the "player" structures for the game.
+    imp.player - (700k) contains all the "player" structures for the game.
                  These structures contains all the "player specific" settings.
     imp.sector - (variable) an array of all the "galactic" sectors of the
                  world. Each "sector" is about 130 bytes, so a 10x10 world
@@ -172,7 +172,27 @@ the command line of ImpServ and any client you wish to use to access this
 server. You MUST have separate data files for each game, but you may share
 the doc and help files among all games.
 
-You may wish to start up the server and telimp client at boot time. See the files in InitScripts for info on doing this
+You may wish to start up the server and telimp client at boot time. See the
+files in InitScripts for info on doing this.
 
 To keep the server from starting up create a file called nostart in
-/usr/local/lib/imperium/data. Remove it when you want the server to start.
+/usr/local/lib/imperium/data (or the directory you are starting the server
+in). Remove it when you want the server to start again.
+
+==== Public Game Directory ====
+
+As of version 1.4 Imperium has a public directory of active games which can
+help you find more players. You can find more info on this in the impcre doc
+file. You will want to change the defaults before you create the world, or
+use the "edit world" command to change it after the world is created. It is
+important to not change these values after the first time you publish your
+game status as the old record will still exist until it reaches the deadline
+for updates and is purged.
+
+You should consider putting the command "ImpCtrl -s" in a cron job that
+executes once per day. Please do not run it more often and you can run it
+from the command line manually as long as you run it once withn a 15 day
+interval (the default time for entries to be purged for inactivity).
+
+You can view the directory here: https://EmpireDirectory.net/imppub.html
+

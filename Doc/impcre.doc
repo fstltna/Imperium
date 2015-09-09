@@ -189,6 +189,20 @@ Tunable World Parameters
 	and add some flavor, so feel free to change the names to something
 	else (red team, etc).
 
+        There are four settings that are very important:
+            Game Name: The name of your game if you are going to list
+                       it in the global directory. If not you can ignore this.
+            Game Host: The host name of your game if you are going to list
+                       it in the global directory. If not you can ignore this.
+            Game Port: The port of your game if you are going to list it in
+                       the global directory. If not you can ignore this.
+            Game Secret: The "secret" key to prevent someone from posting to the
+                       global directory, if you are going to list it. If not
+                       you can ignore this.
+
+            Once these are set you can use the command "ImpCtrl -s" to publish
+            your game in the directory. More on this in the Hosting doc file.
+
 	Lastly, you may enter the winner of the last game. If this is the
 	first game, or you didn't have a conclusive ending to the last game,
 	you can just leave it blank, or you can make up some non-existant
