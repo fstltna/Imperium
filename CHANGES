@@ -1,5 +1,10 @@
 Changes grouped by release:
 
+09-09-15 Release (1.5pl0)
+================
+* Database is not backwards compatible! Do not upgrade on existing server!
+* Add in support for secret field in world struct
+
 09-05-15 Release (1.4pl0)
 ================
 * Database is not backwards compatible! Do not upgrade on existing server!
