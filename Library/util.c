@@ -2611,10 +2611,10 @@ void publishStats(IMP)
     char emailbody[2048];
 
     log3(IS, "*** ", "Starting to publish stats", " ***");
-    sprintf(emailbody, "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\n",
-		    "server name will be here after next server update", /* required DB change */
-		    "server host will be here after next server update", /* required DB change */
-		    "server port will be here after next server update", /* required DB change */
+    sprintf(emailbody, "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\nsecret=%s\r\n",
+		    IS->is_world.w_gameName,
+		    IS->is_world.w_gameHost,
+		    IS->is_world.w_gamePort,
 		    IS->is_world.w_currPlayers,
 		    IS->is_world.w_maxPlayers,
 		    IS->is_world.w_rows,
@@ -2622,7 +2622,8 @@ void publishStats(IMP)
 		    IS->is_world.w_maxConnect,
 		    IS->is_world.w_maxBTUs,
 		    IMP_BASE_REV,
-		    displayTime(IS->is_world.w_buildDate));
+		    displayTime(IS->is_world.w_buildDate),
+		    IS->is_world.w_gameSecret);
     /* generate temp file name. */
     strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
     FILE *fp = fopen(tempFile, "w"); /* open it for writing. */

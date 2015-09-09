@@ -602,6 +602,7 @@ void examineWorld(IMP)
     user3(IS, "Game Name: ", IS->is_world.w_gameName, "\n");
     user3(IS, "Game Host: ", IS->is_world.w_gameHost, "\n");
     user3(IS, "Game Port: ", IS->is_world.w_gamePort, "\n");
+    user3(IS, "Game Secret: ", IS->is_world.w_gameSecret, "\n");
     userNL(IS);
 }
 
@@ -1601,6 +1602,16 @@ void editWorld(IMP)
         {
             IS->is_textIn[6] = '\0';
             strcpy(&IS->is_world.w_gamePort[0], &IS->is_textIn[0]);
+        }
+    }
+    user3(IS, "Game Secret: ", &IS->is_world.w_gameSecret[0], "\n");
+    uPrompt(IS, "Game Secret");
+    if (clReadUser(IS))
+    {
+        if (*IS->is_textInPos != '\0')
+        {
+            IS->is_textIn[10] = '\0';
+            strcpy(&IS->is_world.w_gameSecret[0], &IS->is_textIn[0]);
         }
     }
     user3(IS, "Last game won by: ", &IS->is_world.w_winName[0], "\n");

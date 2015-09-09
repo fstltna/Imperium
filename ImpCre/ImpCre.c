@@ -107,6 +107,7 @@ static char
     gbGameName[48],
     gbGameHost[48],
     gbGamePort[10],
+    gbGameSecret[10],
     gbLastWinner[NAME_LEN],
     gbPlanetsFile[255],
     gbSectorsFile[255],
@@ -1595,6 +1596,7 @@ void writeFiles(void)
     strcpy(&World.w_gameName[0], gbGameName);
     strcpy(&World.w_gameHost[0], gbGameHost);
     strcpy(&World.w_gamePort[0], gbGamePort);
+    strcpy(&World.w_gameSecret[0], gbGameSecret);
     strcpy(&World.w_emailAddress[0], gbEmailAddress);
     if (fwrite((void *)&World, sizeof(char), sizeof(World_t),
 	fd) != sizeof(World_t))
@@ -2432,6 +2434,9 @@ short startGenerate(void)
 
     /* read in game port */
     getEnvDef(gbGamePort, "Port", "3458");
+
+    /* read in game secret */
+    getEnvDef(gbGamePort, "Secret", "secret");
 
     /* now handle the race names and planets */
     for (race = 1; race < 8; race++)

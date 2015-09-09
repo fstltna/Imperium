@@ -11,6 +11,7 @@ PATH=$PATH:/usr/local/lib/imperium/impcre;export PATH
 Name="Default Server"
 Host=change.me
 Port=3458
+Secret=secret
 
 # Here are the various ENV variables you can set, along with their default
 # values.

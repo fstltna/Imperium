@@ -484,8 +484,9 @@ typedef struct
 
 	char
 	    w_gameName[64],        /* Name of the game              */
-	    w_gameHost[64],        /* Name of the game              */
-	    w_gamePort[12];        /* Name of the game              */
+	    w_gameHost[64],        /* Host of the game              */
+	    w_gamePort[12],        /* Port of the game              */
+	    w_gameSecret[12];      /* Secret of the game              */
 
     } World_t;
 
