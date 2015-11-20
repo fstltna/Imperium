@@ -74,7 +74,7 @@ PctBH=50
 NumPlay=6
 
 # The maximum daily connect time allowed for players
-ConTime=60
+ConTime=720
 
 # How much time makes up an "Imperium Time Unit" in seconds
 SecItu=1800

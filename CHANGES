@@ -1,5 +1,9 @@
 Changes grouped by release:
 
+11-20-15 Release
+================
+* Change game time per day
+
 09-12-15 Release (1.5pl0)
 ================
 * Database is not backwards compatible! Do not upgrade on existing server!
