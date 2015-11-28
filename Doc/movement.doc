@@ -1,0 +1,14 @@
+Imperium - Movement
+
+When moving, use the numbers layed out like this:
+
+7 8 9
+4 5 6
+1 2 3
+
+Use the "5" to show you what the current sector is like. To stop
+moving enter a "." or just press enter.
+
+Also See Help:
+        LAND, LIFTOFF, PROGRAM, RUN
+

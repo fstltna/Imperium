@@ -6,6 +6,7 @@ planet, and must have enough energy in their energy banks for the movement
 commands you give.
     If they are on the surface of a planet you must use the liftoff command to
 get them into orbit before moving them.
+    To stop moving enter "." or simply press return.
 
 See also:
         LAND, LIFTOFF, PROGRAM, RUN
