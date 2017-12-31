@@ -766,7 +766,7 @@ int main(int argc, char *argv[])
     char *par;
     BOOL hadError, cont;
     USHORT curArg;
-    char fileDir[256], userName[30], *userNamePtr;
+    char fileDir[256], userName[256], *userNamePtr;
     FILE *allowFD;
     struct passwd *myPwEnt;
 
@@ -934,14 +934,18 @@ int main(int argc, char *argv[])
 	    }
 	    else
 	    {
+#ifdef ZZZ
 		userNamePtr = cuserid(NULL);
 		if (userNamePtr != NULL)
 		{
+printf("-%d - Point 5.1\n", userNamePtr); /* ZZZ */
 		    strncpy(userName, userNamePtr, 28 * sizeof(char));
+printf("Point 5.1.1\n"); /* ZZZ */
 		    strcat(userName, " ");
 		}
 		else
 		{
+#endif
 		    myPwEnt = getpwuid(geteuid());
 		    if (myPwEnt == NULL)
 		    {
@@ -955,7 +959,9 @@ int main(int argc, char *argv[])
 			strncpy(userName, myPwEnt->pw_name, 28 * sizeof(char));
 			strcat(userName, " ");
 		    }
+#ifdef ZZZ
 		}
+#endif
 		if (allowFD != NULL)
 		{
 		    checkCmds(allowFD, userName);

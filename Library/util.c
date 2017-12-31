@@ -56,6 +56,7 @@
 #endif
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #else
@@ -2590,9 +2591,9 @@ void sendSystemEmail(IMP, const char *subject, const char *emailbody)
  *  displayTime - returns the human readable time string
  */
 
-char * displayTime(ULONG t)
+char * displayTime(const time_t *t)
 {
-    static char buffer[30];
+    static char buffer[256];
 
     strcpy(&buffer[0], ctime(&t));
     /* eliminate the '\n' that ctime() adds */
@@ -2608,7 +2609,7 @@ void publishStats(IMP)
 {
     char cmd[255]; /* holds the cli command */
     char tempFile[100];
-    char emailbody[2048];
+    char emailbody[16384];
 
     log3(IS, "*** ", "Starting to publish stats", " ***");
     sprintf(emailbody, "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\nsecret=%s\r\n",

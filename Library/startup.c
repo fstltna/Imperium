@@ -1234,7 +1234,6 @@ void ImpCntrl(IMP)
 
     rp = &IS->is_request.rq_u.ru_player;
     doLog = IS->is_argBool;
-
     /* check the server status */
     if ((IS->is_request.rq_specialFlags != ISF_NONE) &&
         ((IS->is_argShort != IC_RESET) && (IS->is_argShort != IC_BACKE) &&
