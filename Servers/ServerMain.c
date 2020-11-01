@@ -3174,8 +3174,10 @@ void startServing(void)
     }
     if (!readWorld(&World, &Player[0]))
     {
+	char ErrorString[255];
             DeletePort();
-            myAbort("can't read world/player");
+	sprintf(&ErrorString[0], "can't read world/player: %s '%s'", &Player[0], &Path[0]);
+            myAbort(&ErrorString[0]);
     }
     IdleClients = NULL;
     BusyClients = NULL;
