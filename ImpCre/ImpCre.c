@@ -1522,7 +1522,7 @@ void writeFiles(void)
     Player[0].p_status = ps_deity;
     Player[0].p_timeLeft = 999;
     strcpy(&Player[0].p_name[0], "god");
-    strcpy(&Player[0].p_password[0], gbGodPassword);
+    strncpy(&Player[0].p_password[0], gbGodPassword, PASSWORD_LEN);
     if (fwrite((void *)&Player, sizeof(char), sizeof(Player_t) * PLAYER_MAX,
 	fd) != (sizeof(Player_t) * PLAYER_MAX))
     {
