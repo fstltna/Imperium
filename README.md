@@ -20,7 +20,7 @@ Imperium is free software; you can redistribute it and/or modify it under the te
 
 All of the files in the Doc and Help directories are also released under the GPLv1
 
-Imperium currently has recently been tested on the following machines: Linux Ubuntu 12.x, Linux Ubuntu 13.x, Linux Ubuntu 14.x
+Imperium currently has recently been tested on the following machines: Linux Ubuntu 12.x, Linux Ubuntu 13.x, Linux Ubuntu 14.x, Linux Ubuntu 16.04, Linux Ubuntu 20.04
 
 And older versions: Linux 0.99pl10 (SLS), Linux 0.99pl12 (SLS), Linux 0.99pl12a (SLS), Linux 0.99pl13 (SlackWare), Linux 0.99pl14 (SlackWare), SCO Unix 3.2.2.0, SCO Unix 3.2.4.0, SCO Unix 3.2.4.1, SCO Unix 3.2.4.2, Solaris 2.5, Solaris 2.6, Solaris 2.7
 
