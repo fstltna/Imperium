@@ -5,9 +5,9 @@ include ../MakeLoc
 CC = @CC@
 RM = rm -f
 
-CFLAGS = @CFLAGS@
-DEBUG = 
-LDFLAGS = @LDFLAGS@
+#CFLAGS = -m32 @CFLAGS@
+#DEBUG = 
+#LDFLAGS = -m32 @LDFLAGS@
 
 
 INSTALL = @INSTALL@

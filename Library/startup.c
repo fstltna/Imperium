@@ -2060,7 +2060,7 @@ void Imperium(IMP)
 					char MessageBody[2048];
                                     	log3(IS, "*** Player ", name, " created.");
                                     	sprintf(MessageBody, "*** Player %s created", name);
-                                    	sendSystemEmail(IS, "New User Created", MessageBody);
+                                    	sendSystemEmail(IS, "New Imperium User Created", MessageBody);
 				    }
                                     makeUserShip(IS);
                                 }
