@@ -1,0 +1,194 @@
+                      -= Querry Selectors =-
+
+
+Most commands requiring a planet number or a ship number as parameter 
+can accept a selector to narrow the request a subset of the players 
+planets or ships, based on a specific "condition".
+
+The syntax of the selector is ?[KEYWORD][OPERATOR][VALUE]
+
+For example :
+
+    census geo ?ore>50
+
+will list all your planets with an ore deposit > 50.
+
+
+KEYWORD represents one of the various information returned by the census and
+ship commands, like "civ" or "gold", and are described in this document.
+KEYWORD can be abreviated to its first letters, as long there is 
+no ambiguity.
+If too few letters are given to distinguish betwen KEYWORDS, an error message 
+is displayed.
+
+
+OPERATOR is :
+    =   : is equal 
+    #   : is different
+    >   : is strictly superior
+    <   : is strictly inferior
+
+
+VALUE is the comparison reference. 
+<REVIEW one letter value don't work ? pmx-2022.04.29>
+
+Selectors can be chained with the & operator or by putting a space between
+them. For example :
+
+    census geo ?ore>50 & ?efficiency>60
+    --- or ---
+    census geo ?ore>50 ?efficiency>60
+
+will list all your planets with an ore deposit > 50 and efficency > 60.
+
+As a special case, ?class=x can be abbreviated with /x. For example :
+        census geo /1
+
+will display the geology census for your Home Planet.
+
+KEYWORD and VALUE can be exchanged, case, remember that the < and > relations
+are also reversed |
+
+    census geo ?ore>50 is identical to census geo ?50<ore
+
+
+KEYWORD description :
+
+--------------------------------------------------------------------------------
+ Keywords shared by ships and planets
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+class       | Planet class    | 1 to8    | 1=H,2=A,3=B,4=C,5=D,6=M,7=N,8=Q
+            | Ship type       | 0 to 5   | 0=a,1=b,2=c,3=d,4=e,5=m
+owner       | Owner           | player # | Home Planet=255. See | "ownrace"
+efficiency  | Efficiency      | 0-100%   |
+tf          | Tech Factor     |          | 
+plagued     |                 |          |
+
+civilians   | # of civilaians |          | 
+officers    | # of officers   |          |
+military    | # of soldiers   |          | 
+scientists  | # of scientists |          | 
+bars        | # of gold bars  |          |
+
+ore         | Ore quantity    |          | 
+gold        | Gold quantity   |          | 
+
+planes      | # of planes     |          | 
+missiles    | # of missiles   |          | 
+weapons     | # of weapons    |          | REVIEW total number of weapons ?
+
+--------------------------------------------------------------------------------
+Keywords only for ships
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+engeff      | Ship efficiency |  0-100%  | 
+energy      | Energy          |          | 
+fuel        | Fuel qty        |          | 
+airleft     | Oxygen qty      |          | 
+armor       | Armour level    |          | 
+shields     | Shields level   |          | 
+
+cargo       | Cargo Limit     |          |
+
+course      | Course to nav   |          |
+
+btf         | Blaser TF       |          | 
+ctf         | Computer TF     |          | 
+etf         | Engine TF       |          | 
+ltf         | Life Sup TF     |          | Life SupportTechnology Factor
+stf         | Sensor TF       |          | 
+ttf         | Teleport TF     |          |               | 
+ptf         | Photon TF       |          | Photon Torpedoes tech fact
+
+dragged     | Being dragged   |          |
+price       | Ships price     |          |
+
+--------------------------------------------------------------------------------
+Keywords only for planets
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+mobility    |                 |          |
+btu         | BTU             |          | The infamous Bureaucratic Time Unit
+minerals    | ???             |          | REVIEW What is it ? ore + gold ?
+
+polution    | Polution level  | 0-100    |
+gas         | Atmosphere lvl  | 0-100    |
+water       | Water coverage  | 0-100    | Seas coverage
+
+production  | TOTAL product.  |          | Total production available
+checkpoint  | Planets CP.     |          | Sets a password for the planet
+prodciv     | Civilians prod  |          | 
+prodmil     | Military prod   |          | 
+prodtech    | TF prod         |          | Technology Factor improvement
+prodres     | Research prod   |          | Research production available
+prodedu     | Education       |          | Education production available
+prodocs     | OCS prod        |          | Oficers Candidate School units
+prodore     | Ore extraction  |          |
+prodgold    | Gold extraction |          |
+prodair     | Air prod        |          | Oxygen for ships
+prodfuel    | Fuel prod       |          | 
+prodweap    | Weapons prod    |          | 
+prodeng     | Engines prod    |          | 
+prodhull    | Hulls prod      |          | 
+prodmiss    | Missiles prod   |          | 
+prodplan    | Planes prod     |          | Fighters
+prodelec    | Electronics     |          | Computers & Sensors
+prodcash    | Cash generated  |          |
+
+perciv      | Wf for civilans  | O-100%  | Workforce (%) dispach 
+permil      | Wf for military  | 0-100%  | Workforce (%) dispach 
+pertech     | Wf for technology| 0-100%  | Workforce (%) dispach  
+perres      | Wf for research  | 0-100%  | Workforce (%) dispach 
+peredu      | Wf for education | 0-100%  | Workforce (%) dispach 
+perocs      | Wf for OCS       | 0-100%  | OCS = Officer Candidate School
+perore      | Wf for ore       | 0-100%  | Workforce (%) dispach
+pergold     | Wf for gold      | 0-100%  | Workforce (%) dispach
+perair      | Wf for oxygen    | 0-100%  | Workforce (%) dispach
+perfuel     | Wf for fuel      | 0-100%  | Workforce (%) dispach
+perweap     | Wf for weapons   | 0-100%  | Workforce (%) dispach
+pereng      | Wf for engines   | 0-100%  | Workforce (%) dispach
+perhull     | Wf for hulls     | 0-100%  | Workforce (%) dispach
+permiss     | Wf for missiles  | 0-100%  | Workforce (%) dispach
+perplan     | Wf for planes    | 0-100%  | Workforce (%) dispach
+perelec     | Wf for electrnics| 0-100%  | Workforce (%) dispach
+percash     | Wf for cash      | 0-100%  | Workforce (%) dispach
+
+numbig      | # Big Item       |         | Big items available
+
+ownrace     | Planet owner     |         | Contrarily to "owner" KEYWORD, this
+                                         | selection includes the Home Planet
+
+--------------------------------------------------------------------------------
+Keyword for planets and sectors
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+scount      |                 |          | 
+
+--------------------------------------------------------------------------------
+Keyword only for sectors
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+pcount      |                 |          | 
+
+--------------------------------------------------------------------------------
+Keywords only for miners
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+carried     |                 |          | 
+message     |                 |          | 
+activity    |                 |          | 
+
+--------------------------------------------------------------------------------
+Keyword for miners and ships
+------------+-----------------+----------+--------------------------------------
+Keyword     |  Meaning        | Range    | Comment 
+------------+-----------------+----------+--------------------------------------
+free        |  Space free     |          | Space free in cargo hold
+
