@@ -1626,7 +1626,8 @@ void writeFiles(void)
     puts("Writing telegram files:");
     for (i = 0; i < World.w_maxPlayers; i++)
     {
-    	sprintf(&FileName[0], "%stelegrams.%03.3u", &Path[0], i);
+    	snprintf(&FileName[0], sizeof(FileName), "%stelegrams.%03u", &Path[0],
+	    (unsigned int) i);
         zapFile();
     }
     puts("\nImperium universe created!\n");
@@ -2627,7 +2628,10 @@ int main(int argc, char *argv[])
 		{
 		    printf("Do you wish to create the data files for "
 			"this world? [Y/N] <N>:");
-		    (void) fgets(&locBuf[0], 79, stdin);
+		    if (fgets(&locBuf[0], 79, stdin) == NULL)
+		    {
+			locBuf[0] = '\0';
+		    }
 		    if ((locBuf[0] == 'y') || (locBuf[0] == 'Y'))
 		    {
 			doLoop = FALSE;

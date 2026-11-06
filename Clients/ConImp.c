@@ -79,7 +79,6 @@ BOGUS - ConImp not supported on this machine due to missing select() call!
 #include <stdlib.h>
 #endif
 
-#include <bits/signum.h>
 #include <signal.h>
 
 #include <sys/types.h>
@@ -157,6 +156,11 @@ static ULONG
  */
 /* stuff wanted by terminal mode diddling routines */
 
+/* Prefer POSIX termios over the old SysV termio interface when available */
+#if defined(HAVE_TERMIOS_H) && defined(HAVE_TERMIO_H)
+#undef HAVE_TERMIO_H
+#endif
+
 #ifdef HAVE_TERMIO_H
 #include <termio.h>
 static struct termio _tty, _oldtty;
@@ -178,7 +182,7 @@ static BOOL bizarre=FALSE;  /* do we need to restore terminal? */
 #ifdef HAVE_TERMIO_H
 
 #define crmode() ((bizarre=TRUE),_tty.c_lflag &=~ICANON,_tty.c_cc[VMIN] = 1,ioctl(_tty_ch,TCSETAF,&_tty))
-#define nocrmode() ((bizarre=TRUE),_tty.c_lflag |= ICANON,stty(_tty_ch,&_tty))
+#define nocrmode() ((bizarre=TRUE),_tty.c_lflag |= ICANON,ioctl(_tty_ch,TCSETAF,&_tty))
 #define echo()	 ((bizarre=TRUE),_tty.c_lflag |= ECHO, ioctl(_tty_ch, TCSETA, &_tty))
 #define noecho() ((bizarre=TRUE),_tty.c_lflag &=~ECHO, ioctl(_tty_ch, TCSETA, &_tty))
 #define	savetty() (ioctl(_tty_ch, TCGETA, &_oldtty),ioctl(_tty_ch, TCGETA, &_tty))
@@ -402,16 +406,15 @@ void timedInput(unsigned int blTime, unsigned int maxTime)
 	{
 	    IS->is_argShort = 0; /* Timed out */
 	    IS->is_textIn[0] = '\0';
-	    /* See if we got an error, or just timed out */
-	    if (errno != 0)
+	    /* See if we got an error, or just timed out. Only look at errno
+	       when select() actually failed - on a timeout errno is left over
+	       from some earlier call and means nothing. */
+	    if ((nsel < 0) && (errno != EINTR))
 	    {
-	        if ((errno != EINTR) && (errno != ENOENT))
-	        {
-		    /* Got a booboo */
-		    printf("timedInput() got bad val from select(): %d\n", errno);
-		    IS->is_argBool = FALSE;
-		    return;
-	        }
+		/* Got a booboo */
+		printf("timedInput() got bad val from select(): %d\n", errno);
+		IS->is_argBool = FALSE;
+		return;
 	    }
 	    /* Return the apropriate code for where we timed out */
 	    IS->is_argBool = ((bufPos > 0) || (blTime == maxTime)) ? FALSE
@@ -668,15 +671,15 @@ BOOL runImperium(void)
     /* First we attempt to come up with the port name to use */
     if (DoDebug)
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
     }
     else if (PlayPort[0] != '\0')
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, &PlayPort[0]);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, &PlayPort[0]);
     }
     else
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
     }
     /* Try to open the port */
     ImperiumPort = open(fileDir, O_WRONLY | O_NDELAY, 0);

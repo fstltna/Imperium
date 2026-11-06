@@ -51,10 +51,12 @@
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
-#else
-#include <string.h>
 #endif
+#include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <math.h>
 #include <time.h>
 #ifdef HAVE_STDLIB_H
@@ -2551,53 +2553,105 @@ void doUninstall(Ship_t *sh, register ULONG biNum, BigPart_t what)
     }
 }
 
+/*
+ * runSendmail - pipe a message into sendmail. The recipient is passed as a
+ *      separate argument (no shell is involved), so odd characters in an
+ *      address can't be used to run commands. Returns FALSE on failure.
+ *      "from" may be NULL.
+ */
+
+static BOOL runSendmail(const char *sendto, const char *from,
+    const char *subject, const char *emailbody)
+{
+    int fds[2], status;
+    pid_t pid;
+    FILE *fp;
+
+    if ((sendto == NULL) || (sendto[0] == '\0') || (sendto[0] == '-'))
+    {
+        return FALSE;
+    }
+    if (pipe(fds) < 0)
+    {
+        return FALSE;
+    }
+    pid = fork();
+    if (pid < 0)
+    {
+        close(fds[0]);
+        close(fds[1]);
+        return FALSE;
+    }
+    if (pid == 0)
+    {
+        /* child - read the message from the pipe on stdin */
+        close(fds[1]);
+        if (dup2(fds[0], 0) < 0)
+        {
+            _exit(1);
+        }
+        close(fds[0]);
+        execl("/usr/sbin/sendmail", "sendmail", "-i", "--", sendto,
+            (char *) NULL);
+        _exit(127);
+    }
+    close(fds[0]);
+    if ((fp = fdopen(fds[1], "w")) == NULL)
+    {
+        close(fds[1]);
+        (void) waitpid(pid, &status, 0);
+        return FALSE;
+    }
+    if ((from != NULL) && (from[0] != '\0'))
+    {
+        fprintf(fp, "From: %s\r\n", from);
+    }
+    fprintf(fp, "Subject: %s\r\n", subject);
+    fprintf(fp, "\r\n"); /* seperate headers from body */
+    fprintf(fp, "%s\r\n", emailbody);
+    fclose(fp);
+    if (waitpid(pid, &status, 0) < 0)
+    {
+        return FALSE;
+    }
+    return (WIFEXITED(status) && (WEXITSTATUS(status) == 0));
+}
+
 /* Sends an email */
 void sendEmail(IMP, const char *sendto, const char *subject, const char *emailbody)
 {
-	char cmd[1024]; /* holds the cli command */
-	char tempFile[100];
-
-	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
-	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
-	fprintf(fp, "From: %s\r\n", &IS->is_world.w_emailAddress[0]); /* add sender */
-	fprintf(fp, "Subject: %s\r\n", subject); /* Add subject */
-	fprintf(fp, "\r\n"); /* seperate headers from body */
-	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
-	fclose(fp); /* close it. */
-	sprintf(cmd, "/usr/sbin/sendmail %s < %s", sendto, tempFile); /* prepare command. */
-	(void) system(cmd); /* execute it. */
-	/* remove temp file */
-	unlink(tempFile);
+    (void) runSendmail(sendto, &IS->is_world.w_emailAddress[0], subject,
+        emailbody);
 }
 
 /* Sends a system email */
 void sendSystemEmail(IMP, const char *subject, const char *emailbody)
 {
-	char cmd[255]; /* holds the cli command */
-	char tempFile[100];
-	strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
-	FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
-	fprintf(fp, "Subject: %s\r\n", subject); /* write body to it. */
-	fprintf(fp, "\r\n"); /* seperate headers from body */
-	fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
-	fclose(fp); /* close it. */
-	sprintf(cmd, "/usr/sbin/sendmail %s < %s", &IS->is_world.w_emailAddress[0], tempFile); /* prepare command. */
-	(void) system(cmd); /* execute it. */
-	/* remove temp file */
-	unlink(tempFile);
+    (void) runSendmail(&IS->is_world.w_emailAddress[0], NULL, subject,
+        emailbody);
 }
 
 /*
  *  displayTime - returns the human readable time string
  */
 
-char * displayTime(const time_t *t)
+char * displayTime(time_t t)
 {
     static char buffer[256];
+    char *tStr;
 
-    strcpy(&buffer[0], ctime(&t));
+    tStr = ctime(&t);
+    if (tStr == NULL)
+    {
+        strcpy(buffer, "unknown");
+        return(&buffer[0]);
+    }
+    snprintf(buffer, sizeof(buffer), "%s", tStr);
     /* eliminate the '\n' that ctime() adds */
-    buffer[strlen(buffer) - 1] = '\0';
+    if ((buffer[0] != '\0') && (buffer[strlen(buffer) - 1] == '\n'))
+    {
+        buffer[strlen(buffer) - 1] = '\0';
+    }
     return(&buffer[0]);
 }
 
@@ -2607,12 +2661,10 @@ char * displayTime(const time_t *t)
 
 void publishStats(IMP)
 {
-    char cmd[255]; /* holds the cli command */
-    char tempFile[100];
     char emailbody[16384];
 
     log3(IS, "*** ", "Starting to publish stats", " ***");
-    sprintf(emailbody, "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\nsecret=%s\r\n",
+    snprintf(emailbody, sizeof(emailbody), "sname=%s\r\nshost=%s\r\nsport=%s\r\ncurpl=%u\r\nmaxpl=%u\r\nw_row=%u\r\nw_col=%u\r\nmaxcn=%u\r\nmaxbt=%u\r\nsrvvr=%s\r\nstdat=%s\r\nsecret=%s\r\n",
 		    IS->is_world.w_gameName,
 		    IS->is_world.w_gameHost,
 		    IS->is_world.w_gamePort,
@@ -2623,19 +2675,12 @@ void publishStats(IMP)
 		    IS->is_world.w_maxConnect,
 		    IS->is_world.w_maxBTUs,
 		    IMP_BASE_REV,
-		    displayTime(IS->is_world.w_buildDate),
+		    displayTime((time_t) IS->is_world.w_buildDate),
 		    IS->is_world.w_gameSecret);
-    /* generate temp file name. */
-    strcpy(tempFile, tempnam("/tmp", "sendmail")); /* generate temp file name. */
-    FILE *fp = fopen(tempFile, "w"); /* open it for writing. */
-    fprintf(fp, "Subject: Server Publish Data\r\n"); /* write body to it. */
-    fprintf(fp, "\r\n"); /* seperate headers from body */
-    fprintf(fp, "%s\r\n", emailbody); /* write body to it. */
-    fclose(fp); /* close it. */
-    sprintf(cmd, "/usr/sbin/sendmail %s < %s", SENDPUBTO, tempFile); /* prepare command. */
-    (void) system(cmd); /* execute it. */
-    /* remove temp file */
-    unlink(tempFile);
+    if (!runSendmail(SENDPUBTO, NULL, "Server Publish Data", emailbody))
+    {
+        log3(IS, "*** ", "Unable to run sendmail to publish stats", " ***");
+    }
     log3(IS, "*** ", "Publishing complete", " ***");
 }
 

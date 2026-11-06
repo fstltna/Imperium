@@ -280,7 +280,7 @@ void logNumber(ULONG num)
     char buffer[25];
     register int len;
 
-    len = sprintf(&buffer[0], "%-u", num);
+    len = snprintf(&buffer[0], sizeof(buffer), "%-lu", num);
     (void) fwrite(&buffer[0], sizeof(char), len, LogFd);
 }
 
@@ -311,7 +311,7 @@ BOOL logOpen(void)
  * log - write a message, with current time, to the log file.
  */
 
-void log(char *message)
+void impLog(char *message)
 {
     if (logOpen())
     {

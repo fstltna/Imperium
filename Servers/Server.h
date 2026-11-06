@@ -38,7 +38,7 @@
 
 /* FileIO.c */
 
-void log(char *);
+void impLog(char *);
 void logN(char *, ULONG, char *);
 void myAbort(char *);
 void closeFiles(void);

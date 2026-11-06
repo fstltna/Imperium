@@ -6,6 +6,10 @@
 # If "impsec.h" exists, it will let the user know and then exit (without
 # damaging the existing file).
 #
+# For non-interactive builds (scripts, Docker, CI) either set the
+# environment variables IMP_CON_CODE, IMP_CTRL_CODE and IMP_SHUT_CODE, or
+# run with no terminal attached and random codes will be generated.
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 1, or (at your option)
@@ -25,8 +29,47 @@ if test -f impsec.h
 then
 	echo "gSCodes: impsec.h already exists - doing nothing"
 	exit 0
-else
-	cat <<EOF
+fi
+
+# Make a random 8 character code using only letters and digits
+gen_code() {
+	LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 8
+}
+
+# Codes end up inside a C string, so refuse quotes and backslashes
+check_code() {
+	case "$1" in
+	*'"'*|*'\'*)
+		echo "gSCodes: codes may not contain quotes or backslashes" >&2
+		exit 1
+		;;
+	esac
+}
+
+# ask_code PROMPT - prompt until a non-empty code is entered, result in ac_val
+ask_code() {
+	ac_val=""
+	while test "$ac_val" = ""
+	do
+		printf "%s" "$1"
+		if ! read -r ac_val
+		then
+			echo ""
+			echo "gSCodes: no input - aborting" >&2
+			exit 1
+		fi
+	done
+}
+
+ci_code="$IMP_CON_CODE"
+ic_code="$IMP_CTRL_CODE"
+is_code="$IMP_SHUT_CODE"
+
+if test "$ci_code" = "" || test "$ic_code" = "" || test "$is_code" = ""
+then
+	if test -t 0
+	then
+		cat <<EOF
 Imperium uses "secret" codes (they are never displayed or entered) to
 prevent users from "spoofing" the Imperium server into doing things it
 would not normally allow them to do. The codes will be encrypted, if
@@ -38,28 +81,36 @@ contain the codes that you wish to use. Note that only the first 8
 characters will be used for each code.
 
 EOF
-# It would be nice to do this as a function, but sh doesn't have them
-	ci_code=""
-	while test "$ci_code" = "";
-	do
-	    echo -n "Please enter a code for ConImp: "
-	    read ci_code
-	done
-	ic_code=""
-	while test "$ic_code" = "";
-	do
-	    echo -n "Please enter a code for ImpCtrl: "
-	    read ic_code
-	done
-	is_code=""
-	while test "$is_code" = "";
-	do
-	    echo -n "Please enter a code for ImpShut: "
-	    read is_code
-	done
-	echo "#define CON_IMP_CODE \"$ci_code\"" >impsec.h
-	echo "#define IMP_CTRL_CODE \"$ic_code\"" >>impsec.h
-	echo "#define IMP_SHUT_CODE \"$is_code\"" >>impsec.h
-	chmod 600 impsec.h
-	exit 0
+		if test "$ci_code" = ""; then
+			ask_code "Please enter a code for ConImp: "; ci_code="$ac_val"
+		fi
+		if test "$ic_code" = ""; then
+			ask_code "Please enter a code for ImpCtrl: "; ic_code="$ac_val"
+		fi
+		if test "$is_code" = ""; then
+			ask_code "Please enter a code for ImpShut: "; is_code="$ac_val"
+		fi
+	else
+		echo "gSCodes: no terminal - generating random codes in impsec.h"
+		test "$ci_code" = "" && ci_code=`gen_code`
+		test "$ic_code" = "" && ic_code=`gen_code`
+		test "$is_code" = "" && is_code=`gen_code`
+	fi
 fi
+
+check_code "$ci_code"
+check_code "$ic_code"
+check_code "$is_code"
+
+if test "$ci_code" = "" || test "$ic_code" = "" || test "$is_code" = ""
+then
+	echo "gSCodes: unable to create codes" >&2
+	exit 1
+fi
+
+umask 077
+echo "#define CON_IMP_CODE \"$ci_code\"" >impsec.h
+echo "#define IMP_CTRL_CODE \"$ic_code\"" >>impsec.h
+echo "#define IMP_SHUT_CODE \"$is_code\"" >>impsec.h
+chmod 600 impsec.h
+exit 0

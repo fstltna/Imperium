@@ -148,6 +148,8 @@ void cmd_setup(IMP)
             displayActionTypes(IS);
         }
         action = actionChar - 'a';
+        /* default to whatever the action is currently set to */
+        act = IS->is_player.p_action[action].ac_action;
         if (reqActionType(IS, &act, "Which action"))
         {
             IS->is_player.p_action[action].ac_action = act;

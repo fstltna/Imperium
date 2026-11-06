@@ -4,7 +4,13 @@ How to install Imperium:
 	it up on your system.
 
 2)	Run "make" in this directory (the top level of the Imperium source
-	distribution).
+	distribution). The first build asks for three secret codes which
+	are saved in "impsec.h". To build without being asked (scripts,
+	Docker, etc.) set IMP_CON_CODE, IMP_CTRL_CODE and IMP_SHUT_CODE in
+	the environment, or run make with no terminal attached and random
+	codes will be generated. Keep impsec.h - every program must be
+	built with the same codes, and the server must be restarted after
+	the codes change.
 
 3)	If everything seems to build OK, run "make install". Note that you may
 	need to be root to do this, depending on where you are installing

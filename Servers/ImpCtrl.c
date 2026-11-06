@@ -383,15 +383,15 @@ BOOL runImpCtrl(void)
     ok = FALSE;
     if (DoDebug)
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
     }
     else if (PlayPort[0] != '\0')
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, &PlayPort[0]);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, &PlayPort[0]);
     }
     else
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
     }
     ImperiumPort = open(fileDir, O_WRONLY | O_NDELAY, 0);
     if (ImperiumPort >= 0)
@@ -766,7 +766,7 @@ int main(int argc, char *argv[])
     char *par;
     BOOL hadError, cont;
     USHORT curArg;
-    char fileDir[256], userName[256], *userNamePtr;
+    char fileDir[256], userName[256];
     FILE *allowFD;
     struct passwd *myPwEnt;
 
@@ -926,7 +926,7 @@ int main(int argc, char *argv[])
         }
         if (!hadError)
         {
-	    sprintf(fileDir, "%s/../ic.allow", FIFO_DIR);
+	    snprintf(fileDir, sizeof(fileDir), "%s/../ic.allow", FIFO_DIR);
 	    /* If there is no ic.allow file refuse to do anything */
 	    if ((allowFD = fopen(fileDir, "r")) == NULL)
 	    {
@@ -934,34 +934,21 @@ int main(int argc, char *argv[])
 	    }
 	    else
 	    {
-#ifdef ZZZ
-		userNamePtr = cuserid(NULL);
-		if (userNamePtr != NULL)
+		/* cuserid() is obsolete (and not declared on modern glibc, which
+		   truncates its pointer on 64-bit systems), so use the passwd entry */
+		myPwEnt = getpwuid(geteuid());
+		if (myPwEnt == NULL)
 		{
-printf("-%d - Point 5.1\n", userNamePtr); /* ZZZ */
-		    strncpy(userName, userNamePtr, 28 * sizeof(char));
-printf("Point 5.1.1\n"); /* ZZZ */
-		    strcat(userName, " ");
+		    fclose(allowFD);
+		    allowFD = NULL;
+		    printf("Unable to find information on uid %u - "
+			"aborting\n", (unsigned int) geteuid());
 		}
 		else
 		{
-#endif
-		    myPwEnt = getpwuid(geteuid());
-		    if (myPwEnt == NULL)
-		    {
-			fclose(allowFD);
-			allowFD = NULL;
-			printf("Unable to find information on uid %ud - "
-			    "aborting\n", geteuid());
-		    }
-		    else
-		    {
-			strncpy(userName, myPwEnt->pw_name, 28 * sizeof(char));
-			strcat(userName, " ");
-		    }
-#ifdef ZZZ
+		    snprintf(userName, sizeof(userName), "%.28s ",
+			myPwEnt->pw_name);
 		}
-#endif
 		if (allowFD != NULL)
 		{
 		    checkCmds(allowFD, userName);

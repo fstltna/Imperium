@@ -67,9 +67,9 @@ BOGUS - Imperium not supported on this machine due to missing unistd.h
 #include <sys/stat.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <time.h>
 #include <sys/errno.h>
 #include <setjmp.h>
-#include <bits/signum.h>
 #include <signal.h>
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -288,6 +288,26 @@ void DeletePort(void)
     (void)unlink(ImperiumPortName);
 }
 
+#ifdef HAVE_CRYPT
+/*
+ * safeCrypt - crypt() that never returns NULL. Modern crypt libraries can
+ *      return NULL (or a "*" failure string) for a bad salt; use a value
+ *      that can never match a real code instead of crashing.
+ */
+
+static const char *safeCrypt(const char *key, const char *salt)
+{
+    const char *res;
+
+    res = crypt(key, salt);
+    if ((res == NULL) || (res[0] == '*'))
+    {
+        return "*";
+    }
+    return res;
+}
+#endif
+
 /*
  * validPswd - validate the given password and return TRUE if it is
  *             good, FALSE otherwise
@@ -308,24 +328,31 @@ BOOL validPswd(register Request_t *rq, BOOL isShut)
 #ifdef HAVE_CRYPT
     locSalt[0] = pPtr[0];
     locSalt[1] = pPtr[1];
+    /* Must be terminated: modern crypt() libraries (libxcrypt) reject a
+       salt with stray bytes after it and return a failure string, which
+       made the security check randomly fail */
+    locSalt[2] = '\0';
     if (isShut)
     {
-	(void)strncpy(&locBuf[0], crypt(IMP_SHUT_CODE, &locSalt[0]), 15 *
+	(void)strncpy(&locBuf[0], safeCrypt(IMP_SHUT_CODE, &locSalt[0]), 15 *
 	    sizeof(char));
+	locBuf[15] = '\0';
 	if (strcmp(pPtr, &locBuf[0]) == 0)
 	{
 	    return(TRUE);
 	}
 	return(FALSE);
     }
-    (void)strncpy(&locBuf[0], crypt(CON_IMP_CODE, &locSalt[0]), 15 *
+    (void)strncpy(&locBuf[0], safeCrypt(CON_IMP_CODE, &locSalt[0]), 15 *
 	sizeof(char));
+    locBuf[15] = '\0';
     if (strcmp(pPtr, &locBuf[0]) == 0)
     {
 	return(TRUE);
     }
-    (void)strncpy(&locBuf[0], crypt(IMP_CTRL_CODE, &locSalt[0]), 15 *
+    (void)strncpy(&locBuf[0], safeCrypt(IMP_CTRL_CODE, &locSalt[0]), 15 *
 	sizeof(char));
+    locBuf[15] = '\0';
     if (strcmp(pPtr, &locBuf[0]) == 0)
 #else /* !HAVE_CRYPT */
     if (isShut)
@@ -357,7 +384,7 @@ BOOL startClient(register Request_t *rq)
     if (cl == NULL)
     {
         rq->rq_type = rt_stopClient;
-        log("*** can't allocate record for new client");
+        impLog("*** can't allocate record for new client");
         return(FALSE);
     }
 #ifdef zzz
@@ -365,7 +392,7 @@ BOOL startClient(register Request_t *rq)
     {
 	free(cl);
         rq->rq_type = rt_stopClient;
-        log("*** invalid registration password for client");
+        impLog("*** invalid registration password for client");
         return(FALSE);
     }
 #endif
@@ -385,7 +412,7 @@ BOOL startClient(register Request_t *rq)
     {
 	free(cl);
         rq->rq_type = rt_stopClient;
-	log("Unable to open client pipe in startClient()");
+	impLog("Unable to open client pipe in startClient()");
 	return(FALSE);
     }
     rq->rq_clientId = ClientCounter;
@@ -477,33 +504,45 @@ void stopClient(register Client_t *cl, register Request_t *rq)
 void readFile(register Client_t *cl, register Request_t *rq, FileType_t ft)
 {
     char fileName[257];
+    const char *dir, *ext;
     register long len;
+    int n;
 
+    /* make sure the name sent by the client is terminated */
+    rq->rq_u.ru_text[REQ_TEXT_LENGTH - 1] = '\0';
+    dir = &Path[0];
+    ext = "";
     switch(ft)
     {
         case ft_normal:
-            strcpy(&fileName[0], &Path[0]);
+            dir = &Path[0];
             break;
         case ft_help:
-            strcpy(&fileName[0], &HelpDir[0]);
+            dir = &HelpDir[0];
+            ext = ".hlp";
             break;
         case ft_doc:
-            strcpy(&fileName[0], &DocDir[0]);
+            dir = &DocDir[0];
+            ext = ".doc";
             break;
     }
-    strcat(&fileName[0], &rq->rq_u.ru_text[0]);
-
-    /* tack on any needed extension */
-    switch(ft)
+    /* Only plain file names are allowed - no paths. This stops a client
+       (or a "help ../../x" command) from reading files outside the
+       game's own directories, such as the player database. */
+    if ((rq->rq_u.ru_text[0] == '\0') || (rq->rq_u.ru_text[0] == '.') ||
+        (strchr(&rq->rq_u.ru_text[0], '/') != NULL))
     {
-        case ft_help:
-            strcat(&fileName[0], ".hlp");
-            break;
-        case ft_doc:
-            strcat(&fileName[0], ".doc");
-            break;
-        default:
-            break;
+        cl->cl_fd = NULL;
+        rq->rq_whichUnit = 0;
+        return;
+    }
+    n = snprintf(&fileName[0], sizeof(fileName), "%s%s%s", dir,
+        &rq->rq_u.ru_text[0], ext);
+    if ((n < 0) || (n >= (int) sizeof(fileName)))
+    {
+        cl->cl_fd = NULL;
+        rq->rq_whichUnit = 0;
+        return;
     }
     /* attempt to open the file */
     cl->cl_fd = fopen(&fileName[0], "r");
@@ -601,7 +640,7 @@ void appendMessage(register Client_t *cl, register Request_t *rq)
 #ifdef DEBUG_SERV
             if (DO_DEBUG)
             {
-                log("message appended to queue");
+                impLog("message appended to queue");
             }
 #endif
         }
@@ -612,7 +651,7 @@ void appendMessage(register Client_t *cl, register Request_t *rq)
 #ifdef DEBUG_SERV
             if (DO_DEBUG)
             {
-                log("*** message append failed - no mem");
+                impLog("*** message append failed - no mem");
             }
 #endif
         }
@@ -622,7 +661,7 @@ void appendMessage(register Client_t *cl, register Request_t *rq)
 #ifdef DEBUG_SERV
     if (DO_DEBUG)
     {
-        log("*** message append failed - no mem for messageList");
+        impLog("*** message append failed - no mem for messageList");
     }
 #endif
 }
@@ -747,10 +786,11 @@ void sendChat(register Client_t *sender, register Request_t *rq)
  * setFileName - fill in a file name for something for the given time's day.
  */
 
-void setFileName(register char *buffer, register ULONG fTime, char *what)
+void setFileName(register char *buffer, size_t bufSize, register ULONG fTime,
+    char *what)
 {
     fTime = fTime / (World.w_secondsPerITU * (2 * 24));
-    sprintf(buffer, "%s%s.%4.4lu", &Path[0], what, fTime);
+    snprintf(buffer, bufSize, "%s%s.%4.4lu", &Path[0], what, fTime);
 }
 
 /*
@@ -765,7 +805,7 @@ void news(register Request_t *rq)
 
     (void) time(&now);
     rq->rq_u.ru_news.n_time = now;
-    setFileName(&fileName[0], now, "news");
+    setFileName(&fileName[0], sizeof(fileName), now, "news");
     fd = fopen(&fileName[0], "ab");
     if (fd != NULL)
     {
@@ -784,7 +824,7 @@ void readNews(register Request_t *rq)
     char fileName[257];
     long len;
 
-    setFileName(&fileName[0], rq->rq_u.ru_news.n_time, "news");
+    setFileName(&fileName[0], sizeof(fileName), rq->rq_u.ru_news.n_time, "news");
     fd = fopen(&fileName[0], "rb");
     if (fd == NULL)
     {
@@ -820,27 +860,27 @@ void propaganda(register Request_t *rq)
     char fileName[257];
     long len;
 
-    setFileName(&fileName[0], rq->rq_u.ru_telegram.te_time, "prop");
+    setFileName(&fileName[0], sizeof(fileName), rq->rq_u.ru_telegram.te_time, "prop");
     fd = fopen(&fileName[0], "ab");
     if (fd != NULL)
     {
         len = sizeof(Telegram_t) - (TELEGRAM_MAX * sizeof(char));
         if (fwrite(&rq->rq_u.ru_telegram, sizeof(char), len, fd) != len)
 	{
-            log("*** write of propaganda header failed");
+            impLog("*** write of propaganda header failed");
 	}
 	else
 	{
             len = rq->rq_u.ru_telegram.te_length;
 	    if (fwrite(&rq->rq_u.ru_telegram.te_data[0], sizeof(char), len, fd) != len)
 	    {
-		log("*** write of propaganda body failed");
+		impLog("*** write of propaganda body failed");
 	    }
 	}
         fclose(fd);
         return;
     }
-    log("*** write open of propaganda file failed");
+    impLog("*** write open of propaganda file failed");
 }
 
 /*
@@ -856,7 +896,7 @@ void readPropaganda(register Client_t *cl, register Request_t *rq)
     if (cl->cl_fd == NULL)
     {
 	/* Open the propaganda file for the day requested */
-        setFileName(&fileName[0], rq->rq_u.ru_telegram.te_time, "prop");
+        setFileName(&fileName[0], sizeof(fileName), rq->rq_u.ru_telegram.te_time, "prop");
         cl->cl_fd = fopen(&fileName[0], "rb");
         if (cl->cl_fd == NULL)
         {
@@ -883,7 +923,7 @@ void readPropaganda(register Client_t *cl, register Request_t *rq)
                 rq->rq_u.ru_telegram.te_length = 0;
                 fclose(cl->cl_fd);
                 cl->cl_fd = NULL;
-                log("*** read of propaganda body failed");
+                impLog("*** read of propaganda body failed");
             }
         }
     }
@@ -900,8 +940,8 @@ void sendTelegram(register Request_t *rq)
     char fileName[257];
     register ULONG len;
 
-    sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
-	rq->rq_u.ru_telegram.te_to);
+    snprintf(&fileName[0], sizeof(fileName), "%stelegrams.%03u", &Path[0],
+	(unsigned int) rq->rq_u.ru_telegram.te_to);
     fd = fopen(&fileName[0], "r+b");
     if (fd != NULL)
     {
@@ -913,7 +953,7 @@ void sendTelegram(register Request_t *rq)
             if (fwrite(&rq->rq_u.ru_telegram, sizeof(char), len, fd)
 		!= len)
 	    {
-                log("*** write of telegram header failed");
+                impLog("*** write of telegram header failed");
 	    }
 	    else
 	    {
@@ -926,18 +966,18 @@ void sendTelegram(register Request_t *rq)
 		}
 		else
 		{
-		    log("*** write of telegram body failed");
+		    impLog("*** write of telegram body failed");
 		}
 	    }
         }
         else
         {
-            log("*** seek to write telegram file failed");
+            impLog("*** seek to write telegram file failed");
         }
         fclose(fd);
         return;
     }
-    log("*** write open of telegram file failed");
+    impLog("*** write open of telegram file failed");
 }
 
 /*
@@ -999,8 +1039,8 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
             case TELE_DELETE:
                 player->p_telegramsTail = 0;
                 player->p_telegramsNew = 0;
-		sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
-		    cl->cl_playerNumber);
+		snprintf(&fileName[0], sizeof(fileName), "%stelegrams.%03u", &Path[0],
+		    (unsigned int) cl->cl_playerNumber);
                 (void) unlink(&fileName[0]);
                 tempPtr = fopen(&fileName[0], "w");
 		if (tempPtr != NULL)
@@ -1013,13 +1053,13 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
                 break;
             default:
                 /* first read of telegrams */
-		sprintf(&fileName[0], "%stelegrams.%03.3u", &Path[0],
-		    cl->cl_playerNumber);
+		snprintf(&fileName[0], sizeof(fileName), "%stelegrams.%03u", &Path[0],
+		    (unsigned int) cl->cl_playerNumber);
                 cl->cl_fd = fopen(&fileName[0], "r+b");
                 if (cl->cl_fd == NULL)
                 {
                     rq->rq_u.ru_telegram.te_length = 0;
-                    log("*** read open of telegram file failed");
+                    impLog("*** read open of telegram file failed");
                 }
                 break;
         }
@@ -1041,7 +1081,7 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
                 rq->rq_u.ru_telegram.te_length = 0;
                 fclose(cl->cl_fd);
                 cl->cl_fd = NULL;
-                log("*** read of telegram header failed");
+                impLog("*** read of telegram header failed");
             }
             else
             {
@@ -1052,7 +1092,7 @@ void readTelegram(register Client_t *cl, register Request_t *rq)
                     rq->rq_u.ru_telegram.te_length = 0;
                     fclose(cl->cl_fd);
                     cl->cl_fd = NULL;
-                    log("*** read of telegram body failed");
+                    impLog("*** read of telegram body failed");
                 }
             }
         }
@@ -1076,7 +1116,7 @@ void writePower(register Client_t *cl, register Request_t *rq)
         if (cl->cl_fd == NULL)
         {
             /* can't create it! */
-            log("*** can't create power file");
+            impLog("*** can't create power file");
             rq->rq_whichUnit = 0;
         }
         else
@@ -1084,7 +1124,7 @@ void writePower(register Client_t *cl, register Request_t *rq)
             if (fwrite(&rq->rq_u.ru_powerHead, sizeof(char), sizeof(PowerHead_t),
 		cl->cl_fd) != sizeof(PowerHead_t))
             {
-                log("*** bad header write on power file");
+                impLog("*** bad header write on power file");
                 /* can't write it! */
                 fclose(cl->cl_fd);
                 cl->cl_fd = NULL;
@@ -1108,7 +1148,7 @@ void writePower(register Client_t *cl, register Request_t *rq)
     if (fwrite(&rq->rq_u.ru_powerData, sizeof(char), sizeof(PowerData_t),
 	cl->cl_fd) != sizeof(PowerData_t))
     {
-        log("*** bad write of data on power file");
+        impLog("*** bad write of data on power file");
         fclose(cl->cl_fd);
         cl->cl_fd = NULL;
         rq->rq_whichUnit = 0;
@@ -1137,7 +1177,7 @@ void readPower(register Client_t *cl, register Request_t *rq)
             if (fread(&rq->rq_u.ru_powerHead, sizeof(char), sizeof(PowerHead_t),
 		cl->cl_fd) != sizeof(PowerHead_t))
             {
-                log("*** bad header read on power file");
+                impLog("*** bad header read on power file");
                 fclose(cl->cl_fd);
                 cl->cl_fd = NULL;
                 rq->rq_whichUnit = 0;
@@ -1614,7 +1654,7 @@ ResourceKind_t getRKType(register RequestType_t rt)
             rk = rk_planetItemPair;
             break;
         default:
-            log("*** unknown request type in getRKType");
+            impLog("*** unknown request type in getRKType");
             break;
     }
     return rk;
@@ -1659,19 +1699,19 @@ void handleRequests(void)
     if (signal(SIGINT, int_handler) == SIG_ERR)
     {
 	BatGood = FALSE;
-        log("Unable to set SIGINT handler");
+        impLog("Unable to set SIGINT handler");
     } else if (signal(SIGHUP, int_handler) == SIG_ERR)
     {
 	BatGood = FALSE;
-        log("Unable to set SIGHUP handler");
+        impLog("Unable to set SIGHUP handler");
     } else if (signal(SIGTERM, int_handler) == SIG_ERR)
     {
 	BatGood = FALSE;
-        log("Unable to set SIGTERM handler");
+        impLog("Unable to set SIGTERM handler");
     } else if (signal(SIGQUIT, int_handler) == SIG_ERR)
     {
 	BatGood = FALSE;
-        log("Unable to set SIGQUIT handler");
+        impLog("Unable to set SIGQUIT handler");
     }
     /* Save our position */
     if ((jmpCode = setjmp(mainLoop)) != 0)
@@ -1734,7 +1774,7 @@ void handleRequests(void)
 					"equal rq_whichUnit %lu !",
 					rq->rq_u.ru_ship.sh_number,
 					rq->rq_whichUnit);
-                                log(&numBuff[0]);
+                                impLog(&numBuff[0]);
                             }
                             if (rq->rq_u.ru_ship.sh_number >=
                                 World.w_shipNext)
@@ -1743,7 +1783,7 @@ void handleRequests(void)
 				sprintf(&numBuff[0],
 					"*** sh_shipNumber %lu too big!",
 					rq->rq_u.ru_ship.sh_number);
-                                log(&numBuff[0]);
+                                impLog(&numBuff[0]);
                             }
                         }
                     break;
@@ -1879,18 +1919,18 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("nop");
+                        impLog("nop");
                     }
 #endif
                     break;
                 case rt_log:
-                    log(&rq->rq_u.ru_text[0]);
+                    impLog(&rq->rq_u.ru_text[0]);
                     break;
                 case rt_startClient:
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("start client");
+                        impLog("start client");
                     }
 #endif
                     (void) startClient(rq);
@@ -1899,7 +1939,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("stop client");
+                        impLog("stop client");
                     }
 #endif
                     stopClient(cl, rq);
@@ -1909,7 +1949,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("shutDown");
+                        impLog("shutDown");
                     }
 #endif
                     logN("shut-down requested by client ", rq->rq_clientId,
@@ -1922,7 +1962,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("acOut");
+                        impLog("acOut");
                     }
 #endif
                     logN("Client ", rq->rq_clientId, " reports AC power "
@@ -1935,7 +1975,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("acBack");
+                        impLog("acBack");
                     }
 #endif
                     logN("Client ", rq->rq_clientId, " reports AC power "
@@ -1948,7 +1988,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("battLow");
+                        impLog("battLow");
                     }
 #endif
                     logN("Client ", rq->rq_clientId, " reports UPS battery is "
@@ -1964,7 +2004,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("backStart");
+                        impLog("backStart");
                     }
 #endif
                     /* make sure someone else didn't already request this */
@@ -1987,7 +2027,7 @@ void handleRequests(void)
                         }
                         else
                         {
-                            log("Backup started");
+                            impLog("Backup started");
                             writeWorld(&World, &Player[0]);
                             closeFiles();
                             openFiles(&Path[0], &HelpDir[0], &DocDir[0]);
@@ -1999,7 +2039,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("backDone");
+                        impLog("backDone");
                     }
 #endif
                     logN("Client ", rq->rq_clientId, " reports backup "
@@ -2037,7 +2077,7 @@ void handleRequests(void)
                             NumPlay--;
                             if ((BackReq[0] != '\0') && (NumPlay == 0))
                             {
-                                log("Backup started");
+                                impLog("Backup started");
                                 writeWorld(&World, &Player[0]);
                                 closeFiles();
                                 openFiles(&Path[0], &HelpDir[0], &DocDir[0]);
@@ -2080,7 +2120,7 @@ void handleRequests(void)
                                 NumPlay--;
                                 if ((BackReq[0] != '\0') && (NumPlay == 0))
                                 {
-                                    log("Backup started");
+                                    impLog("Backup started");
                                     writeWorld(&World, &Player[0]);
                                     closeFiles();
                                     openFiles(&Path[0], &HelpDir[0], &DocDir[0]);
@@ -2121,7 +2161,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readFile");
+                        impLog("readFile");
                     }
 #endif
                     readFile(cl, rq, ft_normal);
@@ -2130,7 +2170,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("moreFile");
+                        impLog("moreFile");
                     }
 #endif
                     moreFile(cl, rq);
@@ -2139,7 +2179,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readHelp");
+                        impLog("readHelp");
                     }
 #endif
                     readFile(cl, rq, ft_help);
@@ -2148,7 +2188,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readDoc");
+                        impLog("readDoc");
                     }
 #endif
                     readFile(cl, rq, ft_doc);
@@ -2157,7 +2197,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("message");
+                        impLog("message");
                     }
 #endif
                     message(rq);
@@ -2166,7 +2206,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("getMessage");
+                        impLog("getMessage");
                     }
 #endif
                     getMessage(cl, rq);
@@ -2177,11 +2217,11 @@ void handleRequests(void)
                     {
                         if (rq->rq_whichUnit == 0)
                         {
-                            log("set chat off");
+                            impLog("set chat off");
                         }
                         else
                         {
-                            log("set chat on");
+                            impLog("set chat on");
                         }
                     }
 #endif
@@ -2199,7 +2239,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("sendChat");
+                        impLog("sendChat");
                     }
 #endif
                     sendChat(cl, rq);
@@ -2210,7 +2250,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                         if (DO_DEBUG)
                         {
-                            log("news");
+                            impLog("news");
                         }
 #endif
                         news(rq);
@@ -2220,7 +2260,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readNews");
+                        impLog("readNews");
                     }
 #endif
                     readNews(rq);
@@ -2229,7 +2269,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("propaganda");
+                        impLog("propaganda");
                     }
 #endif
                     propaganda(rq);
@@ -2238,7 +2278,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readPropaganda");
+                        impLog("readPropaganda");
                     }
 #endif
                     readPropaganda(cl, rq);
@@ -2253,7 +2293,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                             if (DO_DEBUG)
                             {
-                                log("notify sendTelegram");
+                                impLog("notify sendTelegram");
                             }
 #endif
                             sendTelegram(rq);
@@ -2264,7 +2304,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                             if (DO_DEBUG)
                             {
-                                log("notify message");
+                                impLog("notify message");
                             }
 #endif
                             message(rq);
@@ -2275,7 +2315,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                         if (DO_DEBUG)
                         {
-                            log("sendTelegram");
+                            impLog("sendTelegram");
                         }
 #endif
                         sendTelegram(rq);
@@ -2285,7 +2325,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("checkMessages");
+                        impLog("checkMessages");
                     }
 #endif
                     checkMessages(cl, rq);
@@ -2294,7 +2334,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readTelegram");
+                        impLog("readTelegram");
                     }
 #endif
                     readTelegram(cl, rq);
@@ -2303,7 +2343,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("writePower");
+                        impLog("writePower");
                     }
 #endif
                     writePower(cl, rq);
@@ -2312,7 +2352,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("readPower");
+                        impLog("readPower");
                     }
 #endif
                     readPower(cl, rq);
@@ -2338,7 +2378,7 @@ void handleRequests(void)
                         switch(rq->rq_type)
                         {
                             case rt_readWorld:
-                                log("readWorld");
+                                impLog("readWorld");
                                 break;
                             case rt_readPlayer:
                                 logN("readPlayer ", rq->rq_whichUnit, "");
@@ -2411,7 +2451,7 @@ void handleRequests(void)
                         switch(rq->rq_type)
                         {
                             case rt_lockWorld:
-                                log("lockWorld");
+                                impLog("lockWorld");
                                 break;
                             case rt_lockPlayer:
                                 logN("lockPlayer ", rq->rq_whichUnit, "");
@@ -2564,7 +2604,7 @@ void handleRequests(void)
                         switch(rq->rq_type)
                         {
                             case rt_unlockWorld:
-                                log("unlockWorld");
+                                impLog("unlockWorld");
                                 break;
                             case rt_unlockPlayer:
                                 logN("unlockPlayer ", rq->rq_whichUnit, "");
@@ -2719,7 +2759,7 @@ void handleRequests(void)
 					    "equal rq_whichUnit %lu !",
 					    rq->rq_u.ru_ship.sh_number,
 					    rq->rq_whichUnit);
-                                    log(&numBuff[0]);
+                                    impLog(&numBuff[0]);
                                 }
                                 if (rq->rq_u.ru_ship.sh_number >=
                                     World.w_shipNext)
@@ -2728,7 +2768,7 @@ void handleRequests(void)
 				    sprintf(&numBuff[0],
 					    "*** sh_shipNumber %lu too big!",
 					    rq->rq_u.ru_ship.sh_number);
-                                    log(&numBuff[0]);
+                                    impLog(&numBuff[0]);
                                 }
                             }
 #endif
@@ -2748,7 +2788,7 @@ void handleRequests(void)
 				    sprintf(&numBuff[0],
 					    "*** pl_planetNumber %lu too big!",
 					    rq->rq_u.ru_planet.pl_number);
-                                    log(&numBuff[0]);
+                                    impLog(&numBuff[0]);
                                 }
                             }
 #endif
@@ -2765,7 +2805,7 @@ void handleRequests(void)
 				    sprintf(&numBuff[0],
 					    "*** bi_bigItemNumber %lu too big!",
 					    rq->rq_u.ru_bigItem.bi_number);
-                                    log(&numBuff[0]);
+                                    impLog(&numBuff[0]);
                                 }
                             }
 #endif
@@ -2790,7 +2830,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetPair[0].pl_number >=
                                     World.w_planetNext)
                                 {
-                                    log("*** [0]pl_planetNumber too big!");
+                                    impLog("*** [0]pl_planetNumber too big!");
                                 }
                             }
 #endif
@@ -2801,7 +2841,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetPair[1].pl_number >=
                                     World.w_planetNext)
                                 {
-                                    log("*** [1]pl_planetNumber too big!");
+                                    impLog("*** [1]pl_planetNumber too big!");
                                 }
                             }
 #endif
@@ -2814,7 +2854,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_shipPair[0].sh_number >=
                                     World.w_shipNext)
                                 {
-                                    log("*** [0]sh_shipNumber too big!");
+                                    impLog("*** [0]sh_shipNumber too big!");
                                 }
                             }
 #endif
@@ -2825,7 +2865,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_shipPair[1].sh_number >=
                                     World.w_shipNext)
                                 {
-                                    log("*** [1]sh_shipNumber too big!");
+                                    impLog("*** [1]sh_shipNumber too big!");
                                 }
                             }
 #endif
@@ -2840,7 +2880,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_sectorShipPair.p_sh.sh_number >=
                                     World.w_shipNext)
                                 {
-                                    log("*** sh_shipNumber too big!");
+                                    impLog("*** sh_shipNumber too big!");
                                 }
                             }
 #endif
@@ -2853,7 +2893,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetShipPair.p_p.pl_number >=
                                     World.w_planetNext)
                                 {
-                                    log("*** pl_planetNumber too big!");
+                                    impLog("*** pl_planetNumber too big!");
                                 }
                             }
 #endif
@@ -2864,7 +2904,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetShipPair.p_sh.sh_number >=
                                     World.w_shipNext)
                                 {
-                                    log("*** sh_shipNumber too big!");
+                                    impLog("*** sh_shipNumber too big!");
                                 }
                             }
 #endif
@@ -2877,7 +2917,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetItemPair.p_p.pl_number >=
                                     World.w_planetNext)
                                 {
-                                    log("*** pl_planetNumber too big!");
+                                    impLog("*** pl_planetNumber too big!");
                                 }
                             }
 #endif
@@ -2888,7 +2928,7 @@ void handleRequests(void)
                                 if (rq->rq_u.ru_planetItemPair.p_bi.bi_number >=
                                     World.w_bigItemNext)
                                 {
-                                    log("*** bi_bigItemNumber too big!");
+                                    impLog("*** bi_bigItemNumber too big!");
                                 }
                             }
 #endif
@@ -2994,7 +3034,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
                     if (DO_DEBUG)
                     {
-                        log("broadcastMsg");
+                        impLog("broadcastMsg");
                     }
 #endif
                     break;
@@ -3087,7 +3127,7 @@ void handleRequests(void)
 #ifdef DEBUG_SERV
     if (DO_DEBUG)
     {
-        log("shutting down");
+        impLog("shutting down");
     }
 #endif
     logN("shutting down, ", ClientCounter - 1, " clients serviced.");
@@ -3174,9 +3214,10 @@ void startServing(void)
     }
     if (!readWorld(&World, &Player[0]))
     {
-	char ErrorString[255];
+	char ErrorString[300];
             DeletePort();
-	sprintf(&ErrorString[0], "can't read world/player: %s '%s'", &Player[0], &Path[0]);
+	snprintf(&ErrorString[0], sizeof(ErrorString),
+	    "can't read world/player files in '%s'", &Path[0]);
             myAbort(&ErrorString[0]);
     }
     IdleClients = NULL;
@@ -3184,7 +3225,7 @@ void startServing(void)
     if (UseTest)
     {
 	    sprintf(&lineBuf[0], "Test server %s started up.", IMP_BASE_REV);
-            log(&lineBuf[0]);
+            impLog(&lineBuf[0]);
     }
     else
     {
@@ -3192,17 +3233,17 @@ void startServing(void)
             {
                 sprintf(&lineBuf[0], "Imperium server %s starting up on port"
                     " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
-                log(&lineBuf[0]);
+                impLog(&lineBuf[0]);
             }
             else
             {
 	    	sprintf(&lineBuf[0], "Imperium server %s started up.", IMP_BASE_REV);
-            	log(&lineBuf[0]);
+            	impLog(&lineBuf[0]);
             }
     }
     if (ClearPlayers)
     {
-            log("Clearing the p_loggedOn flags");
+            impLog("Clearing the p_loggedOn flags");
             clearLogFlag();
     }
     handleRequests();
@@ -3211,7 +3252,7 @@ void startServing(void)
     if (UseTest)
     {
 	    sprintf(&lineBuf[0], "Test server %s shut down.", IMP_BASE_REV);
-            log(&lineBuf[0]);
+            impLog(&lineBuf[0]);
     }
     else
     {
@@ -3219,12 +3260,12 @@ void startServing(void)
             {
                 sprintf(&lineBuf[0], "Imperium server %s shutting down on port"
                     " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
-                log(&lineBuf[0]);
+                impLog(&lineBuf[0]);
             }
             else
             {
 	    	sprintf(&lineBuf[0], "Imperium server %s shut down.", IMP_BASE_REV);
-            	log(&lineBuf[0]);
+            	impLog(&lineBuf[0]);
             }
     }
     closeFiles();
@@ -3286,7 +3327,7 @@ BOOL getBool(char *st)
 ULONG getNumber(register char *str)
 {
     register ULONG n;
-    register length;
+    register int length;
 
     n = 0;
     length = 0;
@@ -3335,7 +3376,7 @@ int main(int argc, char *argv[])
     	LockFD = fopen("/usr/local/lib/imperium/data/nostart", "r");
 	if (LockFD != NULL)
 	{
-		log("Lock File Present - not starting Imperium server");
+		impLog("Lock File Present - not starting Imperium server");
 		exit(1);
 	}
 	if (argc > 1)

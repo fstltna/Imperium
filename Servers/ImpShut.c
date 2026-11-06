@@ -242,15 +242,15 @@ int doShut(void)
     /* Set up the path & file name of the server port */
     if (UseTest)
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
     }
     else if (PlayPort[0] != '\0')
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, &PlayPort[0]);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, &PlayPort[0]);
     }
     else
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
     }
     imperiumPort = open(fileDir, O_WRONLY | O_NDELAY, 0);
     if (imperiumPort >= 0)
@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
     BOOL hadError;
     int retCode = 0;
     USHORT curArg;
-    char fileDir[256], userName[30], *userNamePtr;
+    char fileDir[256], userName[30];
     FILE *allowFD;
     struct passwd *myPwEnt;
 
@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-	    sprintf(fileDir, "%s/../is.allow", FIFO_DIR);
+	    snprintf(fileDir, sizeof(fileDir), "%s/../is.allow", FIFO_DIR);
 	    /* if there is no is.allow refuse to do anything */
 	    if ((allowFD = fopen(fileDir, "r")) == NULL)
 	    {
@@ -474,27 +474,20 @@ int main(int argc, char *argv[])
 	    }
 	    else
 	    {
-		userNamePtr = cuserid(NULL);
-		if (userNamePtr != NULL)
+		/* cuserid() is obsolete (and not declared on modern glibc, which
+		   truncates its pointer on 64-bit systems), so use the passwd entry */
+		myPwEnt = getpwuid(geteuid());
+		if (myPwEnt == NULL)
 		{
-		    strncpy(userName, userNamePtr, 28 * sizeof(char));
-		    strcat(userName, " ");
+		    fclose(allowFD);
+		    allowFD = NULL;
+		    printf("Unable to find information on uid %u - "
+			"aborting\n", (unsigned int) geteuid());
 		}
 		else
 		{
-		    myPwEnt = getpwuid(geteuid());
-		    if (myPwEnt == NULL)
-		    {
-			fclose(allowFD);
-			allowFD = NULL;
-			printf("Unable to find information on uid %ud - "
-			    "aborting\n", geteuid());
-		    }
-		    else
-		    {
-			strncpy(userName, myPwEnt->pw_name, 28 * sizeof(char));
-			strcat(userName, " ");
-		    }
+		    snprintf(userName, sizeof(userName), "%.28s ",
+			myPwEnt->pw_name);
 		}
 		if (allowFD != NULL)
 		{

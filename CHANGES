@@ -1,5 +1,27 @@
 Changes grouped by release:
 
+11-06-26 Release
+================
+* Database IS compatible with 1.5 - no data file changes
+* Builds on current Linux (tested Ubuntu 24.04 / GCC 13, and with the
+  stricter error checks that GCC 14 turns on by default)
+* "make" no longer hangs when there is no terminal (scripts, Docker, CI).
+  Set IMP_CON_CODE, IMP_CTRL_CODE and IMP_SHUT_CODE to choose the secret
+  codes, or random ones are generated
+* Fix server security check randomly failing on modern crypt libraries
+  (salt was not NUL terminated) - this broke ImpShut
+* Fix ImpShut crash on 64-bit systems (cuserid)
+* Fix TelImp: did not compile, failed to start when the hostname did not
+  resolve, and dropped players with "got bad val from select()"
+* Fix help/doc file requests being able to read files outside the help
+  and doc directories
+* Email is sent without going through the shell, and no longer crashes
+  if the temp file can't be created
+* Fix plague code notifying a non-existent player for unowned planets
+* Fix new player email prompt returning garbage when cancelled
+* Library and ImpCre now get the configured CFLAGS
+* Many buffer overflow fixes (sprintf -> snprintf)
+
 11-20-15 Release
 ================
 * Change game time per day

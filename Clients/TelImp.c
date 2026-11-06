@@ -81,11 +81,9 @@ BOGUS - TelImp not supported on this machine due to missing select() call!
 #include <stdlib.h>
 #endif
 
-#include <bits/signum.h>
 #include <signal.h>
 
 #include <sys/types.h>
-#include <rpc/types.h>
 #define _XOPEN_SOURCE
 #include <unistd.h>
 #include <crypt.h>
@@ -96,6 +94,7 @@ BOGUS - TelImp not supported on this machine due to missing select() call!
 #include <sys/errno.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <sys/param.h>
 #include <netinet/in.h>
 #include <netdb.h>
 
@@ -158,6 +157,11 @@ static USHORT
  */
 /* stuff wanted by terminal mode diddling routines */
 
+/* Prefer POSIX termios over the old SysV termio interface when available */
+#if defined(HAVE_TERMIOS_H) && defined(HAVE_TERMIO_H)
+#undef HAVE_TERMIO_H
+#endif
+
 #ifdef HAVE_TERMIO_H
 #include <termio.h>
 static struct termio _tty, _oldtty;
@@ -179,7 +183,7 @@ static BOOL bizarre=FALSE;  /* do we need to restore terminal? */
 #ifdef HAVE_TERMIO_H
 
 #define crmode() ((bizarre=TRUE),_tty.c_lflag &=~ICANON,_tty.c_cc[VMIN] = 1,ioctl(_tty_ch,TCSETAF,&_tty))
-#define nocrmode() ((bizarre=TRUE),_tty.c_lflag |= ICANON,stty(_tty_ch,&_tty))
+#define nocrmode() ((bizarre=TRUE),_tty.c_lflag |= ICANON,ioctl(_tty_ch,TCSETAF,&_tty))
 #define echo()	 ((bizarre=TRUE),_tty.c_lflag |= ECHO, ioctl(_tty_ch, TCSETA, &_tty))
 #define noecho() ((bizarre=TRUE),_tty.c_lflag &=~ECHO, ioctl(_tty_ch, TCSETA, &_tty))
 #define	savetty() (ioctl(_tty_ch, TCGETA, &_oldtty),ioctl(_tty_ch, TCGETA, &_tty))
@@ -398,18 +402,15 @@ void timedInput(unsigned int blTime, unsigned int maxTime)
 	{
 	    IS->is_argShort = 0; /* Timed out */
 	    IS->is_textIn[0] = '\0';
-	    /* See if we got an error, or just timed out */
-	    if (errno != 0)
+	    /* See if we got an error, or just timed out. Only look at errno
+	       when select() actually failed - on a timeout errno is left over
+	       from some earlier call and means nothing. */
+	    if ((nsel < 0) && (errno != EINTR))
 	    {
-		/* Why is EFAULT returned?? */
-		/* And ECHILD too? */
-	        if ((errno != EINTR) && (errno != ENOENT) && (errno != EFAULT) && (errno != ECHILD) && (errno != 22) && (errno != 9))
-	        {
-		    /* Got a booboo */
-		    printf("timedInput() got bad val from select() %d\n", errno);
-		    IS->is_argBool = FALSE;
-		    return;
-	        }
+		/* Got a booboo */
+		printf("timedInput() got bad val from select() %d\n", errno);
+		IS->is_argBool = FALSE;
+		return;
 	    }
 	    /* Return the apropriate code for where we timed out */
 	    IS->is_argBool = ((bufPos > 0) || (blTime == maxTime)) ? FALSE
@@ -585,15 +586,15 @@ void runImperium(void)
     /* First we attempt to come up with the port name to use */
     if (DoDebug)
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
     }
     else if (PlayPort[0] != '\0')
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, &PlayPort[0]);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, &PlayPort[0]);
     }
     else
     {
-	sprintf(fileDir, "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
+	snprintf(fileDir, sizeof(fileDir), "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
     }
     /* Try to open the port */
     ImperiumPort = open(fileDir, O_WRONLY | O_NDELAY, 0);
@@ -609,20 +610,20 @@ void runImperium(void)
 	    {
 		ErrStr="Unable to allocate memory for temp name\n";
 		write_str(ErrStr);
-		printf(ErrStr);
+		printf("%s", ErrStr);
 	    }
 	    else if (mknod(tmpNam, S_IFIFO | 0622, 0) == -1)
 	    {
-		sprintf(ErrBuff, "Unable to create named pipe %s\n", tmpNam);
+		snprintf(ErrBuff, sizeof(ErrBuff), "Unable to create named pipe %s\n", tmpNam);
 		write_str(ErrBuff);
-		printf(ErrBuff);
+		printf("%s", ErrBuff);
 	    }
 #ifdef BROKEN_MKNOD
 	    else if (chmod(tmpNam, 0622) != 0)
 	    {
-		sprintf(ErrBuff, "Unable to change mode for named pipe %s\n", tmpNam);
+		snprintf(ErrBuff, sizeof(ErrBuff), "Unable to change mode for named pipe %s\n", tmpNam);
 		write_str(ErrBuff);
-		printf(ErrBuff);
+		printf("%s", ErrBuff);
 	    }
 #endif
 #ifdef BROKEN_PIPE
@@ -632,9 +633,9 @@ void runImperium(void)
 #endif
 	    {
 		(void)unlink(tmpNam);
-		sprintf(ErrBuff, "Unable to open named pipe %s\n", tmpNam);
+		snprintf(ErrBuff, sizeof(ErrBuff), "Unable to open named pipe %s\n", tmpNam);
 		write_str(ErrBuff);
-		printf(ErrBuff);
+		printf("%s", ErrBuff);
 	    }
 	    else
 	    {
@@ -705,7 +706,7 @@ void runImperium(void)
         {
             ErrStr="*** can't allocate Imperium state structure.\n";
 	    write_str(ErrStr);
-            printf(ErrStr);
+            printf("%s", ErrStr);
         }
 	close(ImperiumPort);
     }
@@ -713,15 +714,15 @@ void runImperium(void)
     {
         ErrStr="*** can't find Imperium port. Is server running?\n";
 	write_str(ErrStr);
-	printf(ErrStr);
+	printf("%s", ErrStr);
     }
     return;
 }
 
-void splatZombie(void)
+void splatZombie(int whichSig)
 {
-	union wait wstatus;
-	while(wait3(&wstatus, WNOHANG, NULL) > 0)
+	int wstatus;
+	while(waitpid(-1, &wstatus, WNOHANG) > 0)
 	{
 	}
 	signal(SIGCHLD, splatZombie); /* Needed for SYSV */
@@ -786,25 +787,25 @@ BOOL getBool(char *st)
 
 int establish_sock(unsigned short portnum)
 {
-	char myname[MAXHOSTNAMELEN+1];
 	int s;
+	int on = 1;
 	struct sockaddr_in sa;
-	struct hostent *hp;
 
-	bzero(&sa, sizeof(struct sockaddr_in)); /* Clear address */
-	gethostname(myname, MAXHOSTNAMELEN);
-	hp=gethostbyname(myname); /* get our address info */
-	if (hp == NULL)
-	{
-		return(-1);
-	}
-	sa.sin_family=hp->h_addrtype; /* Our host address */
+	/* Listen on all interfaces. This used to look up our own hostname
+	   first, which failed on machines whose hostname does not resolve
+	   (common on VPSes and in containers) even though the address
+	   was never used. */
+	memset(&sa, 0, sizeof(struct sockaddr_in)); /* Clear address */
+	sa.sin_family=AF_INET;
+	sa.sin_addr.s_addr=htonl(INADDR_ANY);
 	sa.sin_port=htons(portnum);   /* Our port number */
 	if ((s=socket(AF_INET, SOCK_STREAM, 0)) < 0) /* Create the socket */
 	{
 		return(-1);
 	}
-	if (bind(s, &sa, sizeof(sa)) < 0)
+	/* Allow a quick restart without waiting for TIME_WAIT to clear */
+	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	if (bind(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
 	{
 		close(s);
 		return(-1);
@@ -816,13 +817,11 @@ int establish_sock(unsigned short portnum)
 int get_connection(int s)
 {
 	struct sockaddr_in isa; /* Sock addr */
-	int i;                  /* size of addr */
+	socklen_t i;            /* size of addr */
 	int t;                  /* socket of connection */
 
 	i=sizeof(isa);
-	getsockname(s, &isa, &i); /* For accept() */
-
-	if ((t=accept(s, &isa, &i)) < 0) /* Accept connection one exists */
+	if ((t=accept(s, (struct sockaddr *) &isa, &i)) < 0) /* Accept connection one exists */
 	{
 		return(-1);
 	}
@@ -846,6 +845,10 @@ int read_data(int sock, char *buf, int len)
 		if (br < 0)
 		{
 			return(-1);
+		}
+		if (br == 0)
+		{
+			break; /* EOF - don't spin forever */
 		}
 	}
 	return(bcount);

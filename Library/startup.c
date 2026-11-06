@@ -1030,6 +1030,7 @@ BOOL newPlayerEmail(IMP)
     {
 	    return FALSE;
     }}
+    return FALSE;
 }
 
 /*
@@ -1463,8 +1464,8 @@ void showStat(IMP, USHORT race)
             break;
     }
     /* fill in the buffer with the finished line */
-    (void) sprintf(&tempBuf[0],
-        "| %2.2u | %-31.31s | %8.8u | %9.9u | %-6.6s |\n", race,
+    (void) snprintf(&tempBuf[0], sizeof(tempBuf),
+        "| %2.2u | %-31.31s | %8.8lu | %9.9lu | %-6.6s |\n", race,
         &IS->is_world.w_race[race].r_name[0],
         IS->is_world.w_race[race].r_techLevel,
         IS->is_world.w_race[race].r_planetCount, ptr);
@@ -1472,8 +1473,8 @@ void showStat(IMP, USHORT race)
     feRaceRep(IS, 1);
     user(IS, &tempBuf[0]);
     /* fill in the buffer with the finished line */
-    (void) sprintf(&tempBuf[0],
-        "|    | %-15.15s                 | %8.8u | %9.9u |        |\n",
+    (void) snprintf(&tempBuf[0], sizeof(tempBuf),
+        "|    | %-15.15s                 | %8.8lu | %9.9u |        |\n",
         &IS->is_world.w_race[race].r_homeName[0],
         IS->is_world.w_race[race].r_resLevel,
         IS->is_world.w_race[race].r_playCount);

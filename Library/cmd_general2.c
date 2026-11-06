@@ -323,7 +323,7 @@ void cmd_power(IMP)
 	    {
                 if ((plNum - lastItem) > 200)
                 {
-	            sprintf(prog, "!Examining planet %u", plNum);
+	            sprintf(prog, "!Examining planet %lu", plNum);
 	            uPrompt(IS, prog);
                     lastItem = plNum;
 		}
@@ -372,7 +372,7 @@ void cmd_power(IMP)
 		    }
 		    else
 		    {
-	                sprintf(prog, "!Examining ship %u", shipNumber);
+	                sprintf(prog, "!Examining ship %lu", shipNumber);
 	                uPrompt(IS, prog);
 		    }
                     lastItem = shipNumber;

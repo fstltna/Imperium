@@ -226,9 +226,9 @@ void mapCoords(IMP, USHORT left, USHORT right)
 
 void digits(IMP, USHORT r)
 {
-    char numBuf[5];
+    char numBuf[12];
 
-    sprintf(numBuf, "%04u", r);
+    snprintf(numBuf, sizeof(numBuf), "%04u", (unsigned int) r);
     user(IS, numBuf);
 }
 
@@ -830,10 +830,10 @@ void giveShDetails(IMP, register Ship_t *sh, short difTf)
     register USHORT none;
     USHORT numEng, cargo, numWeap, eff, ETF, WTF, civ,
         mil, shield, energ, armour, temp;
-	char shNameBuf[25], work[15];
+	char shNameBuf[25], work[32];
 
     /* pre-initialize all the fields */
-    none = NO_ITEM;
+    none = (USHORT) NO_ITEM;
     numEng = none;
     cargo = none;
     numWeap = none;
@@ -1228,10 +1228,10 @@ void givePlDetails(IMP, register Planet_t *pl, short difTf)
     USHORT size, polut, eff, minr, gold, gas, water, TF, civ,
         mil, ore, bar;
     UBYTE race;
-    char plNameBuf[25], work[15];
+    char plNameBuf[25], work[32];
 
     /* pre-initialize all the fields */
-    none = NO_ITEM;
+    none = (USHORT) NO_ITEM;
     size = none;
     polut = none;
     eff = none;

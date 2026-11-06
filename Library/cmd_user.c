@@ -67,7 +67,7 @@ void printPlayer(IMP, USHORT i, BOOL onlyOn)
     char *actPtr;
     char *racePtr;
     char actChar;
-    char tempBuf[81];
+    char tempBuf[128];
     char timeBuf[30];
     ULONG t;
 
@@ -125,8 +125,8 @@ void printPlayer(IMP, USHORT i, BOOL onlyOn)
         {
             racePtr = "NONE";
         }
-        (void) sprintf(&tempBuf[0],
-"%3.3u  %c%-20.20s  [%4.4u] [%3.3u] %-9.9s %-6.6s %-20.20s\n",
+        (void) snprintf(&tempBuf[0], sizeof(tempBuf),
+"%3.3u  %c%-20.20s  [%4.4lu] [%3.3u] %-9.9s %-6.6s %-20.20s\n",
             i, actChar, &timeBuf[0], p->p_timeLeft, p->p_btu, actPtr,
             racePtr, &p->p_name[0]);
         user(IS, &tempBuf[0]);

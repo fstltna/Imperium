@@ -602,7 +602,7 @@ void updatePlanet(IMP)
                 userP(IS, " officers died of asphyxiation on ", rp,
                     ".\n");
                 savePlanet = *rp;
-		if (ownerNum != NO_OWNER);
+		if (ownerNum != NO_OWNER)
 		{
                     notify(IS, ownerNum);
 		}
