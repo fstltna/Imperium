@@ -47,6 +47,7 @@
 BOGUS - Imperium not supported on this machine due to missing stdlib.h
 #endif
 #include <stdio.h>
+#include <errno.h>
 #ifdef HAVE_STRING_H
 #include <string.h>
 #else
@@ -356,6 +357,9 @@ void logN(register char *m1, register ULONG n, char *m2)
 
 void myAbort(char *message)
 {
+    /* also say why on stderr - the log may be what we can't open, and */
+    /* under systemd this is what shows up in "systemctl status" */
+    fprintf(stderr, "ImpServ: %s - aborting\n", message);
     if (logOpen())
     {
         logString("*** ");
@@ -375,6 +379,7 @@ void myAbort(char *message)
 
 void abortN(char *message, ULONG num)
 {
+    fprintf(stderr, "ImpServ: %s%lu - aborting\n", message, num);
     if (logOpen())
     {
         logString("*** ");
@@ -1179,6 +1184,8 @@ FILE *tryToOpen(char *defName)
     fd = fopen(&FileName[0], "r+b");
     if (fd == NULL)
     {
+        fprintf(stderr, "ImpServ: can't open file %s: %s - aborting\n",
+            &FileName[0], strerror(errno));
         if (logOpen())
         {
             logString("*** ");
