@@ -1,0 +1,54 @@
+# Imperium telnet front end (TelImp) - lets players connect with
+# "telnet yourhost 3458".
+#
+# Installed by "make install-systemd". It is tied to imperium.service:
+# it starts after the server, and stops (logging everyone out properly)
+# whenever the server stops.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+
+[Unit]
+Description=Imperium telnet front end
+Documentation=file:@IMP_DEST@/doc/telimp.doc
+After=imperium.service network.target
+BindsTo=imperium.service
+
+[Service]
+Type=simple
+User=@IMP_OWN@
+Group=@IMP_GRP@
+WorkingDirectory=@IMP_DEST@/data
+ExecStart=@IMP_DEST@/clients/TelImp
+# Every connected player has their own process; SIGTERM makes each one log
+# its player out of the server cleanly before exiting.
+KillMode=control-group
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10
+
+# Hardening. NoNewPrivileges is left off on purpose: new players trigger an
+# email through /usr/sbin/sendmail, and some mail systems (e.g. Postfix)
+# need their setgid helper for that to work.
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectHome=yes
+ProtectSystem=full
+ReadWritePaths=@IMP_DEST@/fifo
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

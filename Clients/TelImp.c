@@ -846,6 +846,17 @@ int read_data(int sock, char *buf, int len)
 }
 
 /*
+ * hangupHandler - in a player's process, treat SIGTERM/SIGHUP (for example
+ *      the service being stopped) like the player hanging up: shut the
+ *      socket so the next read sees end-of-file, and the normal code logs
+ *      the player out of the server properly.
+ */
+void hangupHandler(int whichSig)
+{
+	(void) shutdown(GameSocket, SHUT_RDWR);
+}
+
+/*
  * runNetImperium - This handles establishing the network connection
  */
 void runNetImperium(void)
@@ -858,6 +869,10 @@ void runNetImperium(void)
 		return;
 	}
 	signal(SIGCHLD, splatZombie);
+	/* A player hanging up makes our next write fail with SIGPIPE, which
+	   used to kill their process before it could log them out, leaving
+	   them marked as logged on. Ignore it and let the write just fail. */
+	signal(SIGPIPE, SIG_IGN);
 
 	while (-1)
 	{
@@ -878,6 +893,8 @@ void runNetImperium(void)
 				close(GameSocket);
 				return;
 			case 0:	/* child */
+		signal(SIGTERM, hangupHandler);
+		signal(SIGHUP, hangupHandler);
 		_tty_ch=GameSocket;
     savetty();
     noecho();

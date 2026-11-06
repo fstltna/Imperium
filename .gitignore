@@ -14,3 +14,5 @@ ImpCre/ImpCre
 Include/ImpSize
 Include/ImpLibSize
 .build-settings
+Servers/imperium-stop
+systemd/*.service

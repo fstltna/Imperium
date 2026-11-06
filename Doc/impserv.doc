@@ -50,5 +50,10 @@ server process a SIGINT signal so that it can properly flush the buffers to
 disk before exiting. Using ImpShut is prefered.
 
 If you need to work on the files and dont want ImpServ to start up from the
-init scripts create a file called "nostart" in /usr/local/lib/imperium/data
-and delete it when you want the server to start again.
+init scripts or systemd create a file called "nostart" in
+/usr/local/lib/imperium/data and delete it when you want the server to start
+again.
+
+With systemd, "systemctl stop imperium" asks the server to shut down the
+same way ImpShut does, waits a minute for players to leave, and then has it
+flush everything to disk and exit.

@@ -1,0 +1,28 @@
+# Send this server's details to the public Imperium game directory
+# (https://EmpireDirectory.net/imppub.html) - this is "ImpCtrl -s".
+#
+# Run once a day by imperium-publish.timer, which is NOT enabled by
+# default. Set your game's name, host and port first (see impcre.doc),
+# then turn it on with:
+#     systemctl enable --now imperium-publish.timer
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+
+[Unit]
+Description=Publish Imperium server details to the game directory
+Requires=imperium.service
+After=imperium.service
+
+[Service]
+Type=oneshot
+User=@IMP_OWN@
+Group=@IMP_GRP@
+WorkingDirectory=@IMP_DEST@/data
+ExecStart=@IMP_DEST@/servers/ImpCtrl -s
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=full
+ReadWritePaths=@IMP_DEST@/fifo

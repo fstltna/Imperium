@@ -16,7 +16,9 @@
 #
 # Usage:
 #   make                    build everything
+#   make install-user       create the impown account (as root, once)
 #   make install            install into $(IMP_DEST) (usually needs root)
+#   make install-systemd    install and load the systemd services
 #   make clean              remove build output (keeps impsec.h)
 #   make distclean          also remove impsec.h (the secret codes!)
 #
@@ -35,6 +37,8 @@ IMP_OWN ?= impown
 IMP_GRP ?= games
 # Staging directory for packaging (normally empty)
 DESTDIR ?=
+# Where "make install-systemd" puts the unit files
+SYSTEMD_DIR ?= /etc/systemd/system
 
 # Base revision number shown by the game
 IMP_BR = 1.5
@@ -78,7 +82,8 @@ ALL_OBJS = $(LIB_OBJS) Clients/ConImp.o Clients/TelImp.o \
 	Servers/ServerMain.o Servers/FileIO.o Servers/ImpShut.o \
 	Servers/ImpCtrl.o ImpCre/ImpCre.o
 
-.PHONY: all clean distclean install install-check sizes FORCE
+.PHONY: all clean distclean install install-check install-user \
+	install-systemd sizes FORCE
 
 all: $(PROGS)
 
@@ -140,7 +145,8 @@ Include/ImpLibSize: Include/ImpLibSize.c
 
 clean:
 	rm -f $(PROGS) $(ALL_OBJS) $(ALL_OBJS:.o=.d) $(IMPLIB) \
-		Include/ImpSize Include/ImpLibSize .build-settings
+		Include/ImpSize Include/ImpLibSize .build-settings \
+		Servers/imperium-stop $(addprefix systemd/,$(UNITS))
 
 distclean: clean
 	rm -f impsec.h
@@ -158,8 +164,23 @@ install-check:
 	    echo "    make install IMP_GRP=<group>"; \
 	    exit 1; }
 
+# Create the account the game runs as, if it isn't there already. It gets
+# no login shell and no home directory of its own.
+install-user:
+	@getent group $(IMP_GRP) >/dev/null 2>&1 || groupadd --system $(IMP_GRP)
+	@if id -u $(IMP_OWN) >/dev/null 2>&1; then \
+	    echo "User $(IMP_OWN) already exists"; \
+	else \
+	    useradd --system --no-create-home --home-dir $(IMP_DEST) \
+	        --shell /usr/sbin/nologin --gid $(IMP_GRP) $(IMP_OWN) && \
+	    echo "Created user $(IMP_OWN)"; \
+	fi
+
 D = $(DESTDIR)$(IMP_DEST)
 OWN = -o $(IMP_OWN) -g $(IMP_GRP)
+# Fill in the install settings in the scripts and unit files
+SUBST = sed -e 's|@IMP_DEST@|$(IMP_DEST)|g' -e 's|@IMP_OWN@|$(IMP_OWN)|g' \
+	-e 's|@IMP_GRP@|$(IMP_GRP)|g'
 
 install: all install-check
 	$(INSTALL) -d $(OWN) -m 755 $(D) $(D)/clients $(D)/servers \
@@ -169,6 +190,8 @@ install: all install-check
 	$(INSTALL) $(OWN) -m 711 Servers/ImpCtrl Servers/ImpShut $(D)/servers
 	$(INSTALL) $(OWN) -m 4700 Servers/ImpServ $(D)/servers
 	$(INSTALL) $(OWN) -m 751 Servers/startimpscreen $(D)/servers
+	$(SUBST) Servers/imperium-stop.in > Servers/imperium-stop
+	$(INSTALL) $(OWN) -m 750 Servers/imperium-stop $(D)/servers
 	$(INSTALL) $(OWN) -m 700 ImpCre/ImpCre ImpCre/default.sh \
 		ImpCre/bigworld.sh $(D)/impcre
 	@# don't overwrite access lists a deity may have edited
@@ -190,5 +213,24 @@ install: all install-check
 	$(INSTALL) -d -m 755 $(DESTDIR)$(BIN_DEST)
 	ln -sf $(IMP_DEST)/clients/ConImp $(DESTDIR)$(BIN_DEST)/ConImp
 	ln -sf $(IMP_DEST)/clients/TelImp $(DESTDIR)$(BIN_DEST)/TelImp
+
+# systemd services: the server, the telnet front end, and an optional daily
+# timer that publishes the game to the public directory (not enabled).
+UNITS = imperium.service imperium-telnet.service imperium-publish.service
+
+install-systemd: install
+	$(INSTALL) -d -m 755 $(DESTDIR)$(SYSTEMD_DIR)
+	for u in $(UNITS); do \
+	    $(SUBST) systemd/$$u.in > systemd/$$u && \
+	    $(INSTALL) -m 644 systemd/$$u $(DESTDIR)$(SYSTEMD_DIR)/$$u || exit 1; \
+	done
+	$(INSTALL) -m 644 systemd/imperium-publish.timer $(DESTDIR)$(SYSTEMD_DIR)
+	@if [ -z "$(DESTDIR)" ] && command -v systemctl >/dev/null 2>&1; then \
+	    systemctl daemon-reload 2>/dev/null || \
+	        echo "(systemd isn't running - run 'systemctl daemon-reload' later)"; \
+	    echo; \
+	    echo "Installed. Create a world first (see INSTALL), then:"; \
+	    echo "    systemctl enable --now imperium.service imperium-telnet.service"; \
+	fi
 
 -include $(ALL_OBJS:.o=.d)

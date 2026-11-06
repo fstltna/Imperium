@@ -2,6 +2,17 @@ Changes grouped by release:
 
 11-06-26 Release
 ================
+* systemd services: "make install-systemd" installs imperium.service,
+  imperium-telnet.service and an optional daily imperium-publish.timer,
+  all running as impown with sandboxing. "make install-user" creates
+  the impown account
+* Fix telnet players who hang up without "bye" staying marked as logged
+  on (TelImp was killed by SIGPIPE before it could log them out).
+  Stopping TelImp now logs every connected player out properly
+* ImpServ removes a server port left behind by a crash instead of
+  refusing to start
+* The nostart file is found in the installed data directory (was always
+  /usr/local/lib/imperium/data) and its message is printed
 * Build: autoconf/configure removed - Linux only now. Just "make" and
   "make install". One Makefile with automatic header dependencies,
   parallel builds (make -j), DESTDIR support, and a clear message if the

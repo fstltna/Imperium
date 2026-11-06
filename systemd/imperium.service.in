@@ -1,0 +1,60 @@
+# Imperium game server (ImpServ)
+#
+# Installed by "make install-systemd". To keep the server from starting
+# (for example while you work on the data files) create the file
+# @IMP_DEST@/data/nostart
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+
+[Unit]
+Description=Imperium game server
+Documentation=file:@IMP_DEST@/doc/hosting.doc file:@IMP_DEST@/doc/impserv.doc
+After=network.target
+ConditionPathExists=!@IMP_DEST@/data/nostart
+
+[Service]
+Type=simple
+User=@IMP_OWN@
+Group=@IMP_GRP@
+WorkingDirectory=@IMP_DEST@/data
+ExecStart=@IMP_DEST@/servers/ImpServ
+# Ask the server to shut down politely (players are told and given time to
+# leave). Anything still running when that times out gets SIGTERM, which
+# ImpServ also handles cleanly by flushing everything to disk.
+ExecStop=@IMP_DEST@/servers/imperium-stop $MAINPID
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10
+
+# Hardening. ImpServ only talks to clients through its named pipes, so it
+# needs no network at all, and only writes its data and fifo directories.
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectHome=yes
+ProtectSystem=strict
+ReadWritePaths=@IMP_DEST@/data @IMP_DEST@/fifo
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# imperium-stop - stop the Imperium server politely. Used by the systemd
+# service, but fine to run by hand too.
+#
+# usage: imperium-stop [PID] [SECONDS]
+#
+# Asks the server to shut down with "ImpShut -s". The server tells any
+# players still connected and exits once they have left. We wait up to
+# SECONDS (default 60) for that; if players are still on after that we
+# return anyway, and systemd sends SIGTERM, which ImpServ also handles
+# cleanly (it flushes all data to disk before exiting).
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+
+PID="$1"
+WAIT="${2:-60}"
+
+@IMP_DEST@/servers/ImpShut -s || exit 0
+
+# no PID given - nothing to wait for
+[ -n "$PID" ] || exit 0
+
+while [ "$WAIT" -gt 0 ] && kill -0 "$PID" 2>/dev/null
+do
+	sleep 1
+	WAIT=$((WAIT - 1))
+done
+exit 0

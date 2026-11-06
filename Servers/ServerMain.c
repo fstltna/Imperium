@@ -3147,6 +3147,25 @@ int openPort(char *buff)
     int retCode = -1;
     struct stat locStat;
 
+    /* If the port is left over from a server that crashed (or was killed)
+       nobody will be reading from it. Opening a FIFO for writing without
+       blocking fails with ENXIO when there is no reader, which tells us it
+       is stale and safe to remove. If a server IS running we leave it be. */
+    if ((lstat(buff, &locStat) == 0) && S_ISFIFO(locStat.st_mode))
+    {
+        int testFd = open(buff, O_WRONLY | O_NONBLOCK);
+
+        if (testFd >= 0)
+        {
+            /* someone is listening - a server is already running */
+            close(testFd);
+        }
+        else if (errno == ENXIO)
+        {
+            impLog("removing stale server port left by a previous run");
+            (void) unlink(buff);
+        }
+    }
     if (stat(buff, &locStat))
     {
 	(void) umask(oldUmask);
@@ -3378,10 +3397,13 @@ int main(int argc, char *argv[])
     {
         /* running from CLI */
         hadError = FALSE;
-    	LockFD = fopen("/usr/local/lib/imperium/data/nostart", "r");
+	/* the data directory sits next to the fifo directory */
+	LockFD = fopen(FIFO_DIR "/../data/nostart", "r");
 	if (LockFD != NULL)
 	{
-		impLog("Lock File Present - not starting Imperium server");
+		/* the log file isn't open yet, so say it where it can be seen */
+		fputs("Lock file " FIFO_DIR "/../data/nostart present - not "
+		    "starting Imperium server\n", stderr);
 		exit(1);
 	}
 	if (argc > 1)

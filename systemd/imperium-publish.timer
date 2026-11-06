@@ -1,0 +1,14 @@
+# Run imperium-publish.service once a day. Not enabled by default:
+#     systemctl enable --now imperium-publish.timer
+# Please don't make this run more often than daily.
+
+[Unit]
+Description=Publish Imperium server details once a day
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

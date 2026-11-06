@@ -172,12 +172,15 @@ the command line of ImpServ and any client you wish to use to access this
 server. You MUST have separate data files for each game, but you may share
 the doc and help files among all games.
 
-You may wish to start up the server and telimp client at boot time. See the
-files in InitScripts for info on doing this.
+You may wish to start up the server and telimp client at boot time. The
+easiest way is with systemd - see "Running with systemd" in the INSTALL
+file. (The older screen-based scripts are still in InitScripts.)
 
 To keep the server from starting up create a file called nostart in
-/usr/local/lib/imperium/data (or the directory you are starting the server
-in). Remove it when you want the server to start again.
+/usr/local/lib/imperium/data (the data directory of wherever Imperium is
+installed). Remove it when you want the server to start again. If the
+server crashed, just start it again - a port left behind by the old
+server is cleaned up automatically.
 
 ==== Public Game Directory ====
 
@@ -190,7 +193,7 @@ game status as the old record will still exist until it reaches the deadline
 for updates and is purged.
 
 You should consider putting the command "ImpCtrl -s" in a cron job that
-executes once per day. Please do not run it more often and you can run it
+executes once per day (with systemd, just enable imperium-publish.timer). Please do not run it more often and you can run it
 from the command line manually as long as you run it once withn a 15 day
 interval (the default time for entries to be purged for inactivity).
 

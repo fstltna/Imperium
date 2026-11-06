@@ -1,6 +1,13 @@
 Init Scripts
 ============
-These start up ImpServ and TelImp with a "screen" process.
+These start up ImpServ and TelImp with a "screen" process. Note that they
+run the game as root.
+
+On any current Linux system the systemd services are a better choice - they
+run the game as the impown user, restart it if it crashes, and shut it down
+cleanly. See "Running with systemd" in the INSTALL file.
+
+To use these scripts instead:
 
 1) Copy startimp into /etc/init.d
 2) Run /etc/init.d/startimp

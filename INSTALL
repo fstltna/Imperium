@@ -16,8 +16,8 @@ libcrypt-dev"; on Fedora: "dnf install gcc make libxcrypt-devel").
 	change. "make clean" keeps it; "make distclean" deletes it.
 
 2)	Create the account the game will be owned by (and run as), if you
-	don't have it already:
-		useradd --system --no-create-home impown
+	don't have it already. As root:
+		make install-user
 
 3)	Run "make install" as root. This installs into /usr/local/lib/imperium
 	with links to ConImp and TelImp in /usr/local/bin. You can change
@@ -29,6 +29,42 @@ libcrypt-dev"; on Fedora: "dnf install gcc make libxcrypt-devel").
 	Existing ic.allow and is.allow files are not overwritten.
 
 4)	If you have trouble installing Imperium on your machine, let me know.
+
+Running with systemd
+====================
+
+As root:
+
+	make install-systemd
+
+This does "make install" and also installs these services, which all run
+as the impown user:
+
+	imperium.service         the game server (ImpServ)
+	imperium-telnet.service  TelImp, so players can "telnet host 3458"
+	imperium-publish.timer   daily "ImpCtrl -s" to list your game in the
+	                         public directory (not turned on by default)
+
+Create a world first, as the game user (see Doc/impcre.doc):
+
+	cd /usr/local/lib/imperium/data
+	sudo -u impown ../impcre/default.sh
+
+(Edit a copy of default.sh first to set the size, passwords, game name
+and so on.) Then start the game and have it start at boot:
+
+	systemctl enable --now imperium.service imperium-telnet.service
+
+Useful commands:
+
+	systemctl status imperium          is it running?
+	journalctl -u imperium             server messages
+	systemctl stop imperium            shut down cleanly (telnet too)
+	systemctl enable --now imperium-publish.timer   list in the directory
+
+The server also keeps its own log in data/imp.log. To stop the server
+starting (say while you work on the files) create data/nostart. If the
+server crashes, systemd restarts it after 10 seconds.
 
 5)	Read the following files in the "Doc" subdirectory before creating any
 	worlds for other people to play:
