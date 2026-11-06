@@ -49,6 +49,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -82,7 +83,7 @@ BOGUS - Imperium not supported on this machine due to missing unistd.h
 #include "Server.h"
 #include "../impsec.h"
 
-static const char rcsid[] = "$Id: ServerMain.c,v 1.5 2000/05/23 20:25:42 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: ServerMain.c,v 1.5 2000/05/23 20:25:42 marisa Exp $";
 
 #ifdef DEBUG_SERV
 BOOL DO_DEBUG;
@@ -179,9 +180,9 @@ static Client_t
 static ULONG
     ClientCounter;          /* count the clients active */
 static char
-    Path[257],              /* path to files            */
-    HelpDir[257],           /* help file directory      */
-    DocDir[257];            /* doc file directory       */
+    Path[IMP_DIR_LEN],      /* path to files            */
+    HelpDir[IMP_DIR_LEN],   /* help file directory      */
+    DocDir[IMP_DIR_LEN];    /* doc file directory       */
 
 static BOOL
     ClearPlayers,           /* should we clear the p_loggedOn flag? */
@@ -441,8 +442,12 @@ void stopClient(register Client_t *cl, register Request_t *rq)
 {
     register MessageList_t *ml, *mlt;
 
-    /* Send them the message that indicates they can go bye-bye */
-    (void)write(cl->cl_handle, (char *)rq, sizeof(Request_t));
+    /* Send them the message that indicates they can go bye-bye. If the */
+    /* client has already gone there is nothing more to do about it. */
+    if (write(cl->cl_handle, (char *)rq, sizeof(Request_t)) < 0)
+    {
+        impLog("client went away before goodbye was sent");
+    }
     /* Close their file pointer */
     close(cl->cl_handle);
     /* delete client from chain of idle clients */
@@ -803,7 +808,7 @@ void news(register Request_t *rq)
     FILE *fd;
     char fileName[257];
 
-    (void) time(&now);
+    now = time(NULL);
     rq->rq_u.ru_news.n_time = now;
     setFileName(&fileName[0], sizeof(fileName), now, "news");
     fd = fopen(&fileName[0], "ab");
@@ -1110,8 +1115,8 @@ void writePower(register Client_t *cl, register Request_t *rq)
     if (cl->cl_fd == NULL)
     {
         /* try to open the power file and write the header */
-        strcpy(&fileName[0], &Path[0]);
-        strcat(&fileName[0], POWER_FILE);
+        impStrCopy(&fileName[0], &Path[0], IMP_BUFSIZE(fileName));
+        impStrCat(&fileName[0], POWER_FILE, IMP_BUFSIZE(fileName));
         cl->cl_fd = fopen(&fileName[0], "wb");
         if (cl->cl_fd == NULL)
         {
@@ -1165,8 +1170,8 @@ void readPower(register Client_t *cl, register Request_t *rq)
 
     if (cl->cl_fd == NULL)
     {
-        strcpy(&fileName[0], &Path[0]);
-        strcat(&fileName[0], POWER_FILE);
+        impStrCopy(&fileName[0], &Path[0], IMP_BUFSIZE(fileName));
+        impStrCat(&fileName[0], POWER_FILE, IMP_BUFSIZE(fileName));
         cl->cl_fd = fopen(&fileName[0], "rb");
         if (cl->cl_fd == NULL)
         {
@@ -1758,7 +1763,7 @@ void handleRequests(void)
         {
 	    rq = &LocalReq;
             badBack = FALSE;
-            (void) time(&rq->rq_time);
+            rq->rq_time = time(NULL);
 #ifdef DEBUG_SERV
             switch(rq->rq_type)
             {
@@ -1769,7 +1774,7 @@ void handleRequests(void)
 				rq->rq_whichUnit)
                             {
 				char numBuff[120];
-				sprintf(&numBuff[0],
+				snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					"*** sh_shipNumber %lu does not "
 					"equal rq_whichUnit %lu !",
 					rq->rq_u.ru_ship.sh_number,
@@ -1780,7 +1785,7 @@ void handleRequests(void)
                                 World.w_shipNext)
                             {
 				char numBuff[80];
-				sprintf(&numBuff[0],
+				snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					"*** sh_shipNumber %lu too big!",
 					rq->rq_u.ru_ship.sh_number);
                                 impLog(&numBuff[0]);
@@ -2022,7 +2027,7 @@ void handleRequests(void)
                         if (NumPlay != 0)
                         {
 			    /* Store the port name of the client requesting BU */
-                            strcpy(&BackReq[0], &rq->rq_text[0]);
+                            impStrCopy(&BackReq[0], &rq->rq_text[0], IMP_BUFSIZE(BackReq));
                             rq = NULL;
                         }
                         else
@@ -2754,7 +2759,7 @@ void handleRequests(void)
 				    rq->rq_whichUnit)
                                 {
 				    char numBuff[120];
-				    sprintf(&numBuff[0],
+				    snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					    "*** sh_shipNumber %lu does not "
 					    "equal rq_whichUnit %lu !",
 					    rq->rq_u.ru_ship.sh_number,
@@ -2765,7 +2770,7 @@ void handleRequests(void)
                                     World.w_shipNext)
                                 {
 				    char numBuff[80];
-				    sprintf(&numBuff[0],
+				    snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					    "*** sh_shipNumber %lu too big!",
 					    rq->rq_u.ru_ship.sh_number);
                                     impLog(&numBuff[0]);
@@ -2785,7 +2790,7 @@ void handleRequests(void)
                                     World.w_planetNext)
                                 {
 				    char numBuff[80];
-				    sprintf(&numBuff[0],
+				    snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					    "*** pl_planetNumber %lu too big!",
 					    rq->rq_u.ru_planet.pl_number);
                                     impLog(&numBuff[0]);
@@ -2802,7 +2807,7 @@ void handleRequests(void)
                                     World.w_bigItemNext)
                                 {
 				    char numBuff[80];
-				    sprintf(&numBuff[0],
+				    snprintf(&numBuff[0], IMP_BUFSIZE(numBuff),
 					    "*** bi_bigItemNumber %lu too big!",
 					    rq->rq_u.ru_bigItem.bi_number);
                                     impLog(&numBuff[0]);
@@ -3161,7 +3166,7 @@ int openPort(char *buff)
 	    }
 	    else
 	    {
-		strcpy(ImperiumPortName, buff);
+		impStrCopy(ImperiumPortName, buff, IMP_BUFSIZE(ImperiumPortName));
 	    }
 	}
 	(void) umask(0077);
@@ -3180,15 +3185,15 @@ void startServing(void)
     openFiles(&Path[0], &HelpDir[0], &DocDir[0]);
     if (UseTest)
     {
-	sprintf(lineBuf, "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
+	snprintf(lineBuf, IMP_BUFSIZE(lineBuf), "%s/server/%s", FIFO_DIR, IMP_TEST_PORT);
     }
     else if (PlayPort[0] != '\0')
     {
-	sprintf(lineBuf, "%s/server/%s", FIFO_DIR, &PlayPort[0]);
+	snprintf(lineBuf, IMP_BUFSIZE(lineBuf), "%s/server/%s", FIFO_DIR, &PlayPort[0]);
     }
     else
     {
-	sprintf(lineBuf, "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
+	snprintf(lineBuf, IMP_BUFSIZE(lineBuf), "%s/server/%s", FIFO_DIR, IMPERIUM_PORT);
     }
     ImperiumPort = openPort(lineBuf);
     if (ImperiumPort < 0)
@@ -3201,7 +3206,7 @@ void startServing(void)
             {
                 if (PlayPort[0] != '\0')
                 {
-                    sprintf(&lineBuf[0], "can't create the port \"%s\","
+                    snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "can't create the port \"%s\","
 			" or it already exists",
                         &PlayPort[0]);
                     myAbort(&lineBuf[0]);
@@ -3224,20 +3229,20 @@ void startServing(void)
     BusyClients = NULL;
     if (UseTest)
     {
-	    sprintf(&lineBuf[0], "Test server %s started up.", IMP_BASE_REV);
+	    snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Test server %s started up.", IMP_BASE_REV);
             impLog(&lineBuf[0]);
     }
     else
     {
             if (PlayPort[0] != '\0')
             {
-                sprintf(&lineBuf[0], "Imperium server %s starting up on port"
+                snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Imperium server %s starting up on port"
                     " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
                 impLog(&lineBuf[0]);
             }
             else
             {
-	    	sprintf(&lineBuf[0], "Imperium server %s started up.", IMP_BASE_REV);
+	    	snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Imperium server %s started up.", IMP_BASE_REV);
             	impLog(&lineBuf[0]);
             }
     }
@@ -3251,20 +3256,20 @@ void startServing(void)
     writeWorld(&World, &Player[0]);
     if (UseTest)
     {
-	    sprintf(&lineBuf[0], "Test server %s shut down.", IMP_BASE_REV);
+	    snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Test server %s shut down.", IMP_BASE_REV);
             impLog(&lineBuf[0]);
     }
     else
     {
             if (PlayPort[0] != '\0')
             {
-                sprintf(&lineBuf[0], "Imperium server %s shutting down on port"
+                snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Imperium server %s shutting down on port"
                     " \"%s\"", IMP_BASE_REV, &PlayPort[0]);
                 impLog(&lineBuf[0]);
             }
             else
             {
-	    	sprintf(&lineBuf[0], "Imperium server %s shut down.", IMP_BASE_REV);
+	    	snprintf(&lineBuf[0], IMP_BUFSIZE(lineBuf), "Imperium server %s shut down.", IMP_BASE_REV);
             	impLog(&lineBuf[0]);
             }
     }
@@ -3438,7 +3443,7 @@ int main(int argc, char *argv[])
                 }
                 else if (memcmp("port=", par, 5 * sizeof(char)) == 0)
                 {
-                    strcpy(PlayPort, (char *)(par + (5 * sizeof(char))));
+                    impStrCopy(PlayPort, (char *)(par + (5 * sizeof(char))), IMP_BUFSIZE(PlayPort));
                 }
                 else
                 {

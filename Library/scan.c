@@ -49,7 +49,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: scan.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: scan.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /* negative codes for a unit to be compared: */
 

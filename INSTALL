@@ -1,24 +1,34 @@
 How to install Imperium:
 
-1)	Run the "configure" script. You may need to do "sh configure" to start
-	it up on your system.
+Imperium builds on Linux. You need a C compiler, make, and the crypt
+library headers (on Debian/Ubuntu: "apt install build-essential
+libcrypt-dev"; on Fedora: "dnf install gcc make libxcrypt-devel").
 
-2)	Run "make" in this directory (the top level of the Imperium source
-	distribution). The first build asks for three secret codes which
-	are saved in "impsec.h". To build without being asked (scripts,
-	Docker, etc.) set IMP_CON_CODE, IMP_CTRL_CODE and IMP_SHUT_CODE in
-	the environment, or run make with no terminal attached and random
-	codes will be generated. Keep impsec.h - every program must be
-	built with the same codes, and the server must be restarted after
-	the codes change.
+1)	Run "make" in this directory (the top level of the Imperium source
+	distribution). There is no configure step any more.
 
-3)	If everything seems to build OK, run "make install". Note that you may
-	need to be root to do this, depending on where you are installing
-	Imperium.
+	The first build asks for three secret codes which are saved in
+	"impsec.h". To build without being asked (scripts, Docker, etc.)
+	set IMP_CON_CODE, IMP_CTRL_CODE and IMP_SHUT_CODE in the
+	environment, or run make with no terminal attached and random codes
+	will be generated. Keep impsec.h - every program must be built with
+	the same codes, and the server must be restarted after the codes
+	change. "make clean" keeps it; "make distclean" deletes it.
+
+2)	Create the account the game will be owned by (and run as), if you
+	don't have it already:
+		useradd --system --no-create-home impown
+
+3)	Run "make install" as root. This installs into /usr/local/lib/imperium
+	with links to ConImp and TelImp in /usr/local/bin. You can change
+	that and the owner on the command line, for example:
+		make install IMP_DEST=/opt/imperium IMP_OWN=games IMP_GRP=games
+	If you change IMP_DEST, the programs are rebuilt automatically,
+	since they have the location of the game directory built in.
+
+	Existing ic.allow and is.allow files are not overwritten.
 
 4)	If you have trouble installing Imperium on your machine, let me know.
-	I only have access to Ubuntu & Mac machines, so I can't test it much
-	beyond those environments...
 
 5)	Read the following files in the "Doc" subdirectory before creating any
 	worlds for other people to play:

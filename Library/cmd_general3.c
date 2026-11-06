@@ -38,6 +38,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -53,7 +54,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static char const rcsid[] = "$Id: cmd_general3.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: cmd_general3.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 static char const *SHIP_DESC[ST_LAST + 1] =
     {
@@ -187,6 +188,8 @@ void doBuild(IMP, register Planet_t *pl)
     USHORT it, curIt, maxNum, bp, plTF;
     char *prompt, *choices;
 
+    /* only filled in (and used) for ships that have a hull */
+    memset(&saveIt, 0, sizeof(saveIt));
     buildAbort = FALSE;
     it = 0;
     /* set up all out pointers */
@@ -469,7 +472,7 @@ void doBuild(IMP, register Planet_t *pl)
                 (void) skipBlanks(IS);
                 IS->is_BOOL2 = TRUE;
                 tellShipTypes(IS, rp);
-                getPrompt(IS, &buf[0]);
+                getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                 /* find out what kind of ship they want to build */
                 if (reqShipType(IS, &typ, &buf[0]))
                 {

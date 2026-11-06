@@ -202,7 +202,7 @@ typedef struct
 
     /* startup.c */
 
-void user(IMP, register char *);
+void user(IMP, register const char *);
 void userNL(IMP);
 void userC(IMP, register const char);
 void userSp(IMP);
@@ -211,15 +211,16 @@ void uPrompt(IMP, register char *);
 void userN(IMP, register long);
 void userF(IMP, register long, register short);
 void userX(IMP, register ULONG, register USHORT);
-void user2(IMP, register char *, register char *);
-void user3(IMP, register char *, register char *, register char *);
+void user2(IMP, register const char *, register const char *);
+void user3(IMP, register const char *, register const char *,
+    register const char *);
 void userN2(IMP, register char *, register long);
 void userN3(IMP, register char *, register long, register char *);
 void userS(IMP, register char *, USHORT r, USHORT c, register char *);
 void userP(IMP, register char *, register Planet_t *, register char *);
 void userSh(IMP, register char *, register Ship_t *, register char *);
 void userM3(IMP, register char *, register ULONG, register char *);
-void getPrompt(IMP, register char *);
+void getPrompt(IMP, register char *, size_t);
 BOOL ask(IMP, register char *);
 void server(IMP, register const RequestType_t rt, register const ULONG);
 void server2(IMP, register const RequestType_t rt, register const ULONG,
@@ -345,6 +346,7 @@ char *skipBlanks(IMP);
 char *skipWord(IMP);
 BOOL doSkipBlanks(IMP);
 BOOL getNumber(IMP, long *);
+BOOL getPositive(IMP, ULONG *);
 BOOL reqNumber(IMP, long *, char *);
 BOOL getPosRange(IMP, ULONG *, ULONG);
 BOOL reqPosRange(IMP, ULONG *, ULONG, char *);

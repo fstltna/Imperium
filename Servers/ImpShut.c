@@ -47,6 +47,8 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
+#include "../Include/ImpFifo.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>		/* System include files */
@@ -77,7 +79,7 @@ BOGUS - Imperium not supported on this machine due to missing unistd.h
 #include "../Include/Request.h"
 #include "../impsec.h"
 
-static const char rcsid[] = "$Id: ImpShut.c,v 1.4 2000/05/23 20:25:42 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: ImpShut.c,v 1.4 2000/05/23 20:25:42 marisa Exp $";
 
 static RequestType_t rqType;
 static BOOL UseTest;
@@ -258,25 +260,15 @@ int doShut(void)
             rq = calloc(1, sizeof(Request_t));
             if (rq != NULL)
             {
-		tmpNam = tempnam(FIFO_DIR, "isht");
+		tmpNam = impMakeFifo(FIFO_DIR, "isht", 0622);
 		if (tmpNam == NULL)
 		{
-		    puts("Unable to allocate memory for temp name");
+		    perror("Unable to create named pipe");
 		}
-		else if (mknod(tmpNam, S_IFIFO|0622, 0) == -1)
-		{
-		    printf("Unable to create named pipe %s\n", tmpNam);
-		}
-#ifdef BROKEN_MKNOD
-		else if (chmod(tmpNam, 0622) != 0)
-		{
-		    printf("Unable to change mode for named pipe %s\n", tmpNam);
-		}
-#endif
 #ifdef BROKEN_PIPE
-		else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY)) == -1)
+		else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY | O_NOFOLLOW)) == -1)
 #else
-		else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY)) == -1)
+		else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY | O_NOFOLLOW)) == -1)
 #endif
 		{
 		    (void)unlink(tmpNam);
@@ -287,14 +279,14 @@ int doShut(void)
                     rq->rq_type = rqType;
                     rq->rq_clientId = 0; /* says new client */
 		    /* Tell them our pipe name */
-		    strcpy(&rq->rq_text[0], tmpNam);
+		    impStrCopy(&rq->rq_text[0], tmpNam, IMP_BUFSIZE(rq->rq_text));
 		    /* Fill in the correct security code */
 #ifdef HAVE_CRYPT
-		    sprintf(&locSalt[0], "%2.2x", getpid() % 16);
-		    sprintf(&rq->rq_u.ru_text[0], "%-.15s", crypt(IMP_SHUT_CODE,
+		    snprintf(&locSalt[0], IMP_BUFSIZE(locSalt), "%2.2x", getpid() % 16);
+		    snprintf(&rq->rq_u.ru_text[0], IMP_BUFSIZE(rq->rq_u.ru_text), "%-.15s", crypt(IMP_SHUT_CODE,
 			&locSalt[0]));
 #else /* !HAVE_CRYPT */
-		    strcpy(&rq->rq_u.ru_text[0], IMP_SHUT_CODE);
+		    impStrCopy(&rq->rq_u.ru_text[0], IMP_SHUT_CODE, IMP_BUFSIZE(rq->rq_u.ru_text));
 #endif
                     if (write(imperiumPort, (char *)rq, sizeof(Request_t)) < 0)
 		    {
@@ -408,7 +400,7 @@ int main(int argc, char *argv[])
 		}
                 else if (memcmp("port=", par, 5 * sizeof(char)) == 0)
                 {
-                    strcpy(&PlayPort[0], (char *)(par + (5 * sizeof(char))));
+                    impStrCopy(&PlayPort[0], (char *)(par + (5 * sizeof(char))), IMP_BUFSIZE(PlayPort));
                 }
                 else
                 {

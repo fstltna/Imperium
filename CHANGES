@@ -2,6 +2,26 @@ Changes grouped by release:
 
 11-06-26 Release
 ================
+* Build: autoconf/configure removed - Linux only now. Just "make" and
+  "make install". One Makefile with automatic header dependencies,
+  parallel builds (make -j), DESTDIR support, and a clear message if the
+  install user/group does not exist. Changing IMP_DEST rebuilds
+  automatically. config.h is now a normal source file
+* All sprintf/strcpy/strcat replaced with bounded versions; a compile
+  time check makes sure every buffer size really is an array size
+* Client pipes are created atomically (no more tempnam); the external
+  editor temp file uses mkstemp
+* Install: fifo/ is now sticky (1777) so users can't delete or replace
+  each other's pipes, and fifo/server is writable only by the game
+  owner so nobody can pose as the server. Existing ic.allow/is.allow
+  are no longer overwritten
+* Fix ImpCre storing the Secret setting in the port field, and
+  default.sh/bigworld.sh not passing Name, Host, Port and Secret on
+* Fix "discharge" crashing (divide by zero) when the planets have
+  nobody on them, and negative numbers being accepted by load/teleport
+  and similar commands
+* Fix time handling for 32-bit systems with a 64-bit time_t (e.g.
+  current Raspberry Pi OS)
 * Database IS compatible with 1.5 - no data file changes
 * Builds on current Linux (tested Ubuntu 24.04 / GCC 13, and with the
   stricter error checks that GCC 14 turns on by default)

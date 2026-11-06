@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #include <stdio.h>
 #include "../Include/Imperium.h"
@@ -48,7 +49,7 @@
 
 #define LIST_WIDTH  25
 
-static const char rcsid[] = "$Id: commands.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: commands.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
 
 static const BOOL INACTIVE_ALLOWED[74] = {                  /*  9 */
     TRUE, TRUE,  TRUE, TRUE, TRUE, TRUE,  TRUE, TRUE, TRUE, TRUE,
@@ -647,7 +648,7 @@ void processCommands(IMP)
         }
 	if (needPrompt)
 	{
-            (void) sprintf(&promptBuff[0], "[%hu:%lu] Command",
+            (void) snprintf(&promptBuff[0], IMP_BUFSIZE(promptBuff), "[%hu:%lu] Command",
         	IS->is_player.p_btu, IS->is_player.p_timeLeft);
             uPrompt(IS, &promptBuff[0]);
 	}

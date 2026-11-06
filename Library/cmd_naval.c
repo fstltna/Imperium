@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -54,7 +55,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_naval.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_naval.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /*
  * main function for ship reports
@@ -735,7 +736,7 @@ void doSmallLoad(IMP, ItemType_t what, USHORT percent, BOOL askQuan)
             user2(IS, " ", getItemName(what));
             userN2(IS, " here, ", loaded);
             userN3(IS, " on board, load how many (max ", maxLoad, ")");
-            getPrompt(IS, &buf[0]);
+            getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
             if (!reqPosRange(IS, &amount, maxLoad, &buf[0]))
             {
                 amount = 0;
@@ -834,7 +835,7 @@ BOOL loadSmallItems(IMP)
         }
         else
         {
-            if (getNumber(IS, &plNum) && (plNum > 0))
+            if (getPositive(IS, &plNum))
             {
                 percent = plNum;
             }
@@ -1457,7 +1458,7 @@ void doUnload(IMP, ItemType_t what, USHORT percent, BOOL askQuan)
             user2(IS, " ", getItemName(what));
             userN2(IS, " here, ", loaded);
             userN3(IS, " on board, unload how many (max ", maxUnload, ")");
-            getPrompt(IS, &buf[0]);
+            getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
             if (!reqPosRange(IS, &amount, maxUnload, &buf[0]))
             {
                 amount = 0;
@@ -1549,7 +1550,7 @@ BOOL unloadSmallItems(IMP)
         {
             askQuan = TRUE;
         }
-        else if (getNumber(IS, &plNum) && (plNum > 0))
+        else if (getPositive(IS, &plNum))
         {
             percent = plNum;
         }
@@ -2076,7 +2077,7 @@ void doTend(IMP, ULONG tenderNumber, ULONG otherNumber, ItemType_t what)
         maxTransfer = umin(capacity - loaded, available);
         user2(IS, "Transfer how many ", getItemName(what));
         userN3(IS, " (max ", maxTransfer, ")");
-        getPrompt(IS, &buf[0]);
+        getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
         if (reqPosRange(IS, &amount, maxTransfer, &buf[0]))
         {
             server2(IS, rt_lockShipPair, tenderNumber, otherNumber);

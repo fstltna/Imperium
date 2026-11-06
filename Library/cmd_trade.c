@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -52,7 +53,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_trade.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_trade.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 typedef struct
     {
@@ -976,7 +977,7 @@ void doBuy(IMP, ULONG plNum, ULONG shNum, register ItemType_t what,
         userM3(IS, " at $", price, " (max ");
         userN(IS, max);
         user(IS, ")");
-        getPrompt(IS, &buff[0]);
+        getPrompt(IS, &buff[0], IMP_BUFSIZE(buff));
         if (reqPosRange(IS, &count, max, &buff[0]))
         {
             cost = price * count / 10;
@@ -1457,7 +1458,7 @@ void doSell(IMP, ULONG plNum, ULONG shNum, register ItemType_t what,
         userM3(IS, " at $", price, " (max ");
         userN(IS, present);
         user(IS, ")");
-        getPrompt(IS, &buff[0]);
+        getPrompt(IS, &buff[0], IMP_BUFSIZE(buff));
         if (reqPosRange(IS, &count, present, &buff[0]))
         {
             cost = price * count / 10;

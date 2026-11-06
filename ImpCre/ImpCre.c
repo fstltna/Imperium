@@ -52,6 +52,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -85,7 +86,7 @@ BOGUS - You need to replace unistd.h
 #include <signal.h>
 #include "../Include/Imperium.h"
 
-static const char rcsid[] =
+static const char rcsid[] __attribute__((unused)) =
     "$Id: ImpCre.c,v 1.6 2000/05/25 23:39:28 marisa Exp $";
 
 /*
@@ -1303,7 +1304,7 @@ BOOL buildSector(FILE *planetFd, Sector_t *s, USHORT grow,
                     initializePlanet(&pl, grow, gcol, subrow, subcol,
                         w->w_planetNext, totPlanets, totStars);
                     /* set the override values */
-                    strcpy(&pl.pl_name[0], &finalname[holdRace][0]);
+                    impStrCopy(&pl.pl_name[0], &finalname[holdRace][0], IMP_BUFSIZE(pl.pl_name));
                     addHomeItems(&pl);
                     pl.pl_ownRace = holdRace;
                 }
@@ -1374,7 +1375,7 @@ BOOL buildSector(FILE *planetFd, Sector_t *s, USHORT grow,
 			puts("holdRace was never set!");
 			return FALSE;
 		    }
-                    strcpy(&pl.pl_name[0], &finalname[holdRace][0]);
+                    impStrCopy(&pl.pl_name[0], &finalname[holdRace][0], IMP_BUFSIZE(pl.pl_name));
                     addHomeItems(&pl);
                     pl.pl_ownRace = holdRace;
                 }
@@ -1467,7 +1468,7 @@ void zapFile(void)
 
 void newFile(char *defName)
 {
-    strcpy(&FileName[0], defName);
+    impStrCopy(&FileName[0], defName, IMP_BUFSIZE(FileName));
     zapFile();
 }
 
@@ -1487,8 +1488,8 @@ void newEmptyFile(char *defName)
 
 void clearFile(char *fileName)
 {
-    strcpy(&FileName[0], &Path[0]);
-    strcat(&FileName[0], fileName);
+    impStrCopy(&FileName[0], &Path[0], IMP_BUFSIZE(FileName));
+    impStrCat(&FileName[0], fileName, IMP_BUFSIZE(FileName));
     printf("Deleting %s:\n", &FileName[0]);
     (void) unlink(&FileName[0]);
 }
@@ -1521,7 +1522,7 @@ void writeFiles(void)
     }
     Player[0].p_status = ps_deity;
     Player[0].p_timeLeft = 999;
-    strcpy(&Player[0].p_name[0], "god");
+    impStrCopy(&Player[0].p_name[0], "god", IMP_BUFSIZE(Player[0].p_name));
     strncpy(&Player[0].p_password[0], gbGodPassword, PASSWORD_LEN);
     if (fwrite((void *)&Player, sizeof(char), sizeof(Player_t) * PLAYER_MAX,
 	fd) != (sizeof(Player_t) * PLAYER_MAX))
@@ -1533,12 +1534,12 @@ void writeFiles(void)
 
     for (i = 0; i < RACE_MAX; i++)
     {
-        strcpy(&World.w_race[i].r_name[0], RaceName[i]);
-        strcpy(&finalname[i][0], PlanName[i]);
-        strcpy(&World.w_race[i].r_homeName[0], &finalname[i][0]);
+        impStrCopy(&World.w_race[i].r_name[0], RaceName[i], IMP_BUFSIZE(World.w_race[i].r_name));
+        impStrCopy(&finalname[i][0], PlanName[i], IMP_BUFSIZE(finalname[i]));
+        impStrCopy(&World.w_race[i].r_homeName[0], &finalname[i][0], IMP_BUFSIZE(World.w_race[i].r_homeName));
     }
     memset(&w->w_winName[0], '\0', NAME_LEN * sizeof(char));
-    strcpy(&World.w_winName[0], gbLastWinner);
+    impStrCopy(&World.w_winName[0], gbLastWinner, IMP_BUFSIZE(World.w_winName));
     /* sector and planet file */
     newFile(gbSectorsFile);
     fd = fopen(&FileName[0], "r+b");
@@ -1546,7 +1547,7 @@ void writeFiles(void)
     {
         cleanup(20);
     }
-    strcpy(&sectorFile[0], &FileName[0]);
+    impStrCopy(&sectorFile[0], &FileName[0], IMP_BUFSIZE(sectorFile));
     newFile(gbPlanetsFile);
     planetFd = fopen(&FileName[0], "r+b");
     if (planetFd == NULL)
@@ -1592,12 +1593,12 @@ void writeFiles(void)
     {
         cleanup(20);
     }
-    strcpy(&World.w_password[0], gbCreationPassword);
-    strcpy(&World.w_gameName[0], gbGameName);
-    strcpy(&World.w_gameHost[0], gbGameHost);
-    strcpy(&World.w_gamePort[0], gbGamePort);
-    strcpy(&World.w_gameSecret[0], gbGameSecret);
-    strcpy(&World.w_emailAddress[0], gbEmailAddress);
+    impStrCopy(&World.w_password[0], gbCreationPassword, IMP_BUFSIZE(World.w_password));
+    impStrCopy(&World.w_gameName[0], gbGameName, IMP_BUFSIZE(World.w_gameName));
+    impStrCopy(&World.w_gameHost[0], gbGameHost, IMP_BUFSIZE(World.w_gameHost));
+    impStrCopy(&World.w_gamePort[0], gbGamePort, IMP_BUFSIZE(World.w_gamePort));
+    impStrCopy(&World.w_gameSecret[0], gbGameSecret, IMP_BUFSIZE(World.w_gameSecret));
+    impStrCopy(&World.w_emailAddress[0], gbEmailAddress, IMP_BUFSIZE(World.w_emailAddress));
     if (fwrite((void *)&World, sizeof(char), sizeof(World_t),
 	fd) != sizeof(World_t))
     {
@@ -2135,7 +2136,7 @@ short build(void)
 
     /* initialize and default various fields in the the World_t structure */
 
-    (void) time(&w->w_lastRun);             /* last time Imperium run   */
+    w->w_lastRun = time(NULL);             /* last time Imperium run   */
     w->w_buildDate = w->w_lastRun;
     w->w_currPlayers = 1;                   /* only deity so far        */
     w->w_maxBTUs = 96;
@@ -2360,15 +2361,16 @@ void fixupStr(char *str)
     }
 }
 
-void getEnvDef(char *dest, const char *envVar, const char *defVal)
+void getEnvDef(char *dest, size_t destSize, const char *envVar,
+    const char *defVal)
 {
     if (getenv(envVar) == NULL)
     {
-	strcpy(dest, defVal);
+	impStrCopy(dest, defVal, destSize);
     }
     else
     {
-	strcpy(dest, getenv(envVar));
+	impStrCopy(dest, getenv(envVar), destSize);
     }
 }
 
@@ -2386,72 +2388,72 @@ short startGenerate(void)
 
     puts("Reading in creation parameters");
 
-    getEnvDef(gbWorldFile, "WorldFile", "imp.world");
+    getEnvDef(gbWorldFile, IMP_BUFSIZE(gbWorldFile), "WorldFile", "imp.world");
 
     /* read in the PlanetsFile now */
-    getEnvDef(gbPlanetsFile, "PlanetsFile", "imp.planet");
+    getEnvDef(gbPlanetsFile, IMP_BUFSIZE(gbPlanetsFile), "PlanetsFile", "imp.planet");
 
     /* read in the SectorsFile now */
-    getEnvDef(gbSectorsFile, "SectorsFile", "imp.sector");
+    getEnvDef(gbSectorsFile, IMP_BUFSIZE(gbSectorsFile), "SectorsFile", "imp.sector");
 
     /* read in the BigItemFile now */
-    getEnvDef(gbBigItemFile, "BigItemFile", "imp.bigitem");
+    getEnvDef(gbBigItemFile, IMP_BUFSIZE(gbBigItemFile), "BigItemFile", "imp.bigitem");
 
     /* read in the PlayerFile now */
-    getEnvDef(gbPlayerFile, "PlayerFile", "imp.player");
+    getEnvDef(gbPlayerFile, IMP_BUFSIZE(gbPlayerFile), "PlayerFile", "imp.player");
 
     /* read in the ShipFile now */
-    getEnvDef(gbShipFile, "ShipFile", "imp.ship");
+    getEnvDef(gbShipFile, IMP_BUFSIZE(gbShipFile), "ShipFile", "imp.ship");
 
     /* read in the FleetFile now */
-    getEnvDef(gbFleetFile, "FleetFile", "imp.fleet");
+    getEnvDef(gbFleetFile, IMP_BUFSIZE(gbFleetFile), "FleetFile", "imp.fleet");
 
     /* read in the LoanFile now */
-    getEnvDef(gbLoanFile, "LoanFile", "imp.loan");
+    getEnvDef(gbLoanFile, IMP_BUFSIZE(gbLoanFile), "LoanFile", "imp.loan");
 
     /* read in the OfferFile now */
-    getEnvDef(gbOfferFile, "OfferFile", "imp.offer");
+    getEnvDef(gbOfferFile, IMP_BUFSIZE(gbOfferFile), "OfferFile", "imp.offer");
 
     /* read in the LogFile now */
-    getEnvDef(gbLogFile, "LogFile", "imp.log");
+    getEnvDef(gbLogFile, IMP_BUFSIZE(gbLogFile), "LogFile", "imp.log");
 
     /* read in the LastWinner now */
-    getEnvDef(gbLastWinner, "LastWinner", "");
+    getEnvDef(gbLastWinner, IMP_BUFSIZE(gbLastWinner), "LastWinner", "");
 
     /* read in the server email address */
-    getEnvDef(gbEmailAddress, "EmailAddr", "changeme@foobar.com");
+    getEnvDef(gbEmailAddress, IMP_BUFSIZE(gbEmailAddress), "EmailAddr", "changeme@foobar.com");
 
     /* read in the GodPassword now */
-    getEnvDef(gbGodPassword, "GodPassword", "imperium");
+    getEnvDef(gbGodPassword, IMP_BUFSIZE(gbGodPassword), "GodPassword", "imperium");
 
     /* read in the CreationPassword now */
-    getEnvDef(gbCreationPassword, "CreationPassword", "add.me");
+    getEnvDef(gbCreationPassword, IMP_BUFSIZE(gbCreationPassword), "CreationPassword", "add.me");
 
     /* read in game name */
-    getEnvDef(gbGameName, "Name", "Default Server");
+    getEnvDef(gbGameName, IMP_BUFSIZE(gbGameName), "Name", "Default Server");
 
     /* read in game host */
-    getEnvDef(gbGameHost, "Host", "change.me");
+    getEnvDef(gbGameHost, IMP_BUFSIZE(gbGameHost), "Host", "change.me");
 
     /* read in game port */
-    getEnvDef(gbGamePort, "Port", "3458");
+    getEnvDef(gbGamePort, IMP_BUFSIZE(gbGamePort), "Port", "3458");
 
     /* read in game secret */
-    getEnvDef(gbGamePort, "Secret", "secret");
+    getEnvDef(gbGameSecret, IMP_BUFSIZE(gbGameSecret), "Secret", "secret");
 
     /* now handle the race names and planets */
     for (race = 1; race < 8; race++)
     {
         /* read in the race's name now */
-	(void) sprintf(&locBuf[0], "Race%dName", race);
-	getEnvDef(&RaceName[race - 1][0], &locBuf[0], DEF_RACE[race - 1]);
+	(void) snprintf(&locBuf[0], IMP_BUFSIZE(locBuf), "Race%dName", race);
+	getEnvDef(&RaceName[race - 1][0], IMP_BUFSIZE(RaceName[race - 1]), &locBuf[0], DEF_RACE[race - 1]);
 
         /* read in the race's planet now */
-	(void) sprintf(&locBuf[0], "Race%dPlanet", race);
-	getEnvDef(&PlanName[race - 1][0], &locBuf[0], DEF_PLAN[race - 1]);
+	(void) snprintf(&locBuf[0], IMP_BUFSIZE(locBuf), "Race%dPlanet", race);
+	getEnvDef(&PlanName[race - 1][0], IMP_BUFSIZE(PlanName[race - 1]), &locBuf[0], DEF_PLAN[race - 1]);
     }
     /* read in the random number seed now */
-    getEnvDef(&locBuf[0], "RandomSeed", "0");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "RandomSeed", "0");
     Seed = atol(&locBuf[0]);
     if (Seed == 0)
     {
@@ -2460,91 +2462,91 @@ short startGenerate(void)
     srand48(Seed);
 
     /* read in the horiz size now */
-    getEnvDef(&locBuf[0], "HorizSize", "10");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "HorizSize", "10");
     gbHorizSize = atol(&locBuf[0]);
     /* read in the vert size now */
-    getEnvDef(&locBuf[0], "VertSize", "10");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "VertSize", "10");
     gbVertSize = atol(&locBuf[0]);
 
     /* read in the PctOth now */
-    getEnvDef(&locBuf[0], "PctOth", "5");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "PctOth", "5");
     OtherSect = atoi(&locBuf[0]);
     /* read in the PctBH now */
-    getEnvDef(&locBuf[0], "PctBH", "50");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "PctBH", "50");
     BlkHolePct = atoi(&locBuf[0]);
     /* read in NumPlay now */
-    getEnvDef(&locBuf[0], "NumPlay", "6");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "NumPlay", "6");
     gbNumPlay = atol(&locBuf[0]);
     /* read in ConTime now */
-    getEnvDef(&locBuf[0], "ConTime", "60");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "ConTime", "60");
     gbConTime = atol(&locBuf[0]);
     /* read in the SecItu now */
-    getEnvDef(&locBuf[0], "SecItu", "1800");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "SecItu", "1800");
     gbSecItu = atol(&locBuf[0]);
     /* read in StartingCash now */
-    getEnvDef(&locBuf[0], "StartingCash", "5000");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "StartingCash", "5000");
     InitialMoney = atol(&locBuf[0]);
     /* read in the MinPlSpc now */
-    getEnvDef(&locBuf[0], "MinPlSpc", "3");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MinPlSpc", "3");
     MinDist = atol(&locBuf[0]);
     /* read in the MinPlAdj now */
-    getEnvDef(&locBuf[0], "MinPlAdj", "3");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MinPlAdj", "3");
     MinNear = atol(&locBuf[0]);
     /* read in the MinUnclaimed now */
-    getEnvDef(&locBuf[0], "MinUnclaimed", "5");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MinUnclaimed", "5");
     MinReachable = atol(&locBuf[0]);
     /* read in the MaxDist now */
-    getEnvDef(&locBuf[0], "MaxReach", "15");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxReach", "15");
     MaxReach = atol(&locBuf[0]);
     /* read in the MaxSpread now */
-    getEnvDef(&locBuf[0], "MaxSpread", "15");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxSpread", "15");
     MaxSpread = atol(&locBuf[0]);
     /* read in the LowStarPct now */
-    getEnvDef(&locBuf[0], "LowStarPct", "95");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "LowStarPct", "95");
     StarPer = atol(&locBuf[0]);
     /* read in the HiStarPct now */
-    getEnvDef(&locBuf[0], "HiStarPct", "25");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "HiStarPct", "25");
     MultStarPer = atol(&locBuf[0]);
     /* read in MinStar now */
-    getEnvDef(&locBuf[0], "MinStar", "6");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MinStar", "6");
     SmallStarSize = atol(&locBuf[0]);
     /* read in MaxStar now */
-    getEnvDef(&locBuf[0], "MaxStar", "9");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxStar", "9");
     LargeStarSize = atol(&locBuf[0]);
     /* read in the LowPlPct now */
-    getEnvDef(&locBuf[0], "LowPlPct", "75");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "LowPlPct", "75");
     PlanPer = atol(&locBuf[0]);
     /* read in the HiPlPct now */
-    getEnvDef(&locBuf[0], "HiPlPct", "10");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "HiPlPct", "10");
     MultPlanPer = atol(&locBuf[0]);
     /* read in MinPlan now */
-    getEnvDef(&locBuf[0], "MinPlan", "1");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MinPlan", "1");
     SmallPlanetSize = atol(&locBuf[0]);
     /* read in MaxPlan now */
-    getEnvDef(&locBuf[0], "MaxPlan", "5");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxPlan", "5");
     LargePlanetSize = atol(&locBuf[0]);
     /* read in HomeSize now */
-    getEnvDef(&locBuf[0], "HomeSize", "2");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "HomeSize", "2");
     HomePlanSize = atol(&locBuf[0]);
     /* read in MaxTries now */
     /* First calculate the default value based on world size */
     MaxTries = (gbHorizSize * gbVertSize);
     if (MaxTries > 60000)	/* ~ 256x256 */
     {
-        getEnvDef(&locBuf[0], "MaxTries", "850575");
+        getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxTries", "850575");
     }
     else if (MaxTries > 16000)	/* ~ 128x128 */
     {
-        getEnvDef(&locBuf[0], "MaxTries", "75000");
+        getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxTries", "75000");
     }
     else
     {
-        getEnvDef(&locBuf[0], "MaxTries", "35000");
+        getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "MaxTries", "35000");
     }
     MaxTries = atol(&locBuf[0]);
 
     /* read in ChangePlayers now */
-    getEnvDef(&locBuf[0], "ChangePlayers", "1");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "ChangePlayers", "1");
     if (locBuf[0] == '1')
     {
         gbChangePlayers = TRUE;
@@ -2554,7 +2556,7 @@ short startGenerate(void)
         gbChangePlayers = FALSE;
     }
     /* read in PublicMessages now */
-    getEnvDef(&locBuf[0], "PublicMessages", "1");
+    getEnvDef(&locBuf[0], IMP_BUFSIZE(locBuf), "PublicMessages", "1");
     if (locBuf[0] == '1')
     {
         gbPublicMessages = TRUE;
@@ -2595,7 +2597,7 @@ int main(int argc, char *argv[])
     setvbuf(stdout, NULL, _IONBF, 0);
     printf("\n\t\tImpCre v%s.pl%d\n\n",
 	IMP_BASE_REV, 0);
-    strcpy(&Path[0], DEFAULT_PATH);
+    impStrCopy(&Path[0], DEFAULT_PATH, IMP_BUFSIZE(Path));
     oldUmask = umask(0077);
     if (argc == 2)
     {

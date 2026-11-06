@@ -36,6 +36,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -49,7 +50,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_telep.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_telep.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /*
  * doBeamUp - does the actual user querry about the quantity to beam up (if
@@ -121,7 +122,7 @@ void doBeamUp(IMP, ItemType_t what, USHORT percent, UBYTE telepTF,
             user2(IS, " ", getItemName(what));
             userN2(IS, " here, ", loaded);
             userN3(IS, " on board, beam up how many (max ", maxBeamUp, ")");
-            getPrompt(IS, &buf[0]);
+            getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
             if (!reqPosRange(IS, &amount, maxBeamUp, &buf[0]))
             {
                 amount = 0;
@@ -221,7 +222,7 @@ BOOL beamUpItems(IMP)
         }
         else
         {
-            if (getNumber(IS, &plNum) && (plNum > 0))
+            if (getPositive(IS, &plNum))
             {
                 percent = plNum;
             }
@@ -410,7 +411,7 @@ void doBeamDown(IMP, ItemType_t what, USHORT percent, UBYTE telepTF,
             userN2(IS, " here, ", loaded);
             userN3(IS, " on board, beam down how many (max ", maxBeamDown,
                 ")");
-            getPrompt(IS, &buf[0]);
+            getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
             if (!reqPosRange(IS, &amount, maxBeamDown, &buf[0]))
             {
                 amount = 0;
@@ -508,7 +509,7 @@ BOOL beamDownItems(IMP)
         }
         else
         {
-            if (getNumber(IS, &plNum) && (plNum > 0))
+            if (getPositive(IS, &plNum))
             {
                 percent = plNum;
             }

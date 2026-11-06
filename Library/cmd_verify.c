@@ -41,6 +41,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -53,7 +54,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_verify.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_verify.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
 
 
 int min(int arg1, int arg2)
@@ -223,7 +224,7 @@ void verifyFleets(IMP)
             {
                 /* oops, they aren't the same */
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", fleetNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
                 if (gotError(IS, "### Fleet ", &numbuff1[0],
                     " has a bad ", "internal number - expect other problems"))
                 {
@@ -260,8 +261,8 @@ void verifyFleets(IMP)
             if (rf->f_count > FLEET_MAX)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", FLEET_MAX);
-                sprintf(&numbuff2[0], "%hd", fleetNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", FLEET_MAX);
+                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", fleetNum);
                 if (gotError(IS, "### Ship count was greater than ",
                     &numbuff1[0]," in fleet ", &numbuff2[0]))
                 {
@@ -323,9 +324,9 @@ void verifyFleets(IMP)
                     else
                     {
                         userNL(IS);
-                        sprintf(&numbuff1[0], "%ld",
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld",
                             tempFleet.f_ship[shipNum]);
-                        sprintf(&numbuff2[0], "%ld",
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%ld",
                             IS->is_world.w_shipNext - 1);
                         if (gotError(IS, "### Ship ", &numbuff1[0],
                             " is greater than ", &numbuff2[0]))
@@ -354,8 +355,8 @@ void verifyFleets(IMP)
                 if (numShips != tempFleet.f_count)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", fleetNum);
-                    sprintf(&numbuff2[0], "%hd", numShips);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", numShips);
                     if (gotError(IS, "### Ship count in fleet ",
                         &numbuff1[0], " does not agree "
                         "with count found: ", &numbuff2[0]))
@@ -426,9 +427,9 @@ void verifyFleets(IMP)
                         {
                             /* not at max, so we found the ship */
                             userNL(IS);
-                            sprintf(&numbuff1[0], "%ld",
+                            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld",
                                 tempFleet.f_ship[shipNum]);
-                            sprintf(&numbuff2[0], "%hd", fleetNum);
+                            snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", fleetNum);
                             if (gotError(IS, "### Ship ",
                                 &numbuff1[0],
                                 " is listed more than once in fleet ",
@@ -459,8 +460,8 @@ void verifyFleets(IMP)
                 if (numShips != tempFleet.f_count)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", fleetNum);
-                    sprintf(&numbuff2[0], "%hd", numShips);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", numShips);
                     if (gotError(IS, "### Ship count in fleet ",
                         &numbuff1[0], " does not agree "
                         "with count found: ", &numbuff2[0]))
@@ -499,7 +500,7 @@ void verifyFleets(IMP)
             {
                 /* oops, they are bad */
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", fleetNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
                 if (gotError(IS, "### Fleet ", &numbuff1[0],
                     " has a bad ", "owner"))
                 {
@@ -562,8 +563,8 @@ void verifyFleets(IMP)
                             {
                                 /* 2 players are using the same fleet */
                                 userNL(IS);
-                                sprintf(&numbuff1[0], "%hd", playerNum);
-                                sprintf(&numbuff2[0], "%hd", lastPlayer);
+                                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", playerNum);
+                                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", lastPlayer);
                                 userN3(IS, "###   (", fleetNum, ")\n");
                                 if (gotError(IS, "### Player ",
                                     &numbuff1[0],
@@ -621,9 +622,9 @@ void verifyFleets(IMP)
                     {
                     /* Ships is in another fleet or none */
                         userNL(IS);
-                        sprintf(&numbuff1[0], "%ld",
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld",
                             tempFleet.f_ship[shipNum]);
-                        sprintf(&numbuff2[0], "%hd", fleetNum);
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", fleetNum);
                         if (gotError(IS, "### Ship ",
                             &numbuff1[0], " is not really in fleet ",
                             &numbuff2[0]))
@@ -645,8 +646,8 @@ void verifyFleets(IMP)
                 if (numShips != tempFleet.f_count)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", fleetNum);
-                    sprintf(&numbuff2[0], "%hd", numShips);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", numShips);
                     if (gotError(IS, "### Ship count in fleet ",
                         &numbuff1[0], " does not agree "
                         "with count found: ", &numbuff2[0]))
@@ -706,8 +707,8 @@ void verifyFleets(IMP)
                         if (lastPlayer != playerNum)
                         {
                             userNL(IS);
-                            sprintf(&numbuff1[0], "%hd", playerNum);
-                            sprintf(&numbuff2[0], "%hd", lastPlayer);
+                            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", playerNum);
+                            snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", lastPlayer);
                             userN3(IS, "###   (", fleetNum, ")\n");
                             if (gotError(IS, "### Player ",
                                 &numbuff1[0], " has a ship in the same fleet "
@@ -731,8 +732,8 @@ void verifyFleets(IMP)
                 if (numShips != tempFleet.f_count)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", fleetNum);
-                    sprintf(&numbuff2[0], "%hd", numShips);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", numShips);
                     if (gotError(IS, "### Ship count in fleet ",
                         &numbuff1[0], " does not agree "
                         "with count found: ", &numbuff2[0]))
@@ -796,7 +797,7 @@ void verifyShips(IMP)
             if (rsh->sh_number != shipNum)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", shipNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", shipNum);
                 if (gotError(IS, "### Ship ", &numbuff1[0],
                     " had a bad internal number - expect other problems",""))
                 {
@@ -832,7 +833,7 @@ void verifyShips(IMP)
             if (rsh->sh_type > ST_LAST)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", shipNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", shipNum);
                 if (gotError(IS, "### Ship ", &numbuff1[0],
                     " type was invalid",""))
                 {
@@ -869,7 +870,7 @@ void verifyShips(IMP)
                 (rsh->sh_owner != NO_OWNER))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", shipNum);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", shipNum);
                 if (gotError(IS, "### Ship ", &numbuff1[0],
                     " owner was invalid",""))
                 {
@@ -912,8 +913,8 @@ void verifyShips(IMP)
                 if (fleetNum >= IS->is_world.w_fleetNext)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%ld", shipNum);
-                    sprintf(&numbuff2[0], "%hd", playerNum);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", shipNum);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", playerNum);
                     if (gotError(IS, "### Fleet listed in ship ",
                         &numbuff1[0], " is not in use by owner ",
                         &numbuff2[0]))
@@ -954,8 +955,8 @@ void verifyShips(IMP)
                         {
                             /* ship not listed in that fleet */
                             userNL(IS);
-                            sprintf(&numbuff1[0], "%ld", shipNum);
-                            sprintf(&numbuff2[0], "%hd", fleetNum);
+                            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", shipNum);
+                            snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", fleetNum);
                             if (gotError(IS, "### Ship ", &numbuff1[0],
                                 " was not found in fleet ",
                                 &numbuff2[0]))
@@ -971,8 +972,8 @@ void verifyShips(IMP)
                     {
                         /* no ships listed in that fleet */
                         userNL(IS);
-                        sprintf(&numbuff1[0], "%hd", fleetNum);
-                        sprintf(&numbuff2[0], "%ld", shipNum);
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%ld", shipNum);
                         if (gotError(IS, "### Fleet ", &numbuff1[0],
                             " is empty but is listed in ship ",
                             &numbuff2[0]))
@@ -1031,7 +1032,7 @@ void verifyPlanets(IMP)
         if (rp->pl_class > PC_LAST)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%ld", planetNum);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", planetNum);
             if (gotError(IS, "### Type is invalid for planet ",
                 &numbuff1[0], "", ""))
             {
@@ -1047,7 +1048,7 @@ void verifyPlanets(IMP)
             NO_OWNER))
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%ld", planetNum);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", planetNum);
             if (gotError(IS, "### Owner is invalid for planet ",
                 &numbuff1[0], "", ""))
             {
@@ -1061,7 +1062,7 @@ void verifyPlanets(IMP)
         if (rp->pl_shipCount > 65000)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%ld", planetNum);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", planetNum);
             if (gotError(IS, "### Ship count is less than zero for "
                 "planet ", &numbuff1[0], "", ""))
             {
@@ -1075,7 +1076,7 @@ void verifyPlanets(IMP)
         if (rp->pl_lastUpdate > IS->is_request.rq_time)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%ld", planetNum);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", planetNum);
             if (gotError(IS, "### Update time is in the future for "
                 "planet ", &numbuff1[0], "", ""))
             {
@@ -1127,8 +1128,8 @@ void verifySectors(IMP)
             if (rs->s_type > S_LAST)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", row);
-                sprintf(&numbuff2[0], "%hd", col);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", row);
+                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", col);
                 if (gotError(IS, "### Type is invalid for sector ",
                     &numbuff1[0], ",", &numbuff2[0]))
                 {
@@ -1142,8 +1143,8 @@ void verifySectors(IMP)
             if (rs->s_shipCount > 65000)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", row);
-                sprintf(&numbuff2[0], "%hd", col);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", row);
+                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", col);
                 if (gotError(IS, "### Ship count is less than zero for "
                     "sector ", &numbuff1[0], ",", &numbuff2[0]))
                 {
@@ -1157,8 +1158,8 @@ void verifySectors(IMP)
             if (rs->s_planetCount >= PLANET_MAX)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", row);
-                sprintf(&numbuff2[0], "%hd", col);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", row);
+                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", col);
                 if (gotError(IS, "### Planet count is too large in "
                     "sector ", &numbuff1[0], ",", &numbuff2[0]))
                 {
@@ -1175,8 +1176,8 @@ void verifySectors(IMP)
                     (rs->s_planet[planet] != NO_ITEM))
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", row);
-                    sprintf(&numbuff2[0], "%hd", col);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", row);
+                    snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", col);
                     if (gotError(IS, "### Invalid planet number in sector ",
                         &numbuff1[0], ",", &numbuff2[0]))
                     {
@@ -1233,7 +1234,7 @@ void verifyOffers(IMP)
             if (ro->of_state > of_none)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
                 if (gotError(IS, "### Invalid type of sale for offer ",
                     &numbuff1[0], "", ""))
                 {
@@ -1269,7 +1270,7 @@ void verifyOffers(IMP)
             if (ro->of_who > topEnd)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%u", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%u", i);
                 if (gotError(IS, "### Invalid seller for offer ",
                     &numbuff1[0], "", ""))
                 {
@@ -1309,7 +1310,7 @@ void verifyOffers(IMP)
                 if (ro->of_.of_shipNumber > topEnd)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%u", i);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%u", i);
                     if (gotError(IS, "### Invalid ship number for offer ",
                         &numbuff1[0], "", ""))
                     {
@@ -1327,9 +1328,9 @@ void verifyOffers(IMP)
                     if (rsh->sh_fleet != '*')
                     {
                         userNL(IS);
-                        sprintf(&numbuff2[0], "%ld",
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%ld",
                             ro->of_.of_shipNumber);
-                        sprintf(&numbuff1[0], "%u", i);
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%u", i);
                         if (gotError(IS, "### Ship ",
                             &numbuff2[0], "is in a fleet, but is also in "
                             "offer ", &numbuff1[0]))
@@ -1344,9 +1345,9 @@ void verifyOffers(IMP)
                     else if (rsh->sh_owner != tempOff.of_who)
                     {
                         userNL(IS);
-                        sprintf(&numbuff2[0], "%lu",
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%lu",
                             ro->of_.of_shipNumber);
-                        sprintf(&numbuff1[0], "%u", i);
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%u", i);
                         if (gotError(IS, "### Ship ", &numbuff2[0],
                             "is not owned by player making offer ",
                             &numbuff1[0]))
@@ -1389,7 +1390,7 @@ void verifyOffers(IMP)
                     IS->is_world.w_planetNext)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%d", i);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%d", i);
                     if (gotError(IS, "### Planet number is greater than "
                         "maximum in offer ", &numbuff1[0], "", ""))
                     {
@@ -1406,7 +1407,7 @@ void verifyOffers(IMP)
                         (ro->of_.of_plan.of_payor != of_shipOwn))
                     {
                         userNL(IS);
-                        sprintf(&numbuff1[0], "%d", i);
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%d", i);
                         if (gotError(IS, "### Damaged goods payor is "
                             "invalid in offer ", &numbuff1[0], "", ""))
                         {
@@ -1422,8 +1423,8 @@ void verifyOffers(IMP)
                     if (rpl->pl_owner != tempOff.of_who)
                     {
                         userNL(IS);
-                        sprintf(&numbuff1[0], "%d", rpl->pl_owner);
-                        sprintf(&numbuff2[0], "%d", i);
+                        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%d", rpl->pl_owner);
+                        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%d", i);
                         if (gotError(IS, "### Owner of planet is ",
                             &numbuff1[0],
                             ", which is not the person making offer ",
@@ -1466,7 +1467,7 @@ void verifyOffers(IMP)
                     IS->is_world.w_bigItemNext)
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%d", i);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%d", i);
                     if (gotError(IS, "### Item number is greater than "
                         "maximum in offer ", &numbuff1[0], "", ""))
                     {
@@ -1519,7 +1520,7 @@ void verifyLoans(IMP)
             if (rl->l_number != i)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### The internal number for loan ",
                     &numbuff1[0], " is bad", " - expect more problems"))
                 {
@@ -1554,7 +1555,7 @@ void verifyLoans(IMP)
             if (rl->l_state > l_paidUp)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Invalid state for loan ",
                     &numbuff1[0], "", ""))
                 {
@@ -1589,7 +1590,7 @@ void verifyLoans(IMP)
             if (rl->l_loaner > IS->is_world.w_maxPlayers - 1)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Loaner is greater than the highest "
                     "player in loan ", &numbuff1[0], "", ""))
                 {
@@ -1622,7 +1623,7 @@ void verifyLoans(IMP)
             if (rl->l_loanee > IS->is_world.w_maxPlayers - 1)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Loanee is greater than the highest "
                     "player in loan ", &numbuff1[0], "", ""))
                 {
@@ -1658,7 +1659,7 @@ void verifyLoans(IMP)
             if ((rl->l_amount == 0) && (rl->l_state != l_paidUp))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Amount left in loan ", &numbuff1[0],
                     " is zero, but not marked as paid", ""))
                 {
@@ -1709,7 +1710,7 @@ void verifyBigItems(IMP)
             if (rbi->bi_number != i)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Incorrect internal number for big "
                     "item ", &numbuff1[0], " - expect more problems", ""))
                 {
@@ -1744,7 +1745,7 @@ void verifyBigItems(IMP)
             if (rbi->bi_status > bi_forSale)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Invalid status for big item ",
                     &numbuff1[0], "", ""))
                 {
@@ -1779,7 +1780,7 @@ void verifyBigItems(IMP)
             if (rbi->bi_part > BP_LAST)
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Invalid part type for big item ",
                     &numbuff1[0], "", ""))
                 {
@@ -1816,7 +1817,7 @@ void verifyBigItems(IMP)
                 (((short)rbi->bi_effic) < -100))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Invalid efficiency for big item ",
                     &numbuff1[0], "", ""))
                 {
@@ -1853,7 +1854,7 @@ void verifyBigItems(IMP)
                 (rbi->bi_status != bi_destroyed))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Big item ", &numbuff1[0], " has an",
                     " invalid ship number"))
                 {
@@ -1871,7 +1872,7 @@ void verifyBigItems(IMP)
                     (rbi->bi_status != bi_destroyed))
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%ld", i);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                     if (gotError(IS, "### Big item ", &numbuff1[0],
                         " has an", " invalid planet number"))
                     {
@@ -1908,7 +1909,7 @@ void verifyBigItems(IMP)
             if ((rbi->bi_price != 0) && (rbi->bi_status != bi_forSale))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%ld", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%ld", i);
                 if (gotError(IS, "### Big item ", &numbuff1[0],
                     " has a price listed but is ",
                     " not marked as being for sale"))
@@ -1962,7 +1963,7 @@ void verifyPlayers(IMP)
         if (rp->p_number != i)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The the internal number is bad for "
                 "player ", &numbuff1[0], " - expect more problems", ""))
             {
@@ -1998,7 +1999,7 @@ void verifyPlayers(IMP)
         if (rp->p_status > ps_idle)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The the status is bad for player ",
                 &numbuff1[0], "", ""))
             {
@@ -2034,7 +2035,7 @@ void verifyPlayers(IMP)
         if ((rp->p_race >= RACE_MAX) && (rp->p_race != NO_RACE))
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### Bad race for player ",
                 &numbuff1[0], "", ""))
             {
@@ -2087,7 +2088,7 @@ void verifyPlayers(IMP)
                     (rp->p_fleets[fleetNum] < IS->is_world.w_fleetNext))
                 {
                     userNL(IS);
-                    sprintf(&numbuff1[0], "%hd", i);
+                    snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
                     if (gotError(IS, "### 2 fleets match in player ",
                         &numbuff1[0], "", ""))
                     {
@@ -2125,8 +2126,8 @@ void verifyPlayers(IMP)
                 (rp->p_fleets[fleetNum] != 65535))
             {
                 userNL(IS);
-                sprintf(&numbuff1[0], "%hd", fleetNum);
-                sprintf(&numbuff2[0], "%hd", i);
+                snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", fleetNum);
+                snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", i);
                 if (gotError(IS, "### Fleet ", &numbuff1[0],
                     " is invalid in player ", &numbuff2[0]))
                 {
@@ -2160,7 +2161,7 @@ void verifyPlayers(IMP)
         if (rp->p_loggedOn && (i != IS->is_player.p_number))
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The loggedOn flag is bad for player ",
                 &numbuff1[0], "", ""))
             {
@@ -2175,7 +2176,7 @@ void verifyPlayers(IMP)
             (rp->p_inChat)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The inChat flag is bad for player ",
                 &numbuff1[0], "", ""))
             {
@@ -2208,7 +2209,7 @@ void verifyPlayers(IMP)
         if (rp->p_notify > nt_both)
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The the notify type is bad for player ",
                 &numbuff1[0], "", ""))
             {
@@ -2240,7 +2241,7 @@ void verifyPlayers(IMP)
         if ((rp->p_planetCount > 8000) && (rp->p_status != ps_deity))
         {
             userNL(IS);
-            sprintf(&numbuff1[0], "%hd", i);
+            snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", i);
             if (gotError(IS, "### The the planet count for player ",
                 &numbuff1[0], " seems quite unlikely. Please "
                 "check it by hand", ""))
@@ -2270,8 +2271,8 @@ void verifyWorld(IMP)
     user(IS, "Checking the current player count\n");
     if (rw->w_currPlayers > rw->w_maxPlayers)
     {
-        sprintf(&numbuff1[0], "%hd", rw->w_currPlayers);
-        sprintf(&numbuff2[0], "%hd", rw->w_maxPlayers);
+        snprintf(&numbuff1[0], IMP_BUFSIZE(numbuff1), "%hd", rw->w_currPlayers);
+        snprintf(&numbuff2[0], IMP_BUFSIZE(numbuff2), "%hd", rw->w_maxPlayers);
         if (gotError(IS, "### Current players (", &numbuff1[0],
             ") is greater than maximum: ", &numbuff2[0]))
         {

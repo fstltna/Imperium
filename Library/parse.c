@@ -42,6 +42,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -59,7 +60,7 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: parse.c,v 1.4 2000/05/26 22:55:19 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: parse.c,v 1.4 2000/05/26 22:55:19 marisa Exp $";
 
 /*
  * skipBlanks - skip past blanks in the input line.
@@ -163,6 +164,24 @@ BOOL getNumber(IMP, long *pNum)
     }
     IS->is_textInPos = inputPtr;
     return FALSE;
+}
+
+/*
+ * getPositive - parse a number that must be greater than zero into an
+ *      unsigned variable. Reading straight into an unsigned variable would
+ *      turn "-5" into a huge positive number that passes a "> 0" check.
+ */
+
+BOOL getPositive(IMP, ULONG *pNum)
+{
+    long n;
+
+    if (!getNumber(IS, &n) || (n <= 0))
+    {
+        return FALSE;
+    }
+    *pNum = (ULONG) n;
+    return TRUE;
 }
 
 /*
@@ -404,10 +423,13 @@ BOOL getBox(IMP, USHORT *pA, USHORT *pB, USHORT *pC, USHORT *pD)
                 *IS->is_textInPos = '\0';
                 return FALSE;
             }
-            strcpy(bufStart, &IS->is_player.p_realm[i][0]);
-            strncat(bufStart, IS->is_textInPos, (INPUT_LENGTH -
-                strlen(bufStart)) * sizeof(char));
-            strncpy(IS->is_textInPos, bufStart, INPUT_LENGTH * sizeof(char));
+            impStrCopy(bufStart, &IS->is_player.p_realm[i][0],
+                INPUT_LENGTH + 1);
+            impStrCat(bufStart, IS->is_textInPos, INPUT_LENGTH + 1);
+            /* is_textInPos points part way into is_textIn, so only the */
+            /* rest of that buffer is available */
+            impStrCopy(IS->is_textInPos, bufStart, IMP_BUFSIZE(IS->is_textIn) -
+                (IS->is_textInPos - &IS->is_textIn[0]));
             free(bufStart);
         }
     }

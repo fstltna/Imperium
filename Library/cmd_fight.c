@@ -43,6 +43,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -56,7 +57,7 @@
 #include "ImpPrivate.h"
 #include "Combat.h"
 
-static const char rcsid[] = "$Id: cmd_fight.c,v 1.5 2000/05/26 22:55:19 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_fight.c,v 1.5 2000/05/26 22:55:19 marisa Exp $";
 
 
 
@@ -1926,7 +1927,7 @@ BOOL cmd_fire(IMP)
                     (void) skipBlanks(IS);
                     userN3(IS, "Fire how many units of energy (max ", aGuns,
                         ")? ");
-                    getPrompt(IS, &buf[0]);
+                    getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                     if (!reqPosRange(IS, &temp, aGuns, &buf[0]))
                     {
 			feShDirty(IS, aNum);
@@ -1938,7 +1939,7 @@ BOOL cmd_fire(IMP)
                     aGuns = umin(aGuns, aShells);
                     (void) skipBlanks(IS);
                     userN3(IS, "Fire how many tubes (max ", aGuns, ")? ");
-                    getPrompt(IS, &buf[0]);
+                    getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                     if (!reqPosRange(IS, &temp, aGuns, &buf[0]))
                     {
 			feShDirty(IS, aNum);
@@ -1950,7 +1951,7 @@ BOOL cmd_fire(IMP)
                     aGuns = umin(aGuns, aShells);
                     (void) skipBlanks(IS);
                     userN3(IS, "Fire how many guns (max ", aGuns, ")? ");
-                    getPrompt(IS, &buf[0]);
+                    getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                     if (!reqPosRange(IS, &temp, aGuns, &buf[0]))
                     {
 			feShDirty(IS, aNum);
@@ -2295,7 +2296,7 @@ BOOL cmd_board(IMP)
                 (void) skipBlanks(IS);
                 userN3(IS, "Board with how many military (max ", aCrew,
                     ")? ");
-                getPrompt(IS, &buf[0]);
+                getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                 if (!reqPosRange(IS, &temp, aCrew, &buf[0]))
                 {
 		    feShDirty(IS, aShNum);
@@ -2495,7 +2496,7 @@ BOOL cmd_assault(IMP)
                 {
                     (void) skipBlanks(IS);
                     userN3(IS, "Assault with how many marines (max ", crew, ")");
-                    getPrompt(IS, &buf[0]);
+                    getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
                     if (reqPosRange(IS, &attackers, crew, &buf[0]) &&
                         (attackers != 0))
                     {
@@ -2708,8 +2709,8 @@ BOOL cmd_configure(IMP)
                             saveShip = *rsh;
                             (void) skipBlanks(IS);
                             /* pre-fill prompt */
-                            strcpy(&buff[0], "Enter the desired shield "
-                                "level");
+                            impStrCopy(&buff[0], "Enter the desired shield "
+                                "level", IMP_BUFSIZE(buff));
                             IS->is_BOOL1 = FALSE;
                             xferAmt = repNum(IS, saveShip.sh_shieldKeep, 0,
                                 maxShields(IS, &saveShip), &buff[0]);

@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -57,7 +58,7 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h!
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_naval2.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_naval2.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /*
  * cmd_refuel - allows a player to transfer fuel from fueltanks to the
@@ -319,8 +320,12 @@ void rollString(USHORT rollBy, char *str)
 {
     char buff[257];
     USHORT startAt;
+    size_t strSize;
 
     startAt = 0;
+    /* rolling never changes the length, so the result always fits back */
+    /* into the space the original string took up */
+    strSize = strlen(str) + 1;
     if (*str == '\0')
     {
         /* don't do anything for null strings */
@@ -335,20 +340,20 @@ void rollString(USHORT rollBy, char *str)
     /* copy the part of the string that always get's moved */
     /* note this assumes that if you ask it to roll by x chars */
     /* that there are at least x chars left to roll */
-    strcpy(&buff[startAt], &str[rollBy + startAt]);
+    impStrCopy(&buff[startAt], &str[rollBy + startAt], IMP_BUFSIZE(buff) - startAt);
 
     /* if we are looping, copy the other part of the string to the */
     /* tail end */
     if (startAt == 1)
     {
         str[rollBy + startAt] = '\0';
-        strcat(&buff[0], &str[startAt]);
+        impStrCat(&buff[0], &str[startAt], IMP_BUFSIZE(buff));
     }
 
     /* copy the completed string back */
     /* note this assumes the destination is AT LEAST the full size */
     /* of the programmed course area */
-    strcpy(str, &buff[0]);
+    impStrCopy(str, &buff[0], strSize);
 }
 
 /*
@@ -491,7 +496,7 @@ char *doCountNavOnce(IMP, char *oPtr, char *program, USHORT *flagRow,
     {
         current = 0;
     }
-    sprintf(num1, "[%d,%d]%c", current, end, *ePtr);
+    snprintf(num1, IMP_BUFSIZE(num1), "[%d,%d]%c", current, end, *ePtr);
     /* make sure that the loop is not the first thing */
     if (sPtr != program)
     {
@@ -502,11 +507,11 @@ char *doCountNavOnce(IMP, char *oPtr, char *program, USHORT *flagRow,
     {
         bPtr = course;
     }
-    strcat(course, num1);
-    strcat(course, ePtr + sizeof(char));
+    impStrCat(course, num1, IMP_BUFSIZE(course));
+    impStrCat(course, ePtr + sizeof(char), IMP_BUFSIZE(course));
     if (!cont)
     {
-        strcpy(program, course);
+        impStrCopy(program, course, MAX_PROG_STEPS);
         return NULL;
     }
     mPtr = &course[3];
@@ -516,7 +521,7 @@ char *doCountNavOnce(IMP, char *oPtr, char *program, USHORT *flagRow,
     }
     mPtr++;
     rollString((mPtr - bPtr) + 1, course);
-    strcpy(program, course);
+    impStrCopy(program, course, MAX_PROG_STEPS);
     return oPtr + (ePtr - sPtr);
 }
 
@@ -539,7 +544,7 @@ void runNavProg(IMP, char *program, USHORT *flagRow, USHORT *flagCol,
     sPtr = &progBuf[0];
     /* copy initial program, since we will be munging it up */
     /* and we only want to loop through the program once */
-    strcpy(sPtr, program);
+    impStrCopy(sPtr, program, IMP_BUFSIZE(progBuf));
     /* skip past any loop characters */
     if (*sPtr == '@')
     {
@@ -653,7 +658,7 @@ BOOL cmd_run(IMP)
         {
             msc = 0;
             /* copy the current course */
-            strcpy(&progBuf[0], &rsh->sh_course[0]);
+            impStrCopy(&progBuf[0], &rsh->sh_course[0], IMP_BUFSIZE(progBuf));
             /* set the default for the fleet */
             fleet = '*';
             /* see if the ship is in a fleet */
@@ -807,7 +812,7 @@ BOOL cmd_run(IMP)
 
                 /* copy the modifief course back into the ship */
                 server(IS, rt_lockShip, shNum);
-                strcpy(&rsh->sh_course[0], &progBuf[0]);
+                impStrCopy(&rsh->sh_course[0], &progBuf[0], IMP_BUFSIZE(rsh->sh_course));
                 server(IS, rt_unlockShip, shNum);
             }
         }
@@ -848,7 +853,7 @@ void updateAllMiners(IMP)
             if (IS->is_DEBUG)
             {
 		char numBuff[80];
-		sprintf(&numBuff[0], "%lu", ship);
+		snprintf(&numBuff[0], IMP_BUFSIZE(numBuff), "%lu", ship);
 		log3(IS, "!!! About to lock miner ", &numBuff[0], "");
             }
 #endif

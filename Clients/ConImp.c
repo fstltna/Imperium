@@ -70,6 +70,8 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
+#include "../Include/ImpFifo.h"
 
 #ifndef HAVE_SELECT
 BOGUS - ConImp not supported on this machine due to missing select() call!
@@ -111,7 +113,7 @@ BOGUS - ConImp not supported on this machine due to missing select() call!
 #include "../Include/ImpLib.h"
 #include "../impsec.h"
 
-static char const rcsid[] = "$Id: ConImp.c,v 1.6 2000/05/25 23:45:49 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: ConImp.c,v 1.6 2000/05/25 23:45:49 marisa Exp $";
 
 #define REVISION    "0.3w"
 
@@ -275,7 +277,10 @@ void serverAbort(void)
 	{
 	    if (FD_ISSET(myPort, &readPipe))
 	    {
-		(void)read(myPort, (char *)rq, sizeof(Request_t));
+		if (read(myPort, (char *)rq, sizeof(Request_t)) < 0)
+		{
+		    /* just waiting for the server's goodbye - nothing to do */
+		}
 	    }
 	}
     }
@@ -555,7 +560,8 @@ void locSleep(void)
 void doExtEdit(void)
 {
     ULONG maxLen;
-    char *bufLoc, *tmpName;
+    char *bufLoc, tmpName[64];
+    int tmpFd;
     FILE *tmpFile;
     int retVal;
     char cmdName[512];
@@ -571,15 +577,19 @@ void doExtEdit(void)
     maxLen = ISt->is_argLong;
     bufLoc = ISt->is_argPoint;
     /* Try to get a temporary file name */
-    tmpName = tmpnam(NULL);
-    if (tmpName == NULL)
+    /* mkstemp() creates the file itself (readable only by us), so */
+    /* nobody else can sneak a file or link in under that name first */
+    impStrCopy(tmpName, "/tmp/impeditXXXXXX", IMP_BUFSIZE(tmpName));
+    tmpFd = mkstemp(tmpName);
+    if (tmpFd < 0)
     {
 	/* Tell the library we don't have an external editor */
 	ISt->is_argShort = 3;
 	return;
     }
+    close(tmpFd);
     /* Build up the command line to execute */
-    sprintf(&cmdName[0], "%s %s\n", &ExtEdit[0], tmpName);
+    snprintf(&cmdName[0], IMP_BUFSIZE(cmdName), "%s %s\n", &ExtEdit[0], tmpName);
     /* Execute the command */
     retVal = system(&cmdName[0]);
     /* If you know of some way to tell if a command failed by the return
@@ -688,25 +698,15 @@ BOOL runImperium(void)
         ISt = ImpAlloc();
         if (ISt != NULL)
         {
-	    tmpNam = tempnam(FIFO_DIR, "icon");
+	    tmpNam = impMakeFifo(FIFO_DIR, "icon", 0622);
 	    if (tmpNam == NULL)
 	    {
-		puts("Unable to allocate memory for temp name");
+	        perror("Unable to create named pipe");
 	    }
-	    else if (mknod(tmpNam, S_IFIFO | 0622, 0) == -1)
-	    {
-		printf("Unable to create named pipe %s\n", tmpNam);
-	    }
-#ifdef BROKEN_MKNOD
-	    else if (chmod(tmpNam, 0622) != 0)
-	    {
-		printf("Unable to change mode for named pipe %s\n", tmpNam);
-	    }
-#endif
 #ifdef BROKEN_PIPE
-	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY | O_NOFOLLOW)) == -1)
 #else
-	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY | O_NOFOLLOW)) == -1)
 #endif
 	    {
 		(void)unlink(tmpNam);
@@ -714,7 +714,7 @@ BOOL runImperium(void)
 	    }
 	    else
 	    {
-		    strcpy(UsePort, tmpNam);
+		    impStrCopy(UsePort, tmpNam, IMP_BUFSIZE(UsePort));
                     IS = ISt;
                     ISt->is_serverRequest = serverRequest;
                     ISt->is_writeUser = writeUser;
@@ -729,14 +729,14 @@ BOOL runImperium(void)
                     LogFd = NULL;
 
                     ISt->is_request.rq_type = rt_startClient;
-                    strcpy(&ISt->is_request.rq_text[0], tmpNam);
+                    impStrCopy(&ISt->is_request.rq_text[0], tmpNam, IMP_BUFSIZE(ISt->is_request.rq_text));
                     /* Fill in the correct security code */
 #ifdef HAVE_CRYPT
-                    sprintf(&locSalt[0], "%2.2x", getpid() % 64);
-                    sprintf(&ISt->is_request.rq_private[2], "%-.15s",
+                    snprintf(&locSalt[0], IMP_BUFSIZE(locSalt), "%2.2x", getpid() % 64);
+                    snprintf(&ISt->is_request.rq_private[2], (IMP_BUFSIZE(ISt->is_request.rq_private) - 2), "%-.15s",
                         crypt(CON_IMP_CODE, &locSalt[0]));
 #else /* !HAVE_CRYPT */
-                    strcpy(&ISt->is_request.rq_private[2], CON_IMP_CODE);
+                    impStrCopy(&ISt->is_request.rq_private[2], CON_IMP_CODE, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
 #endif
                     serverRequest();
                     /* Check to see if we were recognized */
@@ -748,16 +748,16 @@ BOOL runImperium(void)
                     else
                     {
                         /* Yup! */
-                        strcpy(&ISt->is_request.rq_private[2], "Local client ");
-                        strcat(&ISt->is_request.rq_private[2], REVISION);
-                        strcat(&ISt->is_request.rq_private[2], " started.");
+                        impStrCopy(&ISt->is_request.rq_private[2], "Local client ", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], REVISION, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], " started.", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
                         ISt->is_request.rq_type = rt_log;
                         serverRequest();
 
                         /* clear out buffer and set up no outside time limit */
                         memset(&ISt->is_textIn[0], '\0', INPUT_BUFFER_SIZE *
                             sizeof(char));
-                        strcpy(&ISt->is_textIn[0], &nameBuff[0]);
+                        impStrCopy(&ISt->is_textIn[0], &nameBuff[0], IMP_BUFSIZE(ISt->is_textIn));
                         ISt->is_argShort = passedTime;
 
                         Imperium(ISt);
@@ -767,9 +767,9 @@ BOOL runImperium(void)
                             logFlush();
                             fclose(LogFd);
                         }
-                        strcpy(&ISt->is_request.rq_private[2], "Local client ");
-                        strcat(&ISt->is_request.rq_private[2], REVISION);
-                        strcat(&ISt->is_request.rq_private[2], " terminated.");
+                        impStrCopy(&ISt->is_request.rq_private[2], "Local client ", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], REVISION, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], " terminated.", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
                         ISt->is_request.rq_type = rt_log;
                         serverRequest();
                         ISt->is_request.rq_type = rt_stopClient;
@@ -901,7 +901,7 @@ int main(int argc, char *argv[])
                 if (memcmp(par, "name=", 5) == 0)
                 {
                     par += 5 * sizeof(char);
-                    strncpy(&nameBuff[0], par, 256 * sizeof(char));
+                    impStrCopy(&nameBuff[0], par, IMP_BUFSIZE(nameBuff));
                     nameBuff[256] = '\0';
                 }
                 else if (memcmp(par, "time=", 5) == 0)
@@ -930,13 +930,11 @@ int main(int argc, char *argv[])
                 }
                 else if (memcmp("port=", par, 5 * sizeof(char)) == 0)
                 {
-                    strncpy(&PlayPort[0], par + (5 * sizeof(char)), 250 *
-                        sizeof(char));
+                    impStrCopy(&PlayPort[0], par + (5 * sizeof(char)), IMP_BUFSIZE(PlayPort));
                 }
                 else if (memcmp("editor=", par, 7 * sizeof(char)) == 0)
                 {
-                    strncpy(&ExtEdit[0], par + (7 * sizeof(char)), 250 *
-                        sizeof(char));
+                    impStrCopy(&ExtEdit[0], par + (7 * sizeof(char)), IMP_BUFSIZE(ExtEdit));
 		    if (ExtEdit[0] != '\0')
 		    {
 			HaveExtEdit = TRUE;
@@ -955,16 +953,14 @@ int main(int argc, char *argv[])
                             case 'n':
                             case 'N':
                                 par += sizeof(char);
-                                strncpy(&nameBuff[0], par, 250 *
-                                    sizeof(char));
+                                impStrCopy(&nameBuff[0], par, IMP_BUFSIZE(nameBuff));
                                 nameBuff[256] = '\0';
                                 par = "\0\0";
                                 break;
                             case 'e':
                             case 'E':
                                 par += sizeof(char);
-                                strncpy(&ExtEdit[0], par, 250 *
-                                    sizeof(char));
+                                impStrCopy(&ExtEdit[0], par, IMP_BUFSIZE(ExtEdit));
 				if (ExtEdit[0] != '\0')
 				{
                                     ExtEdit[251] = '\0';

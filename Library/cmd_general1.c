@@ -42,6 +42,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -58,7 +59,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_general1.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_general1.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
 
 /*
  * cmd_change - allows players to change various things
@@ -120,7 +121,7 @@ void cmd_change(IMP)
                 if (IS->is_player.p_status != ps_visitor)
                 {
                     /* pre-fill prompt */
-                    strcpy(&buff[0], "Warn when BTU's are less than");
+                    impStrCopy(&buff[0], "Warn when BTU's are less than", IMP_BUFSIZE(buff));
                     /* get the new amount */
                     newAmt = repNum(IS, (USHORT)IS->is_player.p_btuWarn, 0,
                         254, &buff[0]);
@@ -144,7 +145,7 @@ void cmd_change(IMP)
                 if (IS->is_player.p_status != ps_visitor)
                 {
                     /* pre-fill prompt */
-                    strcpy(&buff[0], "Warn when time is less than");
+                    impStrCopy(&buff[0], "Warn when time is less than", IMP_BUFSIZE(buff));
                     /* get the new amount */
                     newAmt = repNum(IS, (USHORT)IS->is_player.p_timeWarn, 0,
                         120, &buff[0]);
@@ -202,7 +203,7 @@ void cmd_change(IMP)
                 if (IS->is_player.p_status != ps_visitor)
                 {
                     /* pre-fill prompt */
-                    strcpy(&buff[0], "Set console length to");
+                    impStrCopy(&buff[0], "Set console length to", IMP_BUFSIZE(buff));
                     /* get the new amount */
                     newAmt = repNum(IS, IS->is_player.p_conLength, 0,
                         32767, &buff[0]);
@@ -227,7 +228,7 @@ void cmd_change(IMP)
                 if (IS->is_player.p_status != ps_visitor)
                 {
                     /* pre-fill prompt */
-                    strcpy(&buff[0], "Set console width to");
+                    impStrCopy(&buff[0], "Set console width to", IMP_BUFSIZE(buff));
                     /* get the new amount */
                     newAmt = repNum(IS, IS->is_player.p_conWidth, 0,
                         32767, &buff[0]);
@@ -447,9 +448,7 @@ void cmd_change(IMP)
                                         /* name is OK, so change it */
                                         server(IS, rt_lockPlayer,
                                             IS->is_player.p_number);
-                                        strcpy(
-                                            &IS->is_request.rq_u.ru_player.p_name[0],
-                                            &IS->is_textIn[0]);
+                                        impStrCopy(&IS->is_request.rq_u.ru_player.p_name[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_request.rq_u.ru_player.p_name));
                                         server(IS, rt_unlockPlayer,
                                             IS->is_player.p_number);
                                         IS->is_player =
@@ -464,8 +463,7 @@ void cmd_change(IMP)
                             if (newPlayerPassword(IS))
 			    {
                                 server(IS, rt_lockPlayer, IS->is_player.p_number);
-                                strcpy(&IS->is_request.rq_u.ru_player.p_password[0],
-                                    &IS->is_player.p_password[0]);
+                                impStrCopy(&IS->is_request.rq_u.ru_player.p_password[0], &IS->is_player.p_password[0], IMP_BUFSIZE(IS->is_request.rq_u.ru_player.p_password));
                                 server(IS, rt_unlockPlayer, IS->is_player.p_number);
 			    }
                         }
@@ -475,8 +473,7 @@ void cmd_change(IMP)
                             if (newPlayerEmail(IS))
 			    {
                                 server(IS, rt_lockPlayer, IS->is_player.p_number);
-                                strcpy(&IS->is_request.rq_u.ru_player.p_email[0],
-                                    &IS->is_player.p_email[0]);
+                                impStrCopy(&IS->is_request.rq_u.ru_player.p_email[0], &IS->is_player.p_email[0], IMP_BUFSIZE(IS->is_request.rq_u.ru_player.p_email));
                                 server(IS, rt_unlockPlayer, IS->is_player.p_number);
 			    }
                         }
@@ -904,7 +901,7 @@ void doCheckpoint(IMP, register Planet_t *p)
     /* Build up the prompt */
     userP(IS, "Enter new checkpoint code for planet ", p, "");
     /* This copies the prompt out of the output buffer into out local buffer */
-    getPrompt(IS, &promptBuffer[0]);
+    getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
     /* This displays it to the user properly */
     uPrompt(IS, &promptBuffer[0]);
     /* ask the user for the new code */
@@ -949,7 +946,7 @@ void doCheckpoint(IMP, register Planet_t *p)
     else
     {
 	IS->is_request.rq_u.ru_planet.pl_btu -= 2;
-	strcpy(&IS->is_request.rq_u.ru_planet.pl_checkpoint[0], pswd);
+	impStrCopy(&IS->is_request.rq_u.ru_planet.pl_checkpoint[0], pswd, IMP_BUFSIZE(IS->is_request.rq_u.ru_planet.pl_checkpoint));
 	server(IS, rt_unlockPlanet, plNum);
     }
 }
@@ -1093,7 +1090,7 @@ BOOL cmd_divvy(IMP)
             /* loop for everything but cash */
             for (prod = PPROD_FIRST; prod < PPROD_LAST; prod++)
             {
-                sprintf(&buff[0], "Percent of work devoted to %s",
+                snprintf(&buff[0], IMP_BUFSIZE(buff), "Percent of work devoted to %s",
                     PPROD_NAME[prod]);
                 /* store the current percentage */
                 oldAmt = savePl.pl_workPer[prod];

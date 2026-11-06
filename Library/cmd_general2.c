@@ -42,6 +42,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #include <stdio.h>
 #ifdef HAVE_STRING_H
@@ -55,7 +56,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_general2.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_general2.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /*
  * doDischarge1 - adds up the number of military in the planets for
@@ -119,18 +120,31 @@ void doDischarge2(IMP, register Planet_t *pl)
 BOOL cmd_discharge(IMP)
 {
     PlanetScan_t ps;
-    ULONG wanted;
+    long wanted;
 
     if (reqPlanets(IS, &ps, "Enter planets to discharge on") &&
         doSkipBlanks(IS) &&
         reqNumber(IS, &wanted, "Total number to discharge"))
     {
+        if (wanted <= 0)
+        {
+            err(IS, "you must discharge at least one");
+            return FALSE;
+        }
         IS->is_ULONG1 = 0;
         (void) scanPlanets(IS, &ps, doDischarge1);
-        IS->is_USHORT1 = wanted * 100 / IS->is_ULONG1;
-        if (IS->is_USHORT1 > 50)
+        if (IS->is_ULONG1 == 0)
         {
-            IS->is_USHORT1 = 50;
+            /* would divide by zero below */
+            err(IS, "there is nobody on those planets to discharge");
+            return FALSE;
+        }
+        /* cap the percentage before storing it in a USHORT, or a big */
+        /* request would wrap around to some random small value */
+        {
+            ULONG pct = (ULONG) wanted * 100 / IS->is_ULONG1;
+
+            IS->is_USHORT1 = (pct > 50) ? 50 : (USHORT) pct;
         }
         IS->is_ULONG1 = 0;
         (void) scanPlanets(IS, &ps, doDischarge2);
@@ -323,7 +337,7 @@ void cmd_power(IMP)
 	    {
                 if ((plNum - lastItem) > 200)
                 {
-	            sprintf(prog, "!Examining planet %lu", plNum);
+	            snprintf(prog, IMP_BUFSIZE(prog), "!Examining planet %lu", plNum);
 	            uPrompt(IS, prog);
                     lastItem = plNum;
 		}
@@ -372,7 +386,7 @@ void cmd_power(IMP)
 		    }
 		    else
 		    {
-	                sprintf(prog, "!Examining ship %lu", shipNumber);
+	                snprintf(prog, IMP_BUFSIZE(prog), "!Examining ship %lu", shipNumber);
 	                uPrompt(IS, prog);
 		    }
                     lastItem = shipNumber;
@@ -871,7 +885,7 @@ void doPlate(IMP)
         userN2(IS, " here, ", rp->p_sh.sh_armourLeft);
         userN3(IS, " already installed, add how many (max ", maxLoad,
             ")");
-        getPrompt(IS, &buf[0]);
+        getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
         if (!reqPosRange(IS, &amount, maxLoad, &buf[0]))
         {
             amount = 0;

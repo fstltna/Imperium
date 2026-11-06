@@ -72,6 +72,8 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
+#include "../Include/ImpFifo.h"
 
 #ifndef HAVE_SELECT
 BOGUS - TelImp not supported on this machine due to missing select() call!
@@ -119,7 +121,7 @@ BOGUS - TelImp not supported on this machine due to missing select() call!
 #include "../impsec.h"
 
 #ifndef LINT
-static char const rcsid[] = "$Id: TelImp.c,v 1.8 2000/05/26 00:47:45 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: TelImp.c,v 1.8 2000/05/26 00:47:45 marisa Exp $";
 #endif
 
 #define REVISION    "0.1"
@@ -258,7 +260,10 @@ void serverAbort(void)
 	{
 	    if (FD_ISSET(myPort, &readPipe))
 	    {
-		(void)read(myPort, (char *)rq, sizeof(Request_t));
+		if (read(myPort, (char *)rq, sizeof(Request_t)) < 0)
+		{
+		    /* just waiting for the server's goodbye - nothing to do */
+		}
 	    }
 	}
     }
@@ -605,31 +610,17 @@ void runImperium(void)
         {
 	    /* Attempt to turn off Telnet line processing */
 	    /*write_str("\xff\xfb\x01\xff\xfb\x03\xff\xfd\xf3");*/
-	    tmpNam = tempnam(FIFO_DIR, "telimp");
+	    tmpNam = impMakeFifo(FIFO_DIR, "telimp", 0622);
 	    if (tmpNam == NULL)
 	    {
-		ErrStr="Unable to allocate memory for temp name\n";
+		ErrStr="Unable to create named pipe\n";
 		write_str(ErrStr);
 		printf("%s", ErrStr);
 	    }
-	    else if (mknod(tmpNam, S_IFIFO | 0622, 0) == -1)
-	    {
-		snprintf(ErrBuff, sizeof(ErrBuff), "Unable to create named pipe %s\n", tmpNam);
-		write_str(ErrBuff);
-		printf("%s", ErrBuff);
-	    }
-#ifdef BROKEN_MKNOD
-	    else if (chmod(tmpNam, 0622) != 0)
-	    {
-		snprintf(ErrBuff, sizeof(ErrBuff), "Unable to change mode for named pipe %s\n", tmpNam);
-		write_str(ErrBuff);
-		printf("%s", ErrBuff);
-	    }
-#endif
 #ifdef BROKEN_PIPE
-	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY | O_NOFOLLOW)) == -1)
 #else
-	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY | O_NOFOLLOW)) == -1)
 #endif
 	    {
 		(void)unlink(tmpNam);
@@ -639,7 +630,7 @@ void runImperium(void)
 	    }
 	    else
 	    {
-		    strcpy(UsePort, tmpNam);
+		    impStrCopy(UsePort, tmpNam, IMP_BUFSIZE(UsePort));
                     IS = ISt;
                     ISt->is_serverRequest = serverRequest;
                     ISt->is_writeUser = writeUser;
@@ -653,13 +644,13 @@ void runImperium(void)
                     ISt->is_extEdit = doExtEdit;
 
                     ISt->is_request.rq_type = rt_startClient;
-                    strcpy(&ISt->is_request.rq_text[0], tmpNam);
+                    impStrCopy(&ISt->is_request.rq_text[0], tmpNam, IMP_BUFSIZE(ISt->is_request.rq_text));
 #ifdef HAVE_CRYPT
-                    sprintf(&locSalt[0], "%2.2x", getpid() % 64);
-                    sprintf(&ISt->is_request.rq_private[2], "%-.15s",
+                    snprintf(&locSalt[0], IMP_BUFSIZE(locSalt), "%2.2x", getpid() % 64);
+                    snprintf(&ISt->is_request.rq_private[2], (IMP_BUFSIZE(ISt->is_request.rq_private) - 2), "%-.15s",
                         crypt(CON_IMP_CODE, &locSalt[0]));
 #else /* !HAVE_CRYPT */
-                    strcpy(&ISt->is_request.rq_private[2], CON_IMP_CODE);
+                    impStrCopy(&ISt->is_request.rq_private[2], CON_IMP_CODE, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
 #endif
                     serverRequest();
                     /* Check to see if we were recognized */
@@ -671,9 +662,9 @@ void runImperium(void)
                     else
                     {
                         /* Yup! */
-                        strcpy(&ISt->is_request.rq_private[2], "Telnet client ");
-                        strcat(&ISt->is_request.rq_private[2], REVISION);
-                        strcat(&ISt->is_request.rq_private[2], " started.");
+                        impStrCopy(&ISt->is_request.rq_private[2], "Telnet client ", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], REVISION, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], " started.", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
                         ISt->is_request.rq_type = rt_log;
                         serverRequest();
 
@@ -684,9 +675,9 @@ void runImperium(void)
 
                         Imperium(ISt);
 
-                        strcpy(&ISt->is_request.rq_private[2], "Telnet client ");
-                        strcat(&ISt->is_request.rq_private[2], REVISION);
-                        strcat(&ISt->is_request.rq_private[2], " terminated.");
+                        impStrCopy(&ISt->is_request.rq_private[2], "Telnet client ", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], REVISION, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
+                        impStrCat(&ISt->is_request.rq_private[2], " terminated.", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
                         ISt->is_request.rq_type = rt_log;
                         serverRequest();
                         ISt->is_request.rq_type = rt_stopClient;
@@ -959,8 +950,7 @@ int main(int argc, char *argv[])
                 }
                 else if (memcmp("port=", par, 5 * sizeof(char)) == 0)
                 {
-                    strncpy(&PlayPort[0], par + (5 * sizeof(char)), 250 *
-                        sizeof(char));
+                    impStrCopy(&PlayPort[0], par + (5 * sizeof(char)), IMP_BUFSIZE(PlayPort));
                 }
                 else
                 {

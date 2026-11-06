@@ -44,6 +44,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -60,7 +61,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_map.c,v 1.3 2000/05/25 23:46:17 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_map.c,v 1.3 2000/05/25 23:46:17 marisa Exp $";
 
 #define MAX_RANGE   20
 #define SCAN_COST   2   /* cost in energy per scan */
@@ -506,7 +507,7 @@ void doLRScan(IMP, USHORT rRow, USHORT rCol, USHORT rang)
         userNL(IS);
     }
     mapped = 0xffff;
-    sprintf(numBuf, "%04u:%04u", left, right);
+    snprintf(numBuf, IMP_BUFSIZE(numBuf), "%04u:%04u", left, right);
     for (r = top; r <= bottom; r++)
     {
         if ((r / 10) != mapped)
@@ -772,7 +773,7 @@ void doSRScan(IMP, USHORT rRow, USHORT rCol, USHORT rang)
     {
         userNL(IS);
     }
-    sprintf(numBuf, "%04u:%04u", left, right);
+    snprintf(numBuf, IMP_BUFSIZE(numBuf), "%04u:%04u", left, right);
     for (r = top; r <= bottom; r++)
     {
         if (IS->is_player.p_feMode & FE_WANT_SCAN)
@@ -1048,7 +1049,7 @@ void giveShDetails(IMP, register Ship_t *sh, short difTf)
 		userX(IS, sh->sh_owner, 2);
 		strncpy(shNameBuf, sh->sh_name, 12 * sizeof(char));
 		shNameBuf[12]='\0';
-		sprintf(work, "%-12s", shNameBuf);
+		snprintf(work, IMP_BUFSIZE(work), "%-12s", shNameBuf);
 		user(IS, work);
 		userX(IS, numEng, 3);
 		userX(IS, numWeap, 3);
@@ -1450,7 +1451,7 @@ void givePlDetails(IMP, register Planet_t *pl, short difTf)
 		userX(IS, pl->pl_owner, 2);
 		strncpy(plNameBuf, pl->pl_name, 12 * sizeof(char));
 		plNameBuf[12]='\0';
-		sprintf(work, "%-12s", plNameBuf);
+		snprintf(work, IMP_BUFSIZE(work), "%-12s", plNameBuf);
 		user(IS, work);
 		userX(IS, size, 2);
 		userX(IS, polut, 2);

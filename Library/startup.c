@@ -44,6 +44,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #include <stdio.h>
 #ifdef HAVE_STDLIB_H
@@ -66,7 +67,7 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "ImpPrivate.h"
 #include "../Servers/ImpCtrl.h"
 
-static const char rcsid[] = "$Id: startup.c,v 1.3 2000/05/18 07:29:41 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: startup.c,v 1.3 2000/05/18 07:29:41 marisa Exp $";
 
 /*
  * ImpAlloc - allocates a ImpState_t structure, so the user program does not
@@ -155,7 +156,7 @@ USHORT clEdit(IMP, char *buf, ULONG length)
  * user - send a string to the user.
  */
 
-void user(IMP, register char *str)
+void user(IMP, register const char *str)
 {
     register char *p;
     register USHORT lenLeft;
@@ -380,7 +381,7 @@ void userX(IMP, register ULONG n, register USHORT digits)
  * user2 - write 2 strings to the user.
  */
 
-void user2(IMP, register char *m1, register char *m2)
+void user2(IMP, register const char *m1, register const char *m2)
 {
     user(IS, m1);
     user(IS, m2);
@@ -390,7 +391,8 @@ void user2(IMP, register char *m1, register char *m2)
  * user3 - write 3 strings to the user.
  */
 
-void user3(IMP, register char *m1, register char *m2, register char *m3)
+void user3(IMP, register const char *m1, register const char *m2,
+    register const char *m3)
 {
     user(IS, m1);
     user(IS, m2);
@@ -481,10 +483,10 @@ void userM3(IMP, register char *m1, register ULONG price, register char *m2)
  * getPrompt - get a prompt from the output buffer.
  */
 
-void getPrompt(IMP, register char *buffer)
+void getPrompt(IMP, register char *buffer, size_t bufSize)
 {
     IS->is_textOut[IS->is_textOutPos] = '\0';
-    strcpy(buffer, &IS->is_textOut[0]);
+    impStrCopy(buffer, &IS->is_textOut[0], bufSize);
     IS->is_textOutPos = 0;
 }
 
@@ -740,7 +742,7 @@ void uTime(IMP, ULONG t)
 {
     char buffer[30];
 
-    strcpy(&buffer[0], ctime(&t));
+    impStrCopy(&buffer[0], ctime(&(time_t){ (time_t) t }), IMP_BUFSIZE(buffer));
     /* eliminate the '\n' that ctime() adds */
     buffer[strlen(buffer) - 1] = '\0';
     user(IS, &buffer[0]);
@@ -759,7 +761,7 @@ BOOL printFile(IMP, char *fileName, const FileType_t ft)
     int curLine, maxLine;
     BOOL doMore=TRUE;	/* TRUE if we should do "more" prompt */
 
-    strcpy(&IS->is_request.rq_u.ru_text[0], fileName);
+    impStrCopy(&IS->is_request.rq_u.ru_text[0], fileName, IMP_BUFSIZE(IS->is_request.rq_u.ru_text));
     switch(ft)
     {
         case ft_normal:
@@ -1286,7 +1288,7 @@ void ImpCntrl(IMP)
                 log3(IS, "Control utility updating power report", "", "");
             }
             IS->is_textInPos = &IS->is_textIn[0];
-            strcpy(IS->is_textInPos, "force");
+            impStrCopy(IS->is_textInPos, "force", IMP_BUFSIZE(IS->is_textIn));
             cmd_power(IS);
             if (doLog)
             {
@@ -1314,7 +1316,7 @@ void ImpCntrl(IMP)
                 log3(IS, "Control utility updating all miners", "", "");
             }
             IS->is_textInPos = &IS->is_textIn[0];
-            strcpy(IS->is_textInPos, "update");
+            impStrCopy(IS->is_textInPos, "update", IMP_BUFSIZE(IS->is_textIn));
             cmd_miner(IS);
             if (doLog)
             {
@@ -1359,11 +1361,11 @@ void ImpCntrl(IMP)
             /* reset all options to sane values */
             IS->is_textOutPos = 0;
             IS->is_noWrite = FALSE;
-            strcpy(IS->is_sectorChar, &SECTOR_CHAR[0]);
-            strcpy(IS->is_shipChar, &SHIP_CHAR[0]);
-            strcpy(IS->is_itemChar, &ITEM_CHAR[0]);
+            impStrCopy(IS->is_sectorChar, &SECTOR_CHAR[0], IMP_BUFSIZE(IS->is_sectorChar));
+            impStrCopy(IS->is_shipChar, &SHIP_CHAR[0], IMP_BUFSIZE(IS->is_shipChar));
+            impStrCopy(IS->is_itemChar, &ITEM_CHAR[0], IMP_BUFSIZE(IS->is_itemChar));
             /* initialize the upper 32 bits of the random number "seed" */
-            (void) time(&lastOn);
+            lastOn = time(NULL);
             memcpy(&IS->is_seed[0], (USHORT *)&lastOn, 2 * sizeof(USHORT));
             /* now set the lower 16 bits to the same value as SAS uses */
             IS->is_seed[2] = 0x330E;
@@ -1386,9 +1388,9 @@ void ImpCntrl(IMP)
             IS->is_player.p_btu = 96;
             IS->is_player.p_number = NO_OWNER;
             IS->is_player.p_race = NO_RACE;
-            strcpy(&IS->is_player.p_name[0], "System Utility");
-            strcpy(&IS->is_player.p_password[0], "foobar");
-            strcpy(&IS->is_player.p_email[0], "");
+            impStrCopy(&IS->is_player.p_name[0], "System Utility", IMP_BUFSIZE(IS->is_player.p_name));
+            impStrCopy(&IS->is_player.p_password[0], "foobar", IMP_BUFSIZE(IS->is_player.p_password));
+            impStrCopy(&IS->is_player.p_email[0], "", IMP_BUFSIZE(IS->is_player.p_email));
             IS->is_player.p_loggedOn = TRUE;
             IS->is_player.p_inChat = FALSE;
             IS->is_player.p_compressed = FALSE;
@@ -1806,9 +1808,9 @@ void Imperium(IMP)
 
     IS->is_textOutPos = 0;
     IS->is_noWrite = FALSE;
-    strcpy(IS->is_sectorChar, &SECTOR_CHAR[0]);
-    strcpy(IS->is_shipChar, &SHIP_CHAR[0]);
-    strcpy(IS->is_itemChar, &ITEM_CHAR[0]);
+    impStrCopy(IS->is_sectorChar, &SECTOR_CHAR[0], IMP_BUFSIZE(IS->is_sectorChar));
+    impStrCopy(IS->is_shipChar, &SHIP_CHAR[0], IMP_BUFSIZE(IS->is_shipChar));
+    impStrCopy(IS->is_itemChar, &ITEM_CHAR[0], IMP_BUFSIZE(IS->is_itemChar));
     p = &IS->is_player;
     rp = &IS->is_request.rq_u.ru_player;
     w = &IS->is_world;
@@ -1828,7 +1830,7 @@ void Imperium(IMP)
     passedTime = IS->is_argShort;
 
     /* initialize the upper 32 bits of the random number "seed" */
-    (void) time(&lastOn);
+    lastOn = time(NULL);
     memcpy(&IS->is_seed[0], (USHORT *)&lastOn, 2 * sizeof(USHORT));
     /* now set the lower 16 bits to the same value as SAS uses */
     IS->is_seed[2] = 0x330E;
@@ -2060,7 +2062,7 @@ void Imperium(IMP)
 				    {
 					char MessageBody[2048];
                                     	log3(IS, "*** Player ", name, " created.");
-                                    	sprintf(MessageBody, "*** Player %s created", name);
+                                    	snprintf(MessageBody, IMP_BUFSIZE(MessageBody), "*** Player %s created", name);
                                     	sendSystemEmail(IS, "New Imperium User Created", MessageBody);
 				    }
                                     makeUserShip(IS);

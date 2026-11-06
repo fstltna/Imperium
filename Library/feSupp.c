@@ -55,7 +55,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: feSupp.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: feSupp.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 void fePlDirty(IMP, ULONG plNum)
 {

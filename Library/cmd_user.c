@@ -41,6 +41,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -55,7 +56,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static char const rcsid[] = "$Id: cmd_user.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: cmd_user.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /*
  * printPlayer - part of cmd_player
@@ -93,7 +94,7 @@ void printPlayer(IMP, USHORT i, BOOL onlyOn)
         }
         /* build up the time the user was last on into a string */
         t = p->p_lastOn;
-        strcpy(&timeBuf[0], ctime(&t));
+        impStrCopy(&timeBuf[0], ctime(&(time_t){ (time_t) t }), IMP_BUFSIZE(timeBuf));
         /* eliminate the '\n' that ctime() adds */
         timeBuf[strlen(&timeBuf[0]) - 1] = '\0';
         switch (p->p_status)
@@ -215,7 +216,7 @@ void cmd_player(IMP)
         for (i = playerCount - 1; i >= 0; i--)
         {
             server(IS, rt_readPlayer, i);
-            strcpy(names[i].ul_name, IS->is_request.rq_u.ru_player.p_name);
+            impStrCopy(names[i].ul_name, IS->is_request.rq_u.ru_player.p_name, IMP_BUFSIZE(names[i].ul_name));
             names[i].ul_which = i;
             names[i].ul_status = IS->is_request.rq_u.ru_player.p_status;
         }
@@ -696,8 +697,7 @@ void cmd_realm(IMP)
                         IS->is_textInPos, (REALM_LEN - 1) * sizeof(char));
                 }
                 server(IS, rt_unlockPlayer, IS->is_player.p_number);
-                strcpy(&IS->is_player.p_realm[realm][0],
-                    &IS->is_request.rq_u.ru_player.p_realm[realm][0]);
+                impStrCopy(&IS->is_player.p_realm[realm][0], &IS->is_request.rq_u.ru_player.p_realm[realm][0], IMP_BUFSIZE(IS->is_player.p_realm[realm]));
             }
             else
             {

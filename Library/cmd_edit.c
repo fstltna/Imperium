@@ -44,6 +44,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #include <stdio.h>
 #ifdef HAVE_STRING_H
@@ -59,7 +60,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static char const rcsid[] = "$Id: cmd_edit.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: cmd_edit.c,v 1.3 2000/05/25 18:21:23 marisa Exp $";
 
 static const char fleetChar[] =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -837,7 +838,7 @@ long repNum(IMP, long oldValue, long minValue, long maxValue, char *prompt)
     user(IS, prompt);
     userN2(IS, " (", minValue);
     userN3(IS, " - ", maxValue, ")");
-    getPrompt(IS, &promptBuffer[0]);
+    getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
     if ((*IS->is_textInPos == '\0') || (IS->is_BOOL1))
     {
         user(IS, &promptBuffer[0]);
@@ -916,7 +917,7 @@ long repNum(IMP, long oldValue, long minValue, long maxValue, char *prompt)
  */
 
 ULONG repUNum(IMP, ULONG oldValue, ULONG minValue, ULONG maxValue,
-    char *prompt)
+    const char *prompt)
 {
     ULONG n;
     char promptBuffer[100];
@@ -924,7 +925,7 @@ ULONG repUNum(IMP, ULONG oldValue, ULONG minValue, ULONG maxValue,
     user(IS, prompt);
     userN2(IS, " (", minValue);
     userN3(IS, " - ", maxValue, ")");
-    getPrompt(IS, &promptBuffer[0]);
+    getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
     user(IS, &promptBuffer[0]);
     user(IS, ": ");
     userN(IS, oldValue);
@@ -1006,10 +1007,10 @@ void repRand(IMP, USHORT *pBase, USHORT *pRand, char *what)
     char buffer[50];
 
     user2(IS, what, " base");
-    getPrompt(IS, &buffer[0]);
+    getPrompt(IS, &buffer[0], IMP_BUFSIZE(buffer));
     *pBase = repUNum(IS, *pBase, 0, 127, &buffer[0]);
     user2(IS, what, " rand");
-    getPrompt(IS, &buffer[0]);
+    getPrompt(IS, &buffer[0], IMP_BUFSIZE(buffer));
     *pRand = repUNum(IS, *pRand, 1, 128, &buffer[0]);
 }
 
@@ -1023,7 +1024,7 @@ void repBool(IMP, BOOL *pFlag, char *what)
     char promptBuffer[100];
 
     user(IS, what);
-    getPrompt(IS, &promptBuffer[0]);
+    getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
     user(IS, &promptBuffer[0]);
     user(IS, ": ");
     if (*pFlag)
@@ -1104,7 +1105,7 @@ void editPlayer(IMP, USHORT who)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[NAME_LEN - 1] = '\0';
-            strcpy(&p.p_name[0], &IS->is_textIn[0]);
+            impStrCopy(&p.p_name[0], &IS->is_textIn[0], IMP_BUFSIZE(p.p_name));
         }
     }
     user3(IS, "Password: ", &p.p_password[0], "\n");
@@ -1114,7 +1115,7 @@ void editPlayer(IMP, USHORT who)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[PASSWORD_LEN - 1] = '\0';
-            strcpy(&p.p_password[0], &IS->is_textIn[0]);
+            impStrCopy(&p.p_password[0], &IS->is_textIn[0], IMP_BUFSIZE(p.p_password));
         }
     }
     user3(IS, "Email Address: ", &p.p_email[0], "\n");
@@ -1124,7 +1125,7 @@ void editPlayer(IMP, USHORT who)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[EMAIL_LEN - 1] = '\0';
-            strcpy(&p.p_email[0], &IS->is_textIn[0]);
+            impStrCopy(&p.p_email[0], &IS->is_textIn[0], IMP_BUFSIZE(p.p_email));
         }
     }
     if (p.p_sendEmail)
@@ -1195,7 +1196,7 @@ void editPlayer(IMP, USHORT who)
         {
             user(IS, "Fleet ");
             userC(IS, fleetChar[i]);
-            getPrompt(IS, &buf[0]);
+            getPrompt(IS, &buf[0], IMP_BUFSIZE(buf));
             p.p_fleets[i] = repUNum(IS, p.p_fleets[i], 0, 0xffff, &buf[0]);
         }
     }
@@ -1243,7 +1244,7 @@ void editPlanet(IMP, ULONG pNum)
             else
             {
                 IS->is_textIn[PLAN_NAME_LEN - 1] = '\0';
-                strcpy(&p.pl_name[0], &IS->is_textIn[0]);
+                impStrCopy(&p.pl_name[0], &IS->is_textIn[0], IMP_BUFSIZE(p.pl_name));
             }
         }
     }
@@ -1267,7 +1268,7 @@ void editPlanet(IMP, ULONG pNum)
             else
             {
                 IS->is_textIn[PLAN_PSWD_LEN - 1] = '\0';
-                strcpy(&p.pl_checkpoint[0], &IS->is_textIn[0]);
+                impStrCopy(&p.pl_checkpoint[0], &IS->is_textIn[0], IMP_BUFSIZE(p.pl_checkpoint));
             }
         }
     }
@@ -1319,9 +1320,9 @@ void editPlanet(IMP, ULONG pNum)
     }
     for (prod = PPROD_FIRST; prod <= PPROD_LAST; prod++)
     {
-        sprintf(&buff[0], "%s production units", PPROD_NAME[prod]);
+        snprintf(&buff[0], IMP_BUFSIZE(buff), "%s production units", PPROD_NAME[prod]);
         p.pl_prod[prod] = repUNum(IS, p.pl_prod[prod], 0, MAX_WORK, &buff[0]);
-        sprintf(&buff[0], "%s work percentage", PPROD_NAME[prod]);
+        snprintf(&buff[0], IMP_BUFSIZE(buff), "%s work percentage", PPROD_NAME[prod]);
         p.pl_workPer[prod] = repUNum(IS, p.pl_workPer[prod], 0, 100, &buff[0]);
     }
     if (!IS->is_BOOL1)
@@ -1374,7 +1375,7 @@ void editShip(IMP, ULONG shipNumber)
             else
             {
                 IS->is_textIn[SHIP_NAME_LEN - 1] = '\0';
-                strcpy(&ship.sh_name[0], &IS->is_textIn[0]);
+                impStrCopy(&ship.sh_name[0], &IS->is_textIn[0], IMP_BUFSIZE(ship.sh_name));
             }
         }
     }
@@ -1443,7 +1444,7 @@ void editShip(IMP, ULONG shipNumber)
         for (it = IT_FIRST; it <= IT_LAST; it++)
         {
             /* build up a string with the item type in it */
-            (void) sprintf(&buff[0], "Amount of item type %c aboard",
+            (void) snprintf(&buff[0], IMP_BUFSIZE(buff), "Amount of item type %c aboard",
                 IS->is_itemChar[it]);
             /* prompt them to change it */
             ship.sh_items[it] = repUNum(IS, ship.sh_items[it], 0, 0xFFFF,
@@ -1499,7 +1500,7 @@ void editShip(IMP, ULONG shipNumber)
                 for (it = 0; it < maxNum; it++)
                 {
                     /* build up the prompt */
-                    (void) sprintf(&buff[0], "%s number %u", ptr, it);
+                    (void) snprintf(&buff[0], IMP_BUFSIZE(buff), "%s number %u", ptr, it);
                     numPtr[it] = repUNum(IS, numPtr[it], 0, NO_ITEM, &buff[0]);
                 }
             }
@@ -1561,7 +1562,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[EMAIL_LEN - 1] = '\0';
-            strcpy(&IS->is_world.w_emailAddress[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_emailAddress[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_emailAddress));
         }
     }
     user3(IS, "Player creation password: ", &IS->is_world.w_password[0], "\n");
@@ -1571,7 +1572,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[PASSWORD_LEN - 1] = '\0';
-            strcpy(&IS->is_world.w_password[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_password[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_password));
         }
     }
     user3(IS, "Game Name: ", &IS->is_world.w_gameName[0], "\n");
@@ -1581,7 +1582,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[47] = '\0';
-            strcpy(&IS->is_world.w_gameName[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_gameName[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_gameName));
         }
     }
     user3(IS, "Game Host: ", &IS->is_world.w_gameHost[0], "\n");
@@ -1591,7 +1592,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[47] = '\0';
-            strcpy(&IS->is_world.w_gameHost[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_gameHost[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_gameHost));
         }
     }
     user3(IS, "Game Port: ", &IS->is_world.w_gamePort[0], "\n");
@@ -1601,7 +1602,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[6] = '\0';
-            strcpy(&IS->is_world.w_gamePort[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_gamePort[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_gamePort));
         }
     }
     user3(IS, "Game Secret: ", &IS->is_world.w_gameSecret[0], "\n");
@@ -1611,7 +1612,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[10] = '\0';
-            strcpy(&IS->is_world.w_gameSecret[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_gameSecret[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_gameSecret));
         }
     }
     user3(IS, "Last game won by: ", &IS->is_world.w_winName[0], "\n");
@@ -1621,7 +1622,7 @@ void editWorld(IMP)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[NAME_LEN - 1] = '\0';
-            strcpy(&IS->is_world.w_winName[0], &IS->is_textIn[0]);
+            impStrCopy(&IS->is_world.w_winName[0], &IS->is_textIn[0], IMP_BUFSIZE(IS->is_world.w_winName));
         }
     }
     IS->is_world.w_loanNext = repUNum(IS, IS->is_world.w_loanNext, 0,
@@ -1899,7 +1900,7 @@ void repNaval(IMP, USHORT *pArray, char *what, USHORT minVal,
     for (st = ST_FIRST; st <= ST_LAST; st++)
     {
         user3(IS, what, " of ", getShipName(st));
-        getPrompt(IS, &promptBuffer[0]);
+        getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
         pArray[st] = repUNum(IS, pArray[st], minVal, maxVal,
             &promptBuffer[0]);
     }
@@ -1919,7 +1920,7 @@ void repItems(IMP, USHORT *pArray, char *what, USHORT minVal,
     for (it = IT_FIRST; it <= IT_LAST; it++)
     {
         user3(IS, what, " of ", getItemName(it));
-        getPrompt(IS, &promptBuffer[0]);
+        getPrompt(IS, &promptBuffer[0], IMP_BUFSIZE(promptBuffer));
         pArray[it] = repUNum(IS, pArray[it], minVal, maxVal,
             &promptBuffer[0]);
     }
@@ -1937,13 +1938,11 @@ void editNaval(IMP)
 
     if (IS->is_BOOL1)
     {
-        strcpy(&buff[0], 
-            "Info on what (cargolim/cost/energcost/itemmobcost/weight)? ");
+        impStrCopy(&buff[0], "Info on what (cargolim/cost/energcost/itemmobcost/weight)? ", IMP_BUFSIZE(buff));
     }
     else
     {
-        strcpy(&buff[0],
-            "Edit what (cargolim/cost/energcost/itemmobcost/weight)? ");
+        impStrCopy(&buff[0], "Edit what (cargolim/cost/energcost/itemmobcost/weight)? ", IMP_BUFSIZE(buff));
     }
     if (reqChoice(IS, &what, "cargolim\0cost\0energcost\0itemmobcost\0"
         "weight\0", &buff[0]))
@@ -1990,7 +1989,7 @@ void editRace(IMP, USHORT rNum)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[NAME_LEN - 1] = '\0';
-            strcpy(&r.r_name[0], &IS->is_textIn[0]);
+            impStrCopy(&r.r_name[0], &IS->is_textIn[0], IMP_BUFSIZE(r.r_name));
         }
     }
     user3(IS, "Home name: ", &r.r_homeName[0], "\n");
@@ -2000,7 +1999,7 @@ void editRace(IMP, USHORT rNum)
         if (*IS->is_textInPos != '\0')
         {
             IS->is_textIn[PLAN_NAME_LEN - 1] = '\0';
-            strcpy(&r.r_homeName[0], &IS->is_textIn[0]);
+            impStrCopy(&r.r_homeName[0], &IS->is_textIn[0], IMP_BUFSIZE(r.r_homeName));
         }
     }
     r.r_homeRow = repUNum(IS, r.r_homeRow, 0, 0xffff, "Home row");

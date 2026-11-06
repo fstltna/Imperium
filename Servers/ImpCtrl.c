@@ -43,6 +43,8 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
+#include "../Include/ImpFifo.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -82,7 +84,7 @@ BOGUS - Imperium not supported on this machine due to missing unistd.h
 #include "ImpCtrl.h"
 #include "../impsec.h"
 
-static char const rcsid[] = "$Id: ImpCtrl.c,v 1.4 2000/05/23 20:25:42 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: ImpCtrl.c,v 1.4 2000/05/23 20:25:42 marisa Exp $";
 
 #define LOG_SIZE        (512 * 10)
 
@@ -162,7 +164,10 @@ void serverAbort(void)
 	{
 	    if (FD_ISSET(myPort, &readPipe))
 	    {
-		(void)read(myPort, (char *)rq, sizeof(Request_t));
+		if (read(myPort, (char *)rq, sizeof(Request_t)) < 0)
+		{
+		    /* just waiting for the server's goodbye - nothing to do */
+		}
 	    }
 	}
     }
@@ -399,25 +404,15 @@ BOOL runImpCtrl(void)
         ISt = ImpAlloc();
         if (ISt != NULL)
         {
-	    tmpNam = tempnam(FIFO_DIR, "ictl");
+	    tmpNam = impMakeFifo(FIFO_DIR, "ictl", 0622);
 	    if (tmpNam == NULL)
 	    {
-		puts("Unable to allocate memory for temp name");
+	        perror("Unable to create named pipe");
 	    }
-	    else if (mknod(tmpNam, S_IFIFO|0622, 0) == -1)
-	    {
-		printf("Unable to create named pipe %s\n", tmpNam);
-	    }
-#ifdef BROKEN_MKNOD
-	    else if (chmod(tmpNam, 0622) != 0)
-	    {
-		printf("Unable to change mode for named pipe %s\n", tmpNam);
-	    }
-#endif
 #ifdef BROKEN_PIPE
-	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDWR | O_NDELAY | O_NOFOLLOW)) == -1)
 #else
-	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY)) == -1)
+	    else if ((myPort = open(tmpNam, O_RDONLY | O_NDELAY | O_NOFOLLOW)) == -1)
 #endif
 	    {
 		(void)unlink(tmpNam);
@@ -425,7 +420,7 @@ BOOL runImpCtrl(void)
 	    }
 	    else
 	    {
-		    strcpy(UsePort, tmpNam);
+		    impStrCopy(UsePort, tmpNam, IMP_BUFSIZE(UsePort));
                     IS = ISt;
                     ISt->is_serverRequest = serverRequest;
                     ISt->is_writeUser = writeUser;
@@ -440,14 +435,14 @@ BOOL runImpCtrl(void)
                     LogFd = NULL;
 
                     ISt->is_request.rq_type = rt_startClient;
-                    strcpy(&ISt->is_request.rq_text[0], tmpNam);
+                    impStrCopy(&ISt->is_request.rq_text[0], tmpNam, IMP_BUFSIZE(ISt->is_request.rq_text));
 		    /* Fill in the correct security code */
 #ifdef HAVE_CRYPT
-		    sprintf(&locSalt[0], "%2.2x", getpid() % 64);
-		    sprintf(&ISt->is_request.rq_private[2], "%-.15s",
+		    snprintf(&locSalt[0], IMP_BUFSIZE(locSalt), "%2.2x", getpid() % 64);
+		    snprintf(&ISt->is_request.rq_private[2], (IMP_BUFSIZE(ISt->is_request.rq_private) - 2), "%-.15s",
 			crypt(IMP_CTRL_CODE, &locSalt[0]));
 #else /* !HAVE_CRYPT */
-		    strcpy(&ISt->is_request.rq_private[2], IMP_CTRL_CODE);
+		    impStrCopy(&ISt->is_request.rq_private[2], IMP_CTRL_CODE, (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
 #endif
                     serverRequest();
 		    /* Check to see if we were recognized */
@@ -461,8 +456,7 @@ BOOL runImpCtrl(void)
 			/* Yup! */
 		        if (ServLog)
 		        {
-                	    strcpy(&ISt->is_request.rq_private[2],
-			        "Imperium control utility started");
+                	    impStrCopy(&ISt->is_request.rq_private[2], "Imperium control utility started", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
 			    ISt->is_request.rq_type = rt_log;
 			    serverRequest();
 		        }
@@ -517,8 +511,7 @@ BOOL runImpCtrl(void)
                         }
 		        if (ServLog)
 		        {
-			    strcpy(&ISt->is_request.rq_private[2],
-			        "Imperium control utility terminated");
+			    impStrCopy(&ISt->is_request.rq_private[2], "Imperium control utility terminated", (IMP_BUFSIZE(ISt->is_request.rq_private) - 2));
 			    ISt->is_request.rq_type = rt_log;
 			    serverRequest();
 		        }
@@ -797,7 +790,7 @@ int main(int argc, char *argv[])
                 if (memcmp(par, "name=", 5) == 0)
                 {
                     par += 5 * sizeof(char);
-                    strncpy(&nameBuff[0], par, 256 * sizeof(char));
+                    impStrCopy(&nameBuff[0], par, IMP_BUFSIZE(nameBuff));
                     nameBuff[256] = '\0';
                 }
                 else if (memcmp(par, "test=", 5) == 0)
@@ -810,7 +803,7 @@ int main(int argc, char *argv[])
                 }
                 else if (memcmp("port=", par, 5 * sizeof(char)) == 0)
                 {
-                    strcpy(&PlayPort[0], (char *)par + (5 * sizeof(char)));
+                    impStrCopy(&PlayPort[0], (char *)par + (5 * sizeof(char)), IMP_BUFSIZE(PlayPort));
                 }
                 else if (memcmp(par, "update=", 7) == 0)
                 {

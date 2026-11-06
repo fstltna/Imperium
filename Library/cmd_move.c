@@ -36,6 +36,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -49,7 +50,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: cmd_move.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: cmd_move.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 #define LIFTOFF_COST    10
 #define LAND_COST       5
@@ -1496,7 +1497,7 @@ BOOL cmd_navigate(IMP)
                 userN2(IS, ":", minEnerg / 10);
                 userN2(IS, ".", minEnerg % 10);
                 userS(IS, ": ", flagRow, flagCol, "> ");
-                getPrompt(IS, &promptBuff[0]);
+                getPrompt(IS, &promptBuff[0], IMP_BUFSIZE(promptBuff));
                 uPrompt(IS, &promptBuff[0]);
                 if (!clReadUser(IS) || (*IS->is_textInPos == '\0'))
                 {

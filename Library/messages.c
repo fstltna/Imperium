@@ -45,6 +45,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -64,7 +65,7 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: messages.c,v 1.4 2000/05/26 22:55:19 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: messages.c,v 1.4 2000/05/26 22:55:19 marisa Exp $";
 
 #define tt_telegram     0
 #define tt_message      1
@@ -1149,21 +1150,21 @@ void doHeadLines(IMP, ULONG days)
         h = &hist->fromPlay[scoopI].toPlay[scoopJ];
         if (scoopI == NOBODY)
         {
-            strcpy(name1, "*NOBODY*");
+            impStrCopy(name1, "*NOBODY*", IMP_BUFSIZE(name1));
         }
         else
         {
             server(IS, rt_readPlayer, scoopI);
-            strcpy(name1, IS->is_request.rq_u.ru_player.p_name);
+            impStrCopy(name1, IS->is_request.rq_u.ru_player.p_name, IMP_BUFSIZE(name1));
         }
         if (scoopJ == NOBODY)
         {
-            strcpy(name2, "*NOBODY*");
+            impStrCopy(name2, "*NOBODY*", IMP_BUFSIZE(name2));
         }
         else
         {
             server(IS, rt_readPlayer, scoopJ);
-            strcpy(name2, IS->is_request.rq_u.ru_player.p_name);
+            impStrCopy(name2, IS->is_request.rq_u.ru_player.p_name, IMP_BUFSIZE(name2));
         }
         sayHeadLine(IS, h->h_recent, h->h_past, &name1[0], &name2[0]);
         scoop = h->h_recent;

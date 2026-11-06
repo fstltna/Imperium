@@ -41,6 +41,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -55,7 +56,7 @@
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static char const rcsid[] = "$Id: cmd_action.c,v 1.2 2000/05/18 06:50:01 marisa Exp $";
+static char const rcsid[] __attribute__((unused)) = "$Id: cmd_action.c,v 1.2 2000/05/18 06:50:01 marisa Exp $";
 
 #ifdef FOR_REFERENCE
 
@@ -162,20 +163,20 @@ void cmd_setup(IMP)
                     /* loop through items */
                     for (it = IT_FIRST; it <= IT_LAST_SMALL; it++)
                     {
-                        sprintf(&buff[0], "Number of %s to ", itName[it]);
+                        snprintf(&buff[0], IMP_BUFSIZE(buff), "Number of %s to ", itName[it]);
                         switch(act)
                         {
                             case a_load:
-                                strcat(&buff[0], "load");
+                                impStrCat(&buff[0], "load", IMP_BUFSIZE(buff));
                                 break;
                             case a_unload:
-                                strcat(&buff[0], "unload");
+                                impStrCat(&buff[0], "unload", IMP_BUFSIZE(buff));
                                 break;
                             case a_teleDn:
-                                strcat(&buff[0], "beam down");
+                                impStrCat(&buff[0], "beam down", IMP_BUFSIZE(buff));
                                 break;
                             case a_teleUp:
-                                strcat(&buff[0], "beam up");
+                                impStrCat(&buff[0], "beam up", IMP_BUFSIZE(buff));
                                 break;
                         }
                         /* prompt them to change it */
@@ -187,7 +188,7 @@ void cmd_setup(IMP)
                     /* loop through items */
                     for (it = IT_FIRST; it <= IT_LAST_SMALL; it++)
                     {
-                        sprintf(&buff[0], "Percent of %s to unload",
+                        snprintf(&buff[0], IMP_BUFSIZE(buff), "Percent of %s to unload",
                             itName[it]);
                         /* prompt them to change it */
                         IS->is_player.p_action[action].ac_items[it] =
@@ -278,7 +279,7 @@ void cmd_show(IMP)
         }
         if (*sPtr != '\0')
         {
-            sprintf(&buff[0], "Action type: %s\n", sPtr);
+            snprintf(&buff[0], IMP_BUFSIZE(buff), "Action type: %s\n", sPtr);
             user(IS, &buff[0]);
             if (doNum)
             {

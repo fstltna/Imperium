@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -61,7 +62,7 @@ BOGUS - Imperium not supported on this machine due to missing unistd.h
 #include "../Include/Imperium.h"
 #include "Server.h"
 
-static const char rcsid[] = "$Id: FileIO.c,v 1.2 2000/05/18 06:32:08 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: FileIO.c,v 1.2 2000/05/18 06:32:08 marisa Exp $";
 
 #define OS_BLOCK_SIZE       512
 
@@ -296,8 +297,8 @@ BOOL logOpen(void)
     LogFd = fopen(&LogFileName[0], "a");
     if (LogFd != NULL)
     {
-        (void)time(&oTime);
-        strcpy(&timeBuffer[0], ctime(&oTime));
+        oTime = time(NULL);
+        impStrCopy(&timeBuffer[0], ctime(&(time_t){ (time_t) oTime }), IMP_BUFSIZE(timeBuffer));
         /* eliminate the '\n' that ctime() adds */
         timeBuffer[strlen(timeBuffer) - 1] = '\0';
         logString(&timeBuffer[0]);
@@ -1146,8 +1147,8 @@ void getFileName(char *defName)
 
     if (FileFd == NULL)
     {
-        strcpy(&FileName[0], Path);
-        strcat(&FileName[0], defName);
+        impStrCopy(&FileName[0], Path, IMP_BUFSIZE(FileName));
+        impStrCat(&FileName[0], defName, IMP_BUFSIZE(FileName));
     }
     else
     {
@@ -1206,8 +1207,8 @@ void openFiles(char *path, char *pHelpDir, char *pDocDir)
 {
     Path = path;
     /* if we can't open "imperium.files", we use some default names */
-    strcpy(&FileName[0], path);
-    strcat(&FileName[0], "imperium.files");
+    impStrCopy(&FileName[0], path, IMP_BUFSIZE(FileName));
+    impStrCat(&FileName[0], "imperium.files", IMP_BUFSIZE(FileName));
     FileFd = fopen(&FileName[0], "r");
 
     WorldFd = NULL;
@@ -1222,7 +1223,7 @@ void openFiles(char *path, char *pHelpDir, char *pDocDir)
     PlanetCache = NULL;
     BigItemCache = NULL;
     getFileName("imp.log");
-    strcpy(&LogFileName[0], &FileName[0]);
+    impStrCopy(&LogFileName[0], &FileName[0], IMP_BUFSIZE(LogFileName));
     WorldFd = tryToOpen("imp.world");
     PlayerFd = tryToOpen("imp.player");
     SectorFd = tryToOpen("imp.sector");
@@ -1233,9 +1234,9 @@ void openFiles(char *path, char *pHelpDir, char *pDocDir)
     LoanFd = tryToOpen("imp.loan");
     OfferFd = tryToOpen("imp.offer");
     getFileName("../help/");
-    strcpy(pHelpDir, &FileName[0]);
+    impStrCopy(pHelpDir, &FileName[0], IMP_DIR_LEN);
     getFileName("../doc/");
-    strcpy(pDocDir, &FileName[0]);
+    impStrCopy(pDocDir, &FileName[0], IMP_DIR_LEN);
     if (FileFd != NULL)
     {
         fclose(FileFd);

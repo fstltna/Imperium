@@ -36,6 +36,9 @@
  * Server.h - include file for Imperium server - define function prototypes
  */
 
+/* size of the path, help and doc directory name buffers */
+#define IMP_DIR_LEN 257
+
 /* FileIO.c */
 
 void impLog(char *);

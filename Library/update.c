@@ -39,6 +39,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -57,7 +58,7 @@
 #include <stdio.h>      /* For sprintf definition */
 #endif
 
-static const char rcsid[] = "$Id: update.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: update.c,v 1.2 2000/05/18 06:50:02 marisa Exp $";
 
 /* the maximum amount of work that may be added at any one time */
 #define MAX_ADD_WORK    255
@@ -1831,7 +1832,7 @@ void updateMiner(IMP)
 #ifdef DEBUG_LIB
             if (IS->is_DEBUG)
             {
-		sprintf(&numBuff[0], "%lu", savePlanet.pl_number);
+		snprintf(&numBuff[0], IMP_BUFSIZE(numBuff), "%lu", savePlanet.pl_number);
 		log3(IS, "!!! About to lock planet ",
 		     &numBuff[0], "");
             }

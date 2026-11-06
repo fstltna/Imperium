@@ -48,6 +48,7 @@
  */
 
 #include "../config.h"
+#include "../Include/ImpStr.h"
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -71,7 +72,7 @@ BOGUS - Imperium can not run on this machine due to missing stdlib.h
 #include "Scan.h"
 #include "ImpPrivate.h"
 
-static const char rcsid[] = "$Id: util.c,v 1.5 2000/05/26 22:55:19 marisa Exp $";
+static const char rcsid[] __attribute__((unused)) = "$Id: util.c,v 1.5 2000/05/26 22:55:19 marisa Exp $";
 
 /*
  * numcnvt - converts a number to a string
@@ -1698,7 +1699,7 @@ BOOL verifyCheckPoint(IMP, Planet_t *p, CheckPointType_t cpt)
             /* reposition the pointer */
             spPos -= sizeof(char);
             /* copy the string */
-            strcpy(&pswd[0], &p->pl_checkpoint[0]);
+            impStrCopy(&pswd[0], &p->pl_checkpoint[0], IMP_BUFSIZE(pswd));
             /* bisect it at the correct place */
             pswd[spPos - &p->pl_checkpoint[0]] = '\0';
             /* and now verify that part of it */
@@ -2643,7 +2644,7 @@ char * displayTime(time_t t)
     tStr = ctime(&t);
     if (tStr == NULL)
     {
-        strcpy(buffer, "unknown");
+        impStrCopy(buffer, "unknown", IMP_BUFSIZE(buffer));
         return(&buffer[0]);
     }
     snprintf(buffer, sizeof(buffer), "%s", tStr);
