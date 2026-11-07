@@ -1,0 +1,105 @@
+                         Imperium - Combat
+
+Overview
+========
+Ships and planets can both carry weapons and fire on enemy ships and
+planets with the FIRE command:
+
+    fire <target> <attacker>
+
+The target and the attacker can each be a ship (just the number, e.g. 12)
+or a planet (the number followed by "p", e.g. 12p). For example:
+
+    fire 7 3        ship 3 fires on ship 7
+    fire 40p 3      ship 3 fires on planet 40
+    fire 7 40p      planet 40 fires on ship 7
+    fire 41p 40p    planet 40 fires on planet 41
+
+You will be asked which weapon to use (if more than one kind is installed)
+and how much to fire.
+
+Firing on someone ends any alliance they had with you (it becomes
+neutral), and neutral or default relations become war.
+
+Weapons
+=======
+There are two kinds of weapons, both built with the BUILD command
+(choose "weapon") using weapons production units:
+
+  Blasers           Fire energy at a ship. Blasers have no effect on
+                    planets. On a ship they use the ship's energy; on a
+                    planet they are powered by ore (one ore per unit of
+                    energy). Each blaser can safely discharge a certain
+                    amount at once, depending on its tech level and
+                    efficiency - firing more than that risks damaging the
+                    ship or planet doing the firing, and far more than that
+                    is not allowed.
+
+  Photon torpedoes  One torpedo per tube, each using missiles from the
+                    ship's hold or the planet. Launching costs ship energy
+                    (on a ship) or mobility (on a planet). Torpedoes work
+                    against both ships and planets, and are less accurate
+                    the further away the target is.
+
+A weapon only fires if it is installed (see INSTALL) and at least 60%
+efficient. Installed weapons slowly become more efficient over time, and
+their tech level slowly drops. Damage to a ship or planet also damages its
+weapons, so a hard hit can put them out of action until they recover.
+
+The range of a weapon depends on its tech level and efficiency.
+
+Planet weapons
+==============
+Weapons can be installed on any planet you own (but not on your race's
+shared home planet):
+
+    build 40               build a weapon on planet 40
+    install 40p 123        install weapon #123, which is on planet 40
+    remove 40p 123         take it out again
+
+A planet can have up to 8 weapons installed. An installed weapon can't be
+loaded onto a ship or offered for sale until it is removed.
+
+To fire, a planet needs:
+  - weapons installed and at least 60% efficient
+  - the planet itself at least 60% efficient
+  - the same number of military and officers a ship would need to crew
+    that kind of weapon
+  - ore for blasers, or missiles and mobility for torpedoes
+
+A planet aims using its own tech level and efficiency (it has no
+computers like a ship does).
+
+Defensive fire
+==============
+When you fire on someone, they get to fire back right away:
+
+  1) If you fired on a planet, that planet fires back with full strength.
+  2) If you fired on a ship, that ship fires back with full strength.
+  3) Ships set to defend (see FLEET / the defend flag) that are in range
+     of you help, using part of their weapons.
+  4) Armed planets that are in range of you help, using part of their
+     weapons.
+
+Only ships and planets owned by the player you attacked, or by their
+allies, take part - and never ones owned by you. Defensive fire stops as
+soon as the attacker is destroyed. Blasers can't hurt planets, so a planet
+that attacks is answered with torpedoes.
+
+Damage
+======
+Ships are protected first by their shields, then their armour; what gets
+through damages the ship, its cargo and its big items (installed or not).
+If the hull is destroyed, so is the ship.
+
+Planets have no shields or armour. A hit damages the planet's efficiency,
+mobility, people, goods, production and the big items stored there
+(including installed weapons). A planet whose civilians and military are
+all killed becomes unowned.
+
+Everyone involved is told what happened by telegram, and the attacks show
+up in the news.
+
+See also:
+        Help: FIRE, BUILD, INSTALL, REMOVE, BOARD, ASSAULT
+        Doc:  Ships

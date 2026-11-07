@@ -1101,6 +1101,12 @@ BOOL loadBigItems(IMP)
                             "requested ship");
                         aborting = TRUE;
                     }
+                    else if (plWeapInstalled(IS, plNum, biNum))
+                    {
+                        err(IS, "that weapon is installed on the planet - "
+                            "remove it first");
+                        aborting = TRUE;
+                    }
                     else if (rbi->bi_price > 0)
                     {
                         err(IS, "item is currently offered for sale");
@@ -2775,6 +2781,125 @@ BOOL cmd_refurb(IMP)
 }
 
 /*
+ * plWeapInstalled - returns TRUE if the big item is installed as one of the
+ *          planet's weapons. Leaves the big item in the buffer afterwards,
+ *          since callers are usually in the middle of checking it.
+ */
+
+BOOL plWeapInstalled(IMP, ULONG plNum, ULONG biNum)
+{
+    Planet_t chkPl;
+
+    server(IS, rt_readPlanet, plNum);
+    chkPl = IS->is_request.rq_u.ru_planet;
+    server(IS, rt_readBigItem, biNum);
+    return isInstPl(&chkPl, biNum);
+}
+
+/*
+ * planetInstall - install a weapon that is sitting on a planet into one of
+ *          the planet's weapon slots, so the planet can fire it.
+ */
+
+static BOOL planetInstall(IMP, ULONG plNum)
+{
+    register Planet_t *rpl;
+    register BigItem_t *rbi;
+    ULONG biNum;
+    USHORT which;
+    Planet_t savePl;
+
+    rpl = &IS->is_request.rq_u.ru_planet;
+    rbi = &IS->is_request.rq_u.ru_bigItem;
+    (void) skipBlanks(IS);
+    if (!reqBigItem(IS, &biNum, "Item number to install"))
+    {
+        return FALSE;
+    }
+    server(IS, rt_readPlanet, plNum);
+    if (rpl->pl_owner != IS->is_player.p_number)
+    {
+        err(IS, "you don't own that planet");
+        return TRUE;
+    }
+    savePl = *rpl;
+    server(IS, rt_readBigItem, biNum);
+    if ((rbi->bi_itemLoc != plNum) || rbi->bi_onShip ||
+        (rbi->bi_status != bi_inuse))
+    {
+        err(IS, "that item is not on the requested planet");
+        return TRUE;
+    }
+    if (rbi->bi_price > 0)
+    {
+        err(IS, "that item is currently for sale");
+        return TRUE;
+    }
+    server(IS, rt_lockBigItem, biNum);
+    updateBigItem(IS);
+    server(IS, rt_unlockBigItem, biNum);
+    if ((rbi->bi_part != bp_photon) && (rbi->bi_part != bp_blaser))
+    {
+        err(IS, "only weapons (blasers and photon torpedo tubes) can be "
+            "installed on a planet");
+        return TRUE;
+    }
+    if (isInstPl(&savePl, biNum))
+    {
+        err(IS, "that item is already installed");
+        return TRUE;
+    }
+    server(IS, rt_lockPlanet, plNum);
+    which = findFreePl(rpl);
+    if (which >= MAX_WEAP_PL)
+    {
+        server(IS, rt_unlockPlanet, plNum);
+        err(IS, "no room for more weapons on that planet");
+        return TRUE;
+    }
+    rpl->pl_weapon[which] = biNum;
+    server(IS, rt_unlockPlanet, plNum);
+    user(IS, "Item installed\n");
+    fePlDirty(IS, plNum);
+    return TRUE;
+}
+
+/*
+ * planetRemove - take a weapon out of a planet's weapon slots. It stays on
+ *          the planet and can be loaded onto a ship, sold, etc.
+ */
+
+static BOOL planetRemove(IMP, ULONG plNum)
+{
+    register Planet_t *rpl;
+    ULONG biNum;
+
+    rpl = &IS->is_request.rq_u.ru_planet;
+    (void) skipBlanks(IS);
+    if (!reqBigItem(IS, &biNum, "Item number to remove"))
+    {
+        return FALSE;
+    }
+    server(IS, rt_readPlanet, plNum);
+    if (rpl->pl_owner != IS->is_player.p_number)
+    {
+        err(IS, "you don't own that planet");
+        return TRUE;
+    }
+    if (!isInstPl(rpl, biNum))
+    {
+        err(IS, "that item is not installed on that planet");
+        return TRUE;
+    }
+    server(IS, rt_lockPlanet, plNum);
+    doUninstallPl(rpl, biNum);
+    server(IS, rt_unlockPlanet, plNum);
+    user(IS, "Item removed\n");
+    fePlDirty(IS, plNum);
+    return TRUE;
+}
+
+/*
  * cmd_install - allows the player to install a big item already loaded
  *          onto the ship into one of the ship's locations
  */
@@ -2788,10 +2913,16 @@ BOOL cmd_install(IMP)
     USHORT iMax, which=0;/* prevent GCC complaints */
     BOOL aborting;
     BigPart_t what=0;/* prevent GCC complaints */
+    BOOL isShip;
 
-    /* get the number of the ship */
-    if (reqShip(IS, &shipNumber, "Ship that the item is on"))
+    /* get the number of the ship (or planet, e.g. "12p") */
+    if (reqPlanetOrShip(IS, &shipNumber, &isShip,
+        "Ship or planet (e.g. 12p) that the item is on"))
     {
+        if (!isShip)
+        {
+            return planetInstall(IS, shipNumber);
+        }
         rsh = &IS->is_request.rq_u.ru_ship;
         rbi = &IS->is_request.rq_u.ru_bigItem;
         (void) skipBlanks(IS);
@@ -2916,14 +3047,20 @@ BOOL cmd_remove(IMP)
     Ship_t saveShip;
     BOOL aborting;
     BigPart_t what=0; /* prevent GCC complaints */
+    BOOL isShip;
 
-    /* get the number of the ship */
-    if (reqShip(IS, &shipNumber, "Ship that the item is on"))
+    /* get the number of the ship (or planet, e.g. "12p") */
+    if (reqPlanetOrShip(IS, &shipNumber, &isShip,
+        "Ship or planet (e.g. 12p) that the item is on"))
     {
+        if (!isShip)
+        {
+            return planetRemove(IS, shipNumber);
+        }
         rsh = &IS->is_request.rq_u.ru_ship;
         rbi = &IS->is_request.rq_u.ru_bigItem;
         (void) skipBlanks(IS);
-        /* get the number of the item to install */
+        /* get the number of the item to remove */
         if (reqBigItem(IS, &biNum, "Item number to remove"))
         {
             aborting = FALSE;
@@ -2965,7 +3102,9 @@ BOOL cmd_remove(IMP)
                     server(IS, rt_lockShip, shipNumber);
                     /* uninstall the item */
                     doUninstall(rsh, biNum, what);
-                    if (what == it_engines)
+                    /* (this used to compare against it_engines, which is */
+                    /* a different numbering, so it never matched) */
+                    if (what == bp_engines)
                     {
 			saveShip = *rsh;
 			/* We need to possibly reduce the amount of energy */

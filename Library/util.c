@@ -1082,7 +1082,9 @@ void damagePlanet(IMP, USHORT damage, USHORT responsible)
     plNum = rp->pl_number;
     rp->pl_efficiency = damageUnit(IS, rp->pl_efficiency, damage);
     rp->pl_mobility = damageUnit(IS, rp->pl_mobility, damage);
-    for (it = IT_FIRST; it <= IT_LAST; it++)
+    /* Only the small items - the big item counts must match the real big */
+    /* items, which are damaged one by one by damagePlanetItems() */
+    for (it = IT_FIRST; it <= IT_LAST_SMALL; it++)
     {
         writePlQuan(IS, rp, it, damageUnit(IS, readPlQuan(IS, rp, it), damage));
     }
@@ -2551,6 +2553,217 @@ void doUninstall(Ship_t *sh, register ULONG biNum, BigPart_t what)
             return;
         }
         which++;
+    }
+}
+
+/*
+ * Planet weapons
+ *
+ * Planets can have up to MAX_WEAP_PL weapons (blasers and photon torpedo
+ * tubes) installed in pl_weapon[]. The list is packed: the first NO_ITEM
+ * marks the end. These mirror the ship functions above.
+ */
+
+/*
+ * isInstPl - returns TRUE if the given big item is installed on the planet
+ */
+
+BOOL isInstPl(register Planet_t *pl, register ULONG iNum)
+{
+    register USHORT count;
+
+    for (count = 0; count < MAX_WEAP_PL; count++)
+    {
+        if (pl->pl_weapon[count] == NO_ITEM)
+        {
+            return FALSE;
+        }
+        if (pl->pl_weapon[count] == iNum)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+/*
+ * findFreePl - returns the first free weapon slot on the planet, or
+ *          MAX_WEAP_PL if they are all in use
+ */
+
+USHORT findFreePl(register Planet_t *pl)
+{
+    register USHORT curIt;
+
+    for (curIt = 0; curIt < MAX_WEAP_PL; curIt++)
+    {
+        if (pl->pl_weapon[curIt] == NO_ITEM)
+        {
+            return curIt;
+        }
+    }
+    return MAX_WEAP_PL;
+}
+
+/*
+ * doUninstallPl - remove the given item from the planet's weapon list,
+ *          keeping the list packed
+ */
+
+void doUninstallPl(Planet_t *pl, register ULONG biNum)
+{
+    register USHORT which;
+
+    for (which = 0; which < MAX_WEAP_PL; which++)
+    {
+        if (pl->pl_weapon[which] == biNum)
+        {
+            while (which < MAX_WEAP_PL - 1)
+            {
+                pl->pl_weapon[which] = pl->pl_weapon[which + 1];
+                which++;
+            }
+            pl->pl_weapon[MAX_WEAP_PL - 1] = NO_ITEM;
+            return;
+        }
+        if (pl->pl_weapon[which] == NO_ITEM)
+        {
+            return;
+        }
+    }
+}
+
+/*
+ * getPlTechFactor - returns the average tech factor of the installed
+ *          weapons of the given type on the planet (0 if none).
+ *          Reads big items, so the planet must NOT be in the buffer.
+ */
+
+UBYTE getPlTechFactor(IMP, Planet_t *pl, BigPart_t part)
+{
+    register BigItem_t *bip;
+    register USHORT curIt, icount;
+    ULONG techLevel;
+
+    bip = &IS->is_request.rq_u.ru_bigItem;
+    techLevel = 0;
+    icount = 0;
+    for (curIt = 0; (curIt < MAX_WEAP_PL) && (pl->pl_weapon[curIt] != NO_ITEM);
+        curIt++)
+    {
+        server(IS, rt_readBigItem, pl->pl_weapon[curIt]);
+        if (bip->bi_part == part)
+        {
+            techLevel += bip->bi_techLevel;
+            icount++;
+        }
+    }
+    if (icount == 0)
+    {
+        return 0;
+    }
+    return getTechFactor(techLevel / icount);
+}
+
+/*
+ * getPlEff - returns the average efficiency of the installed weapons of
+ *          the given type on the planet (0 if none).
+ *          Reads big items, so the planet must NOT be in the buffer.
+ */
+
+UBYTE getPlEff(IMP, Planet_t *pl, BigPart_t part)
+{
+    register BigItem_t *bip;
+    register USHORT curIt, icount;
+    USHORT effic;
+
+    bip = &IS->is_request.rq_u.ru_bigItem;
+    effic = 0;
+    icount = 0;
+    for (curIt = 0; (curIt < MAX_WEAP_PL) && (pl->pl_weapon[curIt] != NO_ITEM);
+        curIt++)
+    {
+        server(IS, rt_readBigItem, pl->pl_weapon[curIt]);
+        if (bip->bi_part == part)
+        {
+            effic += bip->bi_effic;
+            icount++;
+        }
+    }
+    if (icount == 0)
+    {
+        return 0;
+    }
+    return (UBYTE) (effic / icount);
+}
+
+/*
+ * refreshPlWeapons - bring the planet's installed weapons up to date, the
+ *          way a ship's installed items are kept up to date: efficiency
+ *          slowly rises while installed, and tech level slowly drops.
+ *          Reads/locks big items, so the planet must NOT be in the buffer.
+ */
+
+void refreshPlWeapons(IMP, Planet_t *pl)
+{
+    register USHORT curIt;
+    ULONG biNum;
+
+    for (curIt = 0; (curIt < MAX_WEAP_PL) && (pl->pl_weapon[curIt] != NO_ITEM);
+        curIt++)
+    {
+        biNum = pl->pl_weapon[curIt];
+        server(IS, rt_lockBigItem, biNum);
+        if (IS->is_request.rq_u.ru_bigItem.bi_status == bi_inuse)
+        {
+            updateBigItem(IS);
+        }
+        server(IS, rt_unlockBigItem, biNum);
+    }
+}
+
+/*
+ * damagePlanetItems - damage the big items stored on a planet after it has
+ *          been hit. Items that are destroyed are removed from the planet's
+ *          item counts and, if they were installed weapons, uninstalled.
+ *          The planet must NOT be locked (this locks it as needed).
+ */
+
+void damagePlanetItems(IMP, ULONG plNum, USHORT damage)
+{
+    register BigItem_t *rbi;
+    register Planet_t *rpl;
+    ULONG i;
+    BigPart_t part;
+
+    if (damage == 0)
+    {
+        return;
+    }
+    rbi = &IS->is_request.rq_u.ru_bigItem;
+    rpl = &IS->is_request.rq_u.ru_planet;
+    /* slow, but this is how ships find their items too */
+    for (i = 0; i < IS->is_world.w_bigItemNext; i++)
+    {
+        server(IS, rt_readBigItem, i);
+        if ((rbi->bi_itemLoc == plNum) && !rbi->bi_onShip &&
+            (rbi->bi_status != bi_destroyed) && (rbi->bi_part != bp_hull))
+        {
+            part = rbi->bi_part;
+            if (damageBigItem(IS, i, damage) == NO_ITEM)
+            {
+                server(IS, rt_lockPlanet, plNum);
+                if (isInstPl(rpl, i))
+                {
+                    doUninstallPl(rpl, i);
+                }
+                if (rpl->pl_quantity[cvtBpIt(part)] > 0)
+                {
+                    rpl->pl_quantity[cvtBpIt(part)]--;
+                }
+                server(IS, rt_unlockPlanet, plNum);
+            }
+        }
     }
 }
 

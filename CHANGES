@@ -2,6 +2,33 @@ Changes grouped by release:
 
 11-06-26 Release
 ================
+* Combat: planets can now have weapons and use them.
+  - "install 12p <item>" / "remove 12p <item>" put blasers and photon
+    torpedo tubes into a planet's 8 weapon slots
+  - "fire <target> 12p" fires from a planet. Blasers are powered by ore,
+    torpedoes use missiles and planet mobility; planets need the same
+    military/officers as a ship to fire, and aim with their own tech
+    level and efficiency
+  - Defensive fire: an attacked planet fires back at full strength, and
+    the defender's (and allies') armed planets in range help, as ships
+    set to defend already did. Planet attackers get torpedoes back
+  - Planet weapons are damaged when the planet is hit, and recover while
+    installed. Installed weapons can't be loaded or sold
+  - New "doc combat"; fire/install/remove help updated
+* Fix planet shelling reducing the counts of big items on a planet without
+  touching the items themselves; big items on a planet are now damaged
+  one by one (also when planes crash onto it)
+* Fix a blaser miss leaving the target ship locked
+* Fix torpedoes aimed at a planet reading garbage for the "target in a gas
+  cloud" check
+* Fix defensive fire treating the ship with the same number as an attacked
+  planet as the target (it fired back at full strength)
+* Fix the weapon chart showing efficiency/TF figures that were too low
+* Fix "remove" of an engine never recalculating the ship's engine stats
+* Deity: fix "edit updates" refusing resDecreaser/techDecreaser values that
+  ImpCre itself sets, and "edit player" refusing every Credits value on
+  64-bit systems
+* load/unload help gave the big item and ship in the wrong order
 * systemd services: "make install-systemd" installs imperium.service,
   imperium-telnet.service and an optional daily imperium-publish.timer,
   all running as impown with sandboxing. "make install-user" creates

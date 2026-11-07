@@ -1,8 +1,13 @@
 remove <ship> <big item>
+remove <planet>p <big item>
 
     Remove "un"-installs a "big" item such as an engine or computer from the
 ships active use slots, and returns it to the ship's cargo area so that it can
 be unloaded. You can not unload an item while it is installed.
+
+    For a planet ("remove 12p 345") this takes a weapon out of the planet's
+weapon slots. It stays on the planet, and can then be loaded onto a ship or
+offered for sale.
 
     Note: While a big item is "installed" it's tech factor will go down while
 it's efficiency will be maintained at 100%. When a big item is NOT installed
@@ -12,5 +17,4 @@ either.
 See also:
         INSTALL, LOAD, UNLOAD
 Doc:
-        Ships
-
+        Ships, Combat

@@ -1145,7 +1145,7 @@ void editPlayer(IMP, USHORT who)
     p.p_status = repUNum(IS, p.p_status, ps_deity, ps_idle, "Status");
     p.p_planetCount = repUNum(IS, p.p_planetCount, 0, 0xffffffff,
         "Planet count");
-    p.p_money = repNum(IS, p.p_money, -0x80000000, 0x7fffffff, "Credits");
+    p.p_money = repNum(IS, p.p_money, -0x7fffffffL - 1, 0x7fffffffL, "Credits");
     p.p_btu = repUNum(IS, p.p_btu, 0, IS->is_world.w_maxBTUs, "BTU's");
     p.p_btuWarn = repUNum(IS, p.p_btuWarn, 0, IS->is_world.w_maxBTUs,
         "BTU Warning Level");
@@ -1766,9 +1766,9 @@ void editUpdates(IMP)
     IS->is_world.w_BTUDivisor = repUNum(IS, IS->is_world.w_BTUDivisor,
             500, 0xffff, "BTUDivisor");
     IS->is_world.w_resDecreaser = repUNum(IS, IS->is_world.w_resDecreaser,
-            480, 0xffff, "resDecreaser");
+            0, 0xffff, "resDecreaser");
     IS->is_world.w_techDecreaser = repUNum(IS, IS->is_world.w_techDecreaser,
-            480, 0xffff, "techDecreaser");
+            0, 0xffff, "techDecreaser");
     putWorld(IS);
 }
 

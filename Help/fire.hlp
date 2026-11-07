@@ -1,18 +1,24 @@
 fire <target> <attacker> blaser <units>
                          photon <tubes>
 
-	Allows you to fire on the <target> ship/planet from the <atacker>
-ship/planet using either blaser's or photon torpedos (currently).
+	Allows you to fire on the <target> ship or planet from the <attacker>
+ship or planet using either blasers or photon torpedos. Give a planet as
+the number followed by "p" (for example 12p); a plain number is a ship.
 	For blasers <units> represents the number of energy units to discharge
-at the <target>. The energy used comes from your active energy (if on a ship),
+at the <target>. On a ship the energy used comes from your active energy,
 and thus you may be stranded if you don't leave enough energy for ship
-movement. Note that the TF of your ship's blaser units affects how many units
-you may safely discharge at one time, as does their efficiency and the number
-of units installed.
+movement. On a planet blasers are powered by ore. Note that the TF of the
+blasers affects how many units you may safely discharge at one time, as
+does their efficiency and the number of units installed. Blasers have no
+effect on planets.
 	For photon torpedos <tubes> represents the number of photon torpedos
-you wish to launch, and you must have one phton torpedo unit installed for
-each tube you wish to fire. You must also have enough "shells" loaded in your
-cargo hold for each torpedo you wish to fire (see factors.doc).
+you wish to launch, and you must have one photon torpedo unit installed for
+each tube you wish to fire. You must also have enough "shells" (missiles)
+in your cargo hold, or on the planet, for each torpedo you wish to fire
+(see factors.doc).
+	Planets need weapons installed (see INSTALL) and enough military and
+officers to fire them. The player you fire on will get to fire back, and
+their nearby ships and planets may help them (see "doc combat").
 
 Help:
 	BUILD, INSTALL

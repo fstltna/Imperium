@@ -1,12 +1,17 @@
 install <ship> <item>
+install <planet>p <item>
 
     Install allows you to install a "big" item such as an engine or computer
 into one of the ship's active use slots, if any are free. The item must
 already be loaded onto the ship. While an item is installed it's efficiency
 will be maintained, but it's tech level slowly drops.
 
-See also:
-        LOAD, REMOVE, SHIPS, UNLOAD
-Doc:
-        Ships
+    Weapons (blasers and photon torpedo tubes) can also be installed on a
+planet you own, so the planet can fire them. Give the planet as its number
+followed by "p", for example "install 12p 345". The weapon must be on that
+planet. A planet can have up to 8 weapons installed.
 
+See also:
+        LOAD, REMOVE, SHIPS, UNLOAD, FIRE
+Doc:
+        Ships, Combat

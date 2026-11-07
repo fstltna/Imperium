@@ -537,11 +537,18 @@ void landOnPlanet(IMP, USHORT planes, int wea, ULONG plNum, USHORT r,
             userP(IS, "onto your planet ", rpl, "");
             notify(IS, owner);
         }
-        server(IS, rt_lockPlanet, plNum);
-        damagePlanet(IS, umin((USHORT) 100, killed *
-            (impRandom(IS, IS->is_world.w_planeRand) +
-            IS->is_world.w_planeBase)), IS->is_player.p_number);
-        server(IS, rt_unlockPlanet, plNum);
+        {
+            USHORT pDamage = umin((USHORT) 100, killed *
+                (impRandom(IS, IS->is_world.w_planeRand) +
+                IS->is_world.w_planeBase));
+
+            server(IS, rt_lockPlanet, plNum);
+            damagePlanet(IS, pDamage, IS->is_player.p_number);
+            server(IS, rt_unlockPlanet, plNum);
+            /* big items (and installed weapons) on the planet get hit too */
+            damagePlanetItems(IS, plNum, pDamage);
+            server(IS, rt_readPlanet, plNum);
+        }
     }
     if (planes != 0)
     {

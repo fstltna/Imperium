@@ -1,4 +1,4 @@
-unload big <item> <ship>
+unload big <ship> <item>
        small <ship>
        miner <ship> <miner>
 

@@ -274,6 +274,12 @@ BOOL cmd_price(IMP)
                        err(IS, "item is not on a planet");
                        return FALSE;
                     }
+                    if (plWeapInstalled(IS, rbi->bi_itemLoc, itemNumber))
+                    {
+                       err(IS, "that weapon is installed on the planet - "
+                           "remove it first");
+                       return FALSE;
+                    }
                     saveIt.un.un_item = *rbi;
                     server(IS, rt_readPlanet, saveIt.un.un_item.bi_itemLoc);
                     if (rpl->pl_owner != IS->is_player.p_number)

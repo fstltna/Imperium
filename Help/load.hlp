@@ -1,4 +1,4 @@
-load big <item> <ship>
+load big <ship> <item>
      small <ship>
      miner <ship> <miner>
 
