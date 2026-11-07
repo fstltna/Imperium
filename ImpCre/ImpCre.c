@@ -2632,7 +2632,12 @@ int main(int argc, char *argv[])
 			"this world? [Y/N] <N>:");
 		    if (fgets(&locBuf[0], 79, stdin) == NULL)
 		    {
-			locBuf[0] = '\0';
+			/* No more input (e.g. run from a script) - asking
+			   again would loop forever, so take the default */
+			fputs("\n*** No answer (end of input) - no files created.\n"
+			    "*** Set DoNotAsk=1 to create the files without "
+			    "being asked.\n", stderr);
+			cleanup(1);
 		    }
 		    if ((locBuf[0] == 'y') || (locBuf[0] == 'Y'))
 		    {

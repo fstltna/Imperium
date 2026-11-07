@@ -2,6 +2,11 @@ Changes grouped by release:
 
 11-06-26 Release
 ================
+* ImpCre no longer loops forever (printing "I don't know what you mean"
+  millions of times a second) when its input ends at the "create the data
+  files?" question, e.g. when run from a script. It now creates nothing,
+  says why, and exits with status 1; set DoNotAsk=1 to create the files
+  without being asked
 * Combat: planets can now have weapons and use them.
   - "install 12p <item>" / "remove 12p <item>" put blasers and photon
     torpedo tubes into a planet's 8 weapon slots
